@@ -1,0 +1,11 @@
+A faire pour le 1er rendu :
+    -module shape --> créer le type S2D
+
+    main : récupérer le nom de fichier de test transmis sur la ligne de commande
+
+
+Proposition : Commencer par faire des classes pour chaques entitées (Je peux le faire)
+                Autant faire les choses bien dès le début non ?
+
+              Il resterais plus qu'à faire le module projet pour lire les entrées et les transmettres
+              au module lifeform qui detecterais les erreurs et les transmetterais à message
