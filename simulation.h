@@ -3,9 +3,7 @@
 //
 
 #ifndef MICRORECIF_SIMULATION_H
-
-
-
 #define MICRORECIF_SIMULATION_H
+//code
 
 #endif //MICRORECIF_SIMULATION_H
