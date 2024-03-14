@@ -12,4 +12,3 @@ Proposition : Commencer par faire des classes pour chaques entitées (Je peux le
               au module lifeform qui detecterais les erreurs et les transmetterais à message
 
 Question : ou mettre la fonction qui trensfert les données du fichier vers les classes
-
