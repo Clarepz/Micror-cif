@@ -32,6 +32,7 @@ void Simulation::readLine(string& line){
     enum ReadStatus{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
 
     static ReadStatus state(NBALG); //initial state
+    //std::cout<<line<<std::endl;
 
     switch (state) {
         case NBALG:
@@ -41,10 +42,15 @@ void Simulation::readLine(string& line){
             break;
         case ALGS:
             for(int i=0; i < nbAlg ; i++){
-                Alg anAlg()
-                lineStream >>
+                S2d pos;
+                int age;
+                lineStream >> pos.x >> pos.y >> age;
+                Alg anAlg(pos,age);
+                algs.push_back(anAlg);
             }
+            state=NBCOR;
+            break;
+        case NBCOR:
+            exit(0);
     }
-
-    std::cout<<line<<std::endl;
 }
