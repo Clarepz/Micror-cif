@@ -5,4 +5,8 @@
 #ifndef MICRORECIF_LIFEFORM_H
 #define MICRORECIF_LIFEFORM_H
 
+class alg{
+
+};
+
 #endif //MICRORECIF_LIFEFORM_H

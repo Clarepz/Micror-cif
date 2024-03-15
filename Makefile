@@ -7,8 +7,8 @@ OFILES = $(CXXFILES:.cc=.o)
 
 # Definition de la premiere regle
 
-prog: $(OFILES)
-	$(CXX) $(OFILES) -o prog
+project: $(OFILES)
+	$(CXX) $(OFILES) -o project
 
 # Definitions de cibles particulieres
 
@@ -22,7 +22,7 @@ depend:
 
 clean:
 	@echo " *** EFFACE MODULES OBJET ET EXECUTABLE ***"
-	@/bin/rm -f *.o *.x *.cc~ *.h~ prog
+	@/bin/rm -f *.o *.x *.cc~ *.h~ project
 
 #
 # -- Regles de dependances generees automatiquement
