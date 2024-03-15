@@ -4,6 +4,7 @@
 
 #ifndef MICRORECIF_SIMULATION_H
 #define MICRORECIF_SIMULATION_H
-//code
+
+bool readInputFile(char* inputFile);
 
 #endif //MICRORECIF_SIMULATION_H

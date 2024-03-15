@@ -3,8 +3,8 @@
 
 using namespace std;
 
-int main(int argc, char* argv){
+int main(int argc, char* argv[]){
+    if(argc != 2) exit(3);
 
-    cout<<"Salut Clarence";
-        <<"On s'organise comment par contre pour faire les fichiers ?"
+    return 0;
 }
