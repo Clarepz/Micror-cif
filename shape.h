@@ -4,6 +4,14 @@
 
 #ifndef MICRORECIF_SHAPE_H
 #define MICRORECIF_SHAPE_H
-//code
+constexpr double epsil_zero(0.5) ;
 
+struct S2d {double x=0.; double y=0.;};
+
+class Segment
+{
+    S2d coor;
+    double angle;
+
+};
 #endif //MICRORECIF_SHAPE_H
