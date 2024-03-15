@@ -3,3 +3,5 @@
 //
 
 #include "simulation.h"
+#include "shape.h"
+#include "message.h"
