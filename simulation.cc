@@ -5,28 +5,36 @@
 #include <fstream>
 #include <sstream>
 
+
 #include "simulation.h"
 #include "shape.h"
 #include "message.h"
 
-enum State{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
 
-bool readFile(char* fileName, int& nbAlg, int& nbCor, int& nbSca);
+
+
+
+
+
 
 Simulation::Simulation(char * inputFile) {
     std::cout<< inputFile<< std::endl;
-    readFile(inputFile, nbAlg, nbCor, nbSca);
+    readFile(inputFile);
     nbSim = 0 ;
 }
 
 
-void readFile(char* fileName, int& nbAlg, int& nbCor, int& nbSca){
+void Simulation::readFile(char* fileName){
     string line;
-    ifstream file(filename);
-    if(!fichier.fail()) exit(1);
-    while(getline(fichier >> ws,line)){
+    ifstream file(fileName);
+    if(file.fail()) exit(1);
+    while(getline(file >> ws,line)){
         if(line[0]=='#') continue;
-        read_ligne(line);
+        readLine(line);
     }
-    cout << "fin de la lecture" << endl;
+}
+void Simulation::readLine(string line){
+    enum State{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
+
+    std::cout<<line<<std::endl;
 }
