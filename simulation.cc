@@ -7,14 +7,7 @@
 
 
 #include "simulation.h"
-#include "shape.h"
 #include "message.h"
-
-
-
-
-
-
 
 
 Simulation::Simulation(char * inputFile) {
@@ -33,8 +26,25 @@ void Simulation::readFile(char* fileName){
         readLine(line);
     }
 }
-void Simulation::readLine(string line){
-    enum State{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
+void Simulation::readLine(string& line){
+    istringstream lineStream(line);
+
+    enum ReadStatus{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
+
+    static ReadStatus state(NBALG); //initial state
+
+    switch (state) {
+        case NBALG:
+            lineStream>>nbAlg;
+            if(nbAlg == 0) state = NBCOR;
+            else state = ALGS;
+            break;
+        case ALGS:
+            for(int i=0; i < nbAlg ; i++){
+                Alg anAlg()
+                lineStream >>
+            }
+    }
 
     std::cout<<line<<std::endl;
 }

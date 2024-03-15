@@ -5,7 +5,7 @@
 
 #ifndef MICRORECIF_SIMULATION_H
 #define MICRORECIF_SIMULATION_H
-
+#include "lifeform.h"
 #include <string>
 using namespace std;
 
@@ -17,8 +17,11 @@ private:
     int nbAlg;
     int nbSca;
     int nbCor;
+    vector<Alg> algs;
+    vector<Cor> cors;
+    vector<Sca> scas;
 
     void readFile(char* fileName);
-    void readLine(string line);
+    void readLine(string& line);
 };
 #endif //MICRORECIF_SIMULATION_H
