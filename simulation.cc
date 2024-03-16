@@ -9,8 +9,10 @@
 #include "simulation.h"
 #include "message.h"
 
-Alg readAlg(istringstream& lineStream);
-Cor readCor(istringstream& lineStream, bool isASeg = false);
+
+
+istringstream nextLine(ifstream& file);
+
 
 Simulation::Simulation(char * inputFile) {
     std::cout<< inputFile<< std::endl;
@@ -19,7 +21,75 @@ Simulation::Simulation(char * inputFile) {
 
 }
 
+void Simulation::readFile(char* fileName){
+    ifstream file(fileName);
+    if(file.fail()) exit(EXIT_FAILURE);
+    readAlg(file);
+    readCor(file);
+    readSca(file);
+}
 
+void Simulation::readAlg(ifstream& file){
+    istringstream line = nextLine(file);
+    line>>nbAlg;
+    for(int i=0; i<nbAlg; i++){
+        line = nextLine(file);
+        S2d pos;
+        int age;
+        line>>pos.x>>pos.y>>age;
+        algs.emplace_back(pos,age);
+    }
+}
+
+void Simulation::readCor(std::ifstream &file) {
+    istringstream line = nextLine(file);
+    line>>nbCor;
+    for(int i=0; i<nbCor; i++){
+        line = nextLine(file);
+        S2d pos;
+        int age, id, statut, dir, dev, nbSeg;
+        line>>pos.x>>pos.y>>age>>id>>statut>>dir>>dev>>nbSeg;
+        vector<Segment> segs;
+        for(int k=0;k<nbSeg;k++){
+            line = nextLine(file);
+            double angle;
+            double length;
+            line>>angle>>length;
+            if(k==0){
+                segs.emplace_back(pos,angle,length);
+            }else{
+                S2d BasePoint = segs[k-1].getSecPoint();
+                segs.emplace_back(BasePoint,angle,length);
+            }
+        }
+        cors.emplace_back(pos,age,id,nbSeg,segs);
+    }
+}
+
+void Simulation::readSca(std::ifstream &file) {
+    istringstream line = nextLine(file);
+    line>>nbSca;
+    for(int i=0; i<nbSca; i++){
+        line = nextLine(file);
+        S2d pos;
+        int age;
+        line>>pos.x>>pos.y>>age;
+        algs.emplace_back(pos,age);
+    }
+}
+
+istringstream nextLine(ifstream& file){
+    string line;
+    do{
+        getline(file >> ws,line);
+    }while(line[0]=='#');
+    istringstream lineStream(line);
+    return lineStream;
+}
+
+
+
+/*
 void Simulation::readFile(char* fileName){
     string line;
     ifstream file(fileName);
@@ -29,6 +99,8 @@ void Simulation::readFile(char* fileName){
         readLine(line);
     }
 }
+
+
 void Simulation::readLine(string& line){
     istringstream lineStream(line);
 
@@ -68,15 +140,6 @@ void Simulation::readLine(string& line){
             break;
     }
 }
+*/
 
-Alg readAlg(istringstream& lineStream){
-    S2d pos;
-    int age;
-    lineStream >> pos.x >> pos.y >> age;
-    Alg anAlg(pos,age);
-    return anAlg;
-}
 
-Cor readCor(istringstream& lineStream, bool isASeg = false){
-
-}

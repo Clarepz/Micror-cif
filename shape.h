@@ -8,9 +8,10 @@ constexpr double epsil_zero(0.5) ;
 
 struct S2d {double x=0.; double y=0.;};
 
-class Segment
-{
+class Segment{
 public:
+    Segment(S2d coor_,double angle_, double longueur_);//constructor
+    S2d getSecPoint();
     double dAngle (Segment seg1, Segment seg2);
     bool suppCommun(Segment seg1, Segment seg2, bool sim=true);//superposition de 2 segments ayant un point commun
     bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants

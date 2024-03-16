@@ -14,9 +14,18 @@ Alg::Alg(S2d position, int age) {
     domainCheck(position);
     position_=position;
     ageCheck(age);
-
     age_=age;
-    std::cout<<position_.x<<position_.y<<std::endl;
+    //std::cout<<position_.x<<position_.y<<age<<std::endl;
+}
+
+Cor::Cor(S2d position, int age, int id, int nbseg, const std::vector<Segment>& segs) {
+    domainCheck(position);
+    position_=position;
+    ageCheck(age);
+    age_=age;
+    id_=id;
+    nbSeg_=nbseg;
+    segments_=segs;
 }
 
 

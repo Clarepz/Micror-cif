@@ -24,6 +24,9 @@ private:
     vector<Sca> scas;
 
     void readFile(char* fileName);
-    void readLine(string& line);
+    //void readLine(string& line);
+    void readAlg(ifstream& file);
+    void readCor(ifstream& file);
+    void readSca(ifstream& file);
 };
 #endif //MICRORECIF_SIMULATION_H
