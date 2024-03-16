@@ -14,11 +14,9 @@
 istringstream nextLine(ifstream& file);
 
 
-Simulation::Simulation(char * inputFile) {
+Simulation::Simulation(char * inputFile): nbSca(0){
     std::cout<< inputFile<< std::endl;
     readFile(inputFile);
-    nbSim = 0 ;
-
 }
 
 void Simulation::readFile(char* fileName){
@@ -78,68 +76,11 @@ void Simulation::readSca(std::ifstream &file) {
     }
 }
 
-istringstream nextLine(ifstream& file){
+istringstream nextLine(ifstream& file) {
     string line;
-    do{
-        getline(file >> ws,line);
-    }while(line[0]=='#');
+    do {
+        getline(file >> ws, line);
+    } while (line[0] == '#');
     istringstream lineStream(line);
     return lineStream;
 }
-
-
-
-/*
-void Simulation::readFile(char* fileName){
-    string line;
-    ifstream file(fileName);
-    if(file.fail()) exit(1);
-    while(getline(file >> ws,line)){
-        if(line[0]=='#') continue;
-        readLine(line);
-    }
-}
-
-
-void Simulation::readLine(string& line){
-    istringstream lineStream(line);
-
-    enum ReadStatus{NBALG,ALGS,NBCOR,COR,SEG,NBSCA,SCAS};
-
-    static ReadStatus state(NBALG); //initial state
-    static int i(0);
-    //std::cout<<line<<std::endl;
-
-    switch (state) {
-        case NBALG:
-            lineStream>>nbAlg;
-            state = ALGS;
-            break;
-        case ALGS:
-            if(i < nbAlg ){
-                algs.push_back(readAlg(lineStream));
-                i++;
-            }else{
-                i = 0;
-                state=NBCOR;
-            }
-            break;
-        case NBCOR:
-            lineStream>>nbCor;
-            state = ALGS;
-            break;
-        case COR:
-            if(i < nbCor ){
-                readCor();
-                i++;
-                state = SEG;
-            }else{
-                i = 0;
-                state=NBCOR;
-            }
-            break;
-    }
-}
-*/
-
-

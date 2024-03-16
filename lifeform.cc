@@ -7,7 +7,7 @@
 #include "lifeform.h"
 #include "constantes.h"
 
-bool domainCheck(S2d center);
+bool domainCheck(S2d center, double margin=1);
 bool ageCheck(int age);
 
 Alg::Alg(S2d position, int age) {
@@ -26,8 +26,16 @@ Cor::Cor(S2d position, int age, int id, int nbseg, const std::vector<Segment>& s
     id_=id;
 
     for(int i = 1; i < segs.size();i++){
-        if(suppCommun(segs[i],segs[i-1]),false){
-            message::segment_superposition(id_,i-1,i);
+        if(suppCommun(segs[i],segs[i-1],false)){
+            std::cout << message::segment_superposition(id_,i-1,i);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    for(auto seg:segs){
+        S2d point = seg.getSecPoint();
+        if(!domainCheck(point,epsil_zero)){
+            std::cout << message::lifeform_computed_outside(id_,point.x,point.y);
             exit(EXIT_FAILURE);
         }
     }
@@ -52,12 +60,15 @@ Sca::Sca(S2d position, int age, int radius, int targetId) {
 }
 
 
-bool domainCheck(S2d center){
-    if (center.x<max-1 and center.y<max-1 and center.x>1 and center.y>1){
+bool domainCheck(S2d center,double m){
+    if (center.x<max-m and center.y<max-m and center.x>m and center.y>m){
         return true;
     }else{
-        std::cout << message::lifeform_center_outside(center.x,center.y);
-        exit(EXIT_FAILURE);
+        if(m==1) {
+            std::cout << message::lifeform_center_outside(center.x, center.y);
+            exit(EXIT_FAILURE);
+        }
+        return false;
     }
 }
 
