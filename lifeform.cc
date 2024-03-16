@@ -24,8 +24,31 @@ Cor::Cor(S2d position, int age, int id, int nbseg, const std::vector<Segment>& s
     ageCheck(age);
     age_=age;
     id_=id;
+
+    for(int i = 1; i < segs.size();i++){
+        if(suppCommun(segs[i],segs[i-1]),false){
+            message::segment_superposition(id_,i-1,i);
+            exit(EXIT_FAILURE);
+        }
+    }
+
     nbSeg_=nbseg;
     segments_=segs;
+}
+
+Sca::Sca(S2d position, int age, int radius, int targetId) {
+    domainCheck(position);
+    position_=position;
+    ageCheck(age);
+    age_=age;
+
+    if(radius>r_sca and radius<r_sca_repro){
+        radius_ = radius;
+    }else{
+        std::cout << message::scavenger_radius_outside(radius);
+        exit(EXIT_FAILURE);
+    }
+    targetId_=targetId;
 }
 
 

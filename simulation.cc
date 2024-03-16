@@ -72,9 +72,9 @@ void Simulation::readSca(std::ifstream &file) {
     for(int i=0; i<nbSca; i++){
         line = nextLine(file);
         S2d pos;
-        int age;
-        line>>pos.x>>pos.y>>age;
-        algs.emplace_back(pos,age);
+        int age,radius,statut,targetId;
+        line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
+        scas.emplace_back(pos,age,radius,targetId);
     }
 }
 

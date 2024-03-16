@@ -12,13 +12,15 @@ class Segment{
 public:
     Segment(S2d coor_,double angle_, double longueur_);//constructor
     S2d getSecPoint();
-    double dAngle (Segment seg1, Segment seg2);
-    bool suppCommun(Segment seg1, Segment seg2, bool sim=true);//superposition de 2 segments ayant un point commun
-    bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
 private:
     S2d coor;
     double angle;
     double longueur;
     S2d secPoint;
 };
+//j' ai mis en fonction
+double deltaAngle(Segment seg1, Segment seg2);
+bool suppCommun(Segment seg1, Segment seg2, bool sim=true);//superposition de 2 segments ayant un point commun
+bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
+
 #endif //MICRORECIF_SHAPE_H
