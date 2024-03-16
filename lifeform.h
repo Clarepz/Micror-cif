@@ -8,7 +8,6 @@
 #include "shape.h"
 #include <vector>
 
-using namespace std;
 
 class Alg{
 public:
@@ -22,10 +21,11 @@ class Cor{
 public:
     Cor(); //constructor
 private:
-    unsigned int id;
     S2d position_;
     unsigned int age_;
-    vector<Segment> segments_;
+    unsigned int id_;
+    unsigned int nbSeg_;
+    std::vector<Segment> segments_;
 };
 
 class Sca{
@@ -36,5 +36,7 @@ private:
     unsigned int age_;
     unsigned int radius_;
 };
+
+
 
 #endif //MICRORECIF_LIFEFORM_H

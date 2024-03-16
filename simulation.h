@@ -14,9 +14,11 @@ public:
     Simulation(char* inputFile); //constructeur lecture fichier
 private:
     int nbSim;
+
     int nbAlg;
-    int nbSca;
     int nbCor;
+    int nbSca;
+
     vector<Alg> algs;
     vector<Cor> cors;
     vector<Sca> scas;

@@ -9,11 +9,14 @@
 #include "simulation.h"
 #include "message.h"
 
+Alg readAlg(istringstream& lineStream);
+Cor readCor(istringstream& lineStream, bool isASeg = false);
 
 Simulation::Simulation(char * inputFile) {
     std::cout<< inputFile<< std::endl;
     readFile(inputFile);
     nbSim = 0 ;
+
 }
 
 
@@ -29,28 +32,51 @@ void Simulation::readFile(char* fileName){
 void Simulation::readLine(string& line){
     istringstream lineStream(line);
 
-    enum ReadStatus{NBALG,ALGS,NBCOR,CORS,NBSCA,SCAS};
+    enum ReadStatus{NBALG,ALGS,NBCOR,COR,SEG,NBSCA,SCAS};
 
     static ReadStatus state(NBALG); //initial state
+    static int i(0);
     //std::cout<<line<<std::endl;
 
     switch (state) {
         case NBALG:
             lineStream>>nbAlg;
-            if(nbAlg == 0) state = NBCOR;
-            else state = ALGS;
+            state = ALGS;
             break;
         case ALGS:
-            for(int i=0; i < nbAlg ; i++){
-                S2d pos;
-                int age;
-                lineStream >> pos.x >> pos.y >> age;
-                Alg anAlg(pos,age);
-                algs.push_back(anAlg);
+            if(i < nbAlg ){
+                algs.push_back(readAlg(lineStream));
+                i++;
+            }else{
+                i = 0;
+                state=NBCOR;
             }
-            state=NBCOR;
             break;
         case NBCOR:
-            exit(0);
+            lineStream>>nbCor;
+            state = ALGS;
+            break;
+        case COR:
+            if(i < nbCor ){
+                readCor();
+                i++;
+                state = SEG;
+            }else{
+                i = 0;
+                state=NBCOR;
+            }
+            break;
     }
+}
+
+Alg readAlg(istringstream& lineStream){
+    S2d pos;
+    int age;
+    lineStream >> pos.x >> pos.y >> age;
+    Alg anAlg(pos,age);
+    return anAlg;
+}
+
+Cor readCor(istringstream& lineStream, bool isASeg = false){
+
 }

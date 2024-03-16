@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_Microrecif: phony || CMakeFiles/Microrec
 
 build CMakeFiles/Microrecif.dir/lifeform.cc.o: CXX_COMPILER__Microrecif_unscanned_Debug /Users/clarence/Prog/Microrecif/lifeform.cc || cmake_object_order_depends_target_Microrecif
   DEP_FILE = CMakeFiles/Microrecif.dir/lifeform.cc.o.d
-  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
   INCLUDES = -I/Users/clarence/Prog/Microrecif/.
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   OBJECT_FILE_DIR = CMakeFiles/Microrecif.dir
@@ -60,7 +60,7 @@ build CMakeFiles/Microrecif.dir/lifeform.cc.o: CXX_COMPILER__Microrecif_unscanne
 
 build CMakeFiles/Microrecif.dir/message.cc.o: CXX_COMPILER__Microrecif_unscanned_Debug /Users/clarence/Prog/Microrecif/message.cc || cmake_object_order_depends_target_Microrecif
   DEP_FILE = CMakeFiles/Microrecif.dir/message.cc.o.d
-  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
   INCLUDES = -I/Users/clarence/Prog/Microrecif/.
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   OBJECT_FILE_DIR = CMakeFiles/Microrecif.dir
@@ -69,7 +69,7 @@ build CMakeFiles/Microrecif.dir/message.cc.o: CXX_COMPILER__Microrecif_unscanned
 
 build CMakeFiles/Microrecif.dir/project.cc.o: CXX_COMPILER__Microrecif_unscanned_Debug /Users/clarence/Prog/Microrecif/project.cc || cmake_object_order_depends_target_Microrecif
   DEP_FILE = CMakeFiles/Microrecif.dir/project.cc.o.d
-  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
   INCLUDES = -I/Users/clarence/Prog/Microrecif/.
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   OBJECT_FILE_DIR = CMakeFiles/Microrecif.dir
@@ -78,7 +78,7 @@ build CMakeFiles/Microrecif.dir/project.cc.o: CXX_COMPILER__Microrecif_unscanned
 
 build CMakeFiles/Microrecif.dir/shape.cc.o: CXX_COMPILER__Microrecif_unscanned_Debug /Users/clarence/Prog/Microrecif/shape.cc || cmake_object_order_depends_target_Microrecif
   DEP_FILE = CMakeFiles/Microrecif.dir/shape.cc.o.d
-  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
   INCLUDES = -I/Users/clarence/Prog/Microrecif/.
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   OBJECT_FILE_DIR = CMakeFiles/Microrecif.dir
@@ -87,7 +87,7 @@ build CMakeFiles/Microrecif.dir/shape.cc.o: CXX_COMPILER__Microrecif_unscanned_D
 
 build CMakeFiles/Microrecif.dir/simulation.cc.o: CXX_COMPILER__Microrecif_unscanned_Debug /Users/clarence/Prog/Microrecif/simulation.cc || cmake_object_order_depends_target_Microrecif
   DEP_FILE = CMakeFiles/Microrecif.dir/simulation.cc.o.d
-  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -fcolor-diagnostics
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2 -fcolor-diagnostics
   INCLUDES = -I/Users/clarence/Prog/Microrecif/.
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   OBJECT_FILE_DIR = CMakeFiles/Microrecif.dir
@@ -103,7 +103,7 @@ build CMakeFiles/Microrecif.dir/simulation.cc.o: CXX_COMPILER__Microrecif_unscan
 # Link the executable Microrecif
 
 build Microrecif: CXX_EXECUTABLE_LINKER__Microrecif_Debug CMakeFiles/Microrecif.dir/lifeform.cc.o CMakeFiles/Microrecif.dir/message.cc.o CMakeFiles/Microrecif.dir/project.cc.o CMakeFiles/Microrecif.dir/shape.cc.o CMakeFiles/Microrecif.dir/simulation.cc.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.2
   OBJECT_DIR = CMakeFiles/Microrecif.dir
   POST_BUILD = :
   PRE_LINK = :
