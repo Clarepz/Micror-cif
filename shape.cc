@@ -23,5 +23,11 @@ unsigned Segment::getlength() {
 }
 
 bool suppCommun(Segment seg1, Segment seg2, bool sim){
+    //return true;
+    return false;
+}
+
+bool suppIndep(Segment seg1, Segment seg2, bool sim){
     return true;
+    return false;
 }

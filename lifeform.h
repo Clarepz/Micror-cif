@@ -21,12 +21,15 @@ class Cor{
 public:
     Cor(S2d position, int age, unsigned id, int nbseg,const std::vector<Segment>& segs);
     unsigned getId() const;
+    bool collisionCheck(const Cor& otherCor)const;
 private:
     S2d position_;
     unsigned age_;
     unsigned id_;
     unsigned nbSeg_;
     std::vector<Segment> segments_;
+
+    const std::vector<Segment>& getSegments()const;
 };
 
 class Sca{

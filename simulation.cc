@@ -13,15 +13,12 @@
 
 istringstream nextLine(ifstream& file);
 bool corIdUnicityCheck(const vector<Cor>& cors);
-bool collisionCheck(const vector<Cor>& cors);
-bool collisionCheck(const vector<Segment>& segs1,const vector<Segment>& segs2);
-
 
 Simulation::Simulation(char * inputFile): nbSca(0){
     std::cout<< inputFile<< std::endl;
     readFile(inputFile);
     corIdUnicityCheck(cors);
-
+    corCollisionCheck();
 }
 
 void Simulation::readFile(char* fileName){
@@ -103,14 +100,10 @@ bool corIdUnicityCheck(const vector<Cor>& cors){
     return true;
 }
 
-bool collisionCheck(const vector<Cor>& cors){
-    for(int i(0);i<cors.size();i++){
+bool Simulation::corCollisionCheck() const {
+    for(int i(0);i<nbCor;i++){
         for(int k = 0; k<= i ;k++){
-            if(cors[k].getId(),cors[i].getId()){
-                std::cout << message::lifeform_duplicated_id(cors[i].getId());
-                exit(EXIT_FAILURE);
-                return false;
-            }
+            cors[i].collisionCheck(cors[k]);
         }
     }
 }
