@@ -5,7 +5,7 @@
 #include "shape.h"
 #include <cmath>
 
-Segment::Segment(S2d coor_, double angle_, double longueur_):
+Segment::Segment(S2d coor_, double angle_, unsigned longueur_):
     coor(coor_),
     angle(angle_),
     longueur(longueur_){
@@ -16,6 +16,10 @@ Segment::Segment(S2d coor_, double angle_, double longueur_):
 //tester l'erreur : L’angle des segments est compris dans [-π, π]
 S2d Segment::getSecPoint() {
     return secPoint;
+}
+
+unsigned Segment::getlength() {
+    return longueur;
 }
 
 bool suppCommun(Segment seg1, Segment seg2, bool sim){

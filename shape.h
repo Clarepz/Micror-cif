@@ -10,12 +10,13 @@ struct S2d {double x=0.; double y=0.;};
 
 class Segment{
 public:
-    Segment(S2d coor_,double angle_, double longueur_);//constructor
+    Segment(S2d coor_,double angle_, unsigned longueur_);//constructor
     S2d getSecPoint();
+    unsigned getlength();
 private:
     S2d coor;
     double angle;
-    double longueur;
+    unsigned longueur;
     S2d secPoint;
 };
 //j' ai mis en fonction

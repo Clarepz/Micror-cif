@@ -9,6 +9,8 @@
 
 bool domainCheck(S2d center, double margin=1);
 bool ageCheck(int age);
+bool superposCheck(const std::vector<Segment>& segs,unsigned id);
+bool segDomainAndLengthCheck(const std::vector<Segment>& segs,unsigned id);
 
 Alg::Alg(S2d position, int age) {
     domainCheck(position);
@@ -18,29 +20,15 @@ Alg::Alg(S2d position, int age) {
     //std::cout<<position_.x<<position_.y<<age<<std::endl;
 }
 
-Cor::Cor(S2d position, int age, int id, int nbseg, const std::vector<Segment>& segs) {
+Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segment>& segs) {
     domainCheck(position);
     position_=position;
     ageCheck(age);
     age_=age;
     id_=id;
-
-    for(int i = 1; i < segs.size();i++){
-        if(suppCommun(segs[i],segs[i-1],false)){
-            std::cout << message::segment_superposition(id_,i-1,i);
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    for(auto seg:segs){
-        S2d point = seg.getSecPoint();
-        if(!domainCheck(point,epsil_zero)){
-            std::cout << message::lifeform_computed_outside(id_,point.x,point.y);
-            exit(EXIT_FAILURE);
-        }
-    }
-
     nbSeg_=nbseg;
+    superposCheck(segs,id_);
+    segDomainAndLengthCheck(segs,id_);
     segments_=segs;
 }
 
@@ -80,3 +68,37 @@ bool ageCheck(int age){
         exit(EXIT_FAILURE);
     }
 }
+
+bool superposCheck(const std::vector<Segment>& segs,unsigned id){
+    for(int i = 1; i < segs.size();i++){
+        if(suppCommun(segs[i],segs[i-1],false)){
+            std::cout << message::segment_superposition(id,i-1,i);
+            exit(EXIT_FAILURE);
+            return false;
+        }
+    }
+    return true;
+}
+
+bool segDomainAndLengthCheck(const std::vector<Segment>& segs,unsigned id){
+    for(auto seg:segs){
+        S2d point = seg.getSecPoint();
+        if(!domainCheck(point,epsil_zero)){
+            std::cout << message::lifeform_computed_outside(id,point.x,point.y);
+            exit(EXIT_FAILURE);
+            return false;
+        }
+        unsigned length = seg.getlength();
+        if(!(length >= l_repro-l_seg_interne and length < l_repro)){
+            std::cout << message::segment_length_outside(id,length);
+            exit(EXIT_FAILURE);
+            return false;
+        }
+    }
+    return true;
+}
+
+unsigned Cor:: getId() const{
+    return id_;
+}
+

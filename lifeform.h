@@ -19,7 +19,8 @@ private:
 
 class Cor{
 public:
-    Cor(S2d position, int age, int id, int nbseg,const std::vector<Segment>& segs);
+    Cor(S2d position, int age, unsigned id, int nbseg,const std::vector<Segment>& segs);
+    unsigned getId() const;
 private:
     S2d position_;
     unsigned age_;
