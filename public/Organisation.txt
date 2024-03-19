@@ -12,3 +12,9 @@ Proposition : Commencer par faire des classes pour chaques entitées (Je peux le
               au module lifeform qui detecterais les erreurs et les transmetterais à message
 
 Question : ou mettre la fonction qui trensfert les données du fichier vers les classes
+
+
+reste a faire:
+shape.cc
+L’angle des segments est compris dans [-π, π]
+L’existence d’un corail identifié avec l’identificateur mémorisé par un scavenger dans l’état MANGE
