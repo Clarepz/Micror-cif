@@ -13,10 +13,10 @@ enum fail {noFail, negLenght, badAngle};
 class Segment{
 public:
     Segment(S2d coor_,double angle_, unsigned longueur_);//constructor
-    S2d getSecPoint();
-    unsigned getlength();
-    double getAngle();
-    fail getFail(Segment seg);
+    S2d getSecPoint() const;
+    unsigned getlength() const;
+    double getAngle() const;
+    fail getFail(Segment seg) const;
 private:
     S2d coor;
     double angle;
@@ -25,7 +25,7 @@ private:
 };
 //j' ai mis en fonction
 double deltaAngle(Segment seg1, Segment seg2);
-bool suppCommun(Segment seg1, Segment seg2, bool sim=true);//superposition de 2 segments ayant un point commun
+bool suppCommun(Segment seg1, Segment seg2, bool sensTrigo=true, bool sim=true);//superposition de 2 segments ayant un point commun
 bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
 
 #endif //MICRORECIF_SHAPE_H
