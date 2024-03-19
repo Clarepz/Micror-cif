@@ -8,11 +8,15 @@ constexpr double epsil_zero(0.5) ;
 
 struct S2d {double x=0.; double y=0.;};
 
+enum fail {noFail, negLenght, badAngle};
+
 class Segment{
 public:
     Segment(S2d coor_,double angle_, unsigned longueur_);//constructor
     S2d getSecPoint();
     unsigned getlength();
+    double getAngle();
+    fail getFail(Segment seg);
 private:
     S2d coor;
     double angle;
