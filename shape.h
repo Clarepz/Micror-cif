@@ -4,6 +4,7 @@
 
 #ifndef MICRORECIF_SHAPE_H
 #define MICRORECIF_SHAPE_H
+#include "message.h"
 constexpr double epsil_zero(0.5) ;
 
 struct S2d {double x=0.; double y=0.;};
@@ -14,6 +15,7 @@ public:
     double dAngle (Segment seg1, Segment seg2);
     bool suppCommun(Segment seg1, Segment seg2, bool sim=true);//superposition de 2 segments ayant un point commun
     bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
+    Segment(double x, double y, double angle, double longeur);
 private:
     S2d coor;
     double angle;

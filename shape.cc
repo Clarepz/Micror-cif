@@ -4,4 +4,7 @@
 // faire type def
 #include "shape.h"
 
-
+Segment::Segment(double x, double y, double angle, double longeur)
+{
+    :
+}
