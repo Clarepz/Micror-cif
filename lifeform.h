@@ -6,6 +6,7 @@
 #define MICRORECIF_LIFEFORM_H
 
 #include "shape.h"
+#include "constantes.h"
 #include <vector>
 
 
@@ -34,11 +35,15 @@ private:
 
 class Sca{
 public:
-    Sca(S2d position, int age, int radius, int targetId); //constructor
+    Sca(S2d position, int age, int radius, int status, int targetId); //constructor
+
+    unsigned getTarget() const;
+    Statut_sca getStatus() const;
 private:
     S2d position_;
     unsigned age_;
     unsigned radius_;
+    Statut_sca status_;
     unsigned targetId_;
 
 };

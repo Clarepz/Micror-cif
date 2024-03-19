@@ -19,6 +19,7 @@ Simulation::Simulation(char * inputFile): nbSca(0){
     readFile(inputFile);
     corIdUnicityCheck(cors);
     corCollisionCheck();
+    scaTargetCheck();
 }
 
 void Simulation::readFile(char* fileName){
@@ -74,7 +75,7 @@ void Simulation::readSca(std::ifstream &file) {
         S2d pos;
         int age,radius,statut,targetId;
         line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
-        scas.emplace_back(pos,age,radius,targetId);
+        scas.emplace_back(pos,age,radius,statut,targetId);
     }
 }
 
@@ -93,7 +94,7 @@ bool corIdUnicityCheck(const vector<Cor>& cors){
             if(cors[k].getId()==cors[i].getId()){
                 std::cout << message::lifeform_duplicated_id(cors[i].getId());
                 exit(EXIT_FAILURE);
-                return false;
+                //return false;
             }
         }
     }
@@ -104,6 +105,19 @@ bool Simulation::corCollisionCheck() const {
     for(int i(0);i<nbCor;i++){
         for(int k = 0; k<= i ;k++){
             cors[i].collisionCheck(cors[k]);
+        }
+    }
+}
+
+bool Simulation::scaTargetCheck() const {
+    for(auto sca : scas){
+        int target = sca.getTarget();
+        if(sca.getStatus()==MANGE){
+            for(auto cor : cors){
+                if(cor.getId()==target) return true;
+            }
+            std::cout << message::lifeform_invalid_id(target);
+            exit(EXIT_FAILURE);
         }
     }
 }

@@ -11,6 +11,7 @@ bool domainCheck(S2d center, double margin=1);
 bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segDomainAndLengthCheck(const std::vector<Segment>& segs,unsigned id);
+bool scaRadiusCheck(int radius);
 
 Alg::Alg(S2d position, int age) {
     domainCheck(position);
@@ -32,18 +33,14 @@ Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segmen
     segments_=segs;
 }
 
-Sca::Sca(S2d position, int age, int radius, int targetId) {
+Sca::Sca(S2d position, int age, int radius,int status, int targetId) {
     domainCheck(position);
     position_=position;
     ageCheck(age);
     age_=age;
-
-    if(radius>r_sca and radius<r_sca_repro){
-        radius_ = radius;
-    }else{
-        std::cout << message::scavenger_radius_outside(radius);
-        exit(EXIT_FAILURE);
-    }
+    scaRadiusCheck(radius);
+    radius_ = radius;
+    status_ = static_cast<Statut_sca>(status);
     targetId_=targetId;
 }
 
@@ -125,3 +122,20 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
     return true;
 }
 
+
+bool scaRadiusCheck(int radius){
+    if(radius>r_sca and radius<r_sca_repro){
+
+    }else{
+        std::cout << message::scavenger_radius_outside(radius);
+        exit(EXIT_FAILURE);
+    }
+}
+
+unsigned int Sca::getTarget() const {
+    return targetId_;
+}
+
+Statut_sca Sca::getStatus() const {
+    return status_;
+}
