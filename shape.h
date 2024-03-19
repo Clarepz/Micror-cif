@@ -9,6 +9,7 @@ constexpr double epsil_zero(0.5) ;
 struct S2d {double x=0.; double y=0.;};
 
 enum fail {noFail, negLenght, badAngle};
+enum posSeg {colineaire, antiTrigo, trigo};
 
 class Segment{
 public:
