@@ -47,7 +47,7 @@ bool suppCommun(Segment seg1, Segment seg2, bool sim)
     {
         //if (deltaAngle(seg1, seg2) != 0) return true;
         //return false;
-        //test
+        //test1
     }
 
     else
