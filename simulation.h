@@ -29,6 +29,7 @@ private:
     void readCor(ifstream& file);
     void readSca(ifstream& file);
 
+    bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
 };
