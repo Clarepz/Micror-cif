@@ -70,9 +70,9 @@ bool suppIndep(Segment seg1, Segment seg2, bool sim)
 
 bool onSegment(S2d p, S2d q, S2d r)
 {
-    if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&
-        q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))
-        return true;
+    //if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&
+      //  q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))
+        //return true;
 
     return false;
 }
