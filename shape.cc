@@ -4,7 +4,6 @@
 // faire type def
 #include "shape.h"
 #include <cmath>
-#include "constantes.h"
 #include <algorithm>
 
 Segment::Segment(S2d coor_, double angle_, unsigned longueur_):
@@ -16,7 +15,7 @@ Segment::Segment(S2d coor_, double angle_, unsigned longueur_):
     secPoint.y = coor.y+longueur* sin(angle);
 }
 
-fail Segment::getFail (Segment seg) const
+fail Segment::getFail () const
 {
     if(longueur<=0) return(NEGLENGHT);
 
@@ -43,14 +42,12 @@ double deltaAngle(Segment seg1, Segment seg2)
     return(seg1.getAngle()-seg2.getAngle()+M_PI);
 }
 
-bool suppCommun(Segment seg1, Segment seg2,bool sensTrigo, bool sim)
+bool suppCommun(Segment seg1, Segment seg2, Segment newSeg=seg2, bool sim)
 {
-    double delta= deltaAngle(seg1,seg2);
-    if (delta>=-delta_rot*sim and delta<=delta_rot*sim)
-    {
-        //faire le mode simulation
-        return true;
-    }
+    double delta1 = deltaAngle(seg1,seg2);
+    double delta2 = deltaAngle(seg1,newSeg);
+    if (delta1==delta2==0)
+
     else return false;
 }
 
