@@ -9,17 +9,15 @@
 #include "simulation.h"
 #include "message.h"
 
-
-
 istringstream nextLine(ifstream& file);
-bool corIdUnicityCheck(const vector<Cor>& cors);
 
 Simulation::Simulation(char * inputFile): nbSca(0){
     std::cout<< inputFile<< std::endl;
     readFile(inputFile);
-    corIdUnicityCheck(cors);
+    corIdUnicityCheck();
     corCollisionCheck();
     scaTargetCheck();
+
 }
 
 void Simulation::readFile(char* fileName){
@@ -88,7 +86,7 @@ istringstream nextLine(ifstream& file) {
     return lineStream;
 }
 
-bool corIdUnicityCheck(const vector<Cor>& cors){
+bool Simulation::corIdUnicityCheck() const {
     for(int i = 0; i< cors.size(); i++){
         for(int k = 0; k< i ;k++){
             if(cors[k].getId()==cors[i].getId()){

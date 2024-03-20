@@ -10,7 +10,7 @@
 bool domainCheck(S2d center, double margin=1);
 bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
-bool segDomainAndLengthCheck(const std::vector<Segment>& segs,unsigned id);
+bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
 
 Alg::Alg(S2d position, int age) {
@@ -29,7 +29,7 @@ Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segmen
     id_=id;
     nbSeg_=nbseg;
     superposCheck(segs,id_);
-    segDomainAndLengthCheck(segs,id_);
+    segCheck(segs,id_);
     segments_=segs;
 }
 
@@ -77,19 +77,23 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id){
     return true;
 }
 
-bool segDomainAndLengthCheck(const std::vector<Segment>& segs,unsigned id){
+bool segCheck(const std::vector<Segment>& segs,unsigned id){
     for(auto seg:segs){
         S2d point = seg.getSecPoint();
         if(!domainCheck(point,epsil_zero)){
             std::cout << message::lifeform_computed_outside(id,point.x,point.y);
             exit(EXIT_FAILURE);
-            return false;
+            //return false;
         }
         unsigned length = seg.getlength();
         if(!(length >= l_repro-l_seg_interne and length < l_repro)){
             std::cout << message::segment_length_outside(id,length);
             exit(EXIT_FAILURE);
-            return false;
+            //return false;
+        }
+        if(seg.getFail()==BADANGLE){
+            std::cout << message::segment_angle_outside(id, seg.getAngle());
+            exit(EXIT_FAILURE);
         }
     }
     return true;
