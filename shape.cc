@@ -6,6 +6,8 @@
 #include <cmath>
 #include <algorithm>
 
+int signe(double val);
+
 Segment::Segment(S2d coor_, double angle_, unsigned longueur_):
     coor(coor_),
     angle(angle_),
@@ -42,13 +44,22 @@ double deltaAngle(Segment seg1, Segment seg2)
     return(seg1.getAngle()-seg2.getAngle()+M_PI);
 }
 
-bool suppCommun(Segment seg1, Segment seg2, Segment newSeg=seg2, bool sim)
+bool suppCommun(Segment seg1, Segment seg2, Segment newSeg)
 {
     double delta1 = deltaAngle(seg1,seg2);
     double delta2 = deltaAngle(seg1,newSeg);
-    if (delta1==delta2==0)
-
-    else return false;
+    if (delta1==delta2)
+        return(delta1==0);
+    else
+    {
+        bool bornInf=seg2.getAngle()<=seg1.getAngle()+(M_PI/6);
+        bool bornSup=seg2.getAngle()>=seg1.getAngle()-(M_PI/6);
+        if(bornInf and bornSup)
+        {
+            return(signe(delta1) != signe(delta2));
+        }
+        return false;
+    }
 }
 
 bool suppIndep(Segment seg1, Segment seg2, bool sim)
@@ -57,7 +68,14 @@ bool suppIndep(Segment seg1, Segment seg2, bool sim)
     return false;
 }
 
+int signe(double val)
+{
+    if(val>0) return 1;
 
+    if(val<0) return -1;
+
+    if(val==0) return 0;
+}
 
 
 
