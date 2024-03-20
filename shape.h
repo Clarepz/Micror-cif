@@ -14,13 +14,14 @@ enum posSeg {colineaire, antiTrigo, trigo};
 class Segment{
 public:
     Segment(S2d coor_,double angle_, unsigned longueur_);//constructor
+    S2d getPoint() const;
     S2d getSecPoint() const;
-    unsigned getlength() const;
+    double getlength() const;
     double getAngle() const;
     fail getFail() const;
     Segment addAngle(double angle) const;
 private:
-    S2d coor;
+    S2d point;
     double angle;
     double longueur;
     S2d secPoint;
