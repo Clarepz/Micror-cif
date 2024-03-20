@@ -44,7 +44,7 @@ double deltaAngle(Segment seg1, Segment seg2)
     return(seg1.getAngle()-seg2.getAngle()+M_PI);
 }
 
-bool suppCommun(Segment seg1, Segment seg2, Segment newSeg)
+bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot=0)
 {
     double delta1 = deltaAngle(seg1,seg2);
     double delta2 = deltaAngle(seg1,newSeg);
@@ -52,8 +52,8 @@ bool suppCommun(Segment seg1, Segment seg2, Segment newSeg)
         return(delta1==0);
     else
     {
-        bool bornInf=seg2.getAngle()<=seg1.getAngle()+(M_PI/6);
-        bool bornSup=seg2.getAngle()>=seg1.getAngle()-(M_PI/6);
+        bool bornInf=seg2.getAngle()<=seg1.getAngle()+(delta_rot);
+        bool bornSup=seg2.getAngle()>=seg1.getAngle()-(delta_rot);
         if(bornInf and bornSup)
         {
             return(signe(delta1) != signe(delta2));
