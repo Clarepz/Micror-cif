@@ -30,5 +30,6 @@ private:
     void readSca(ifstream& file);
 
     bool corCollisionCheck() const;
+    bool scaTargetCheck() const;
 };
 #endif //MICRORECIF_SIMULATION_H
