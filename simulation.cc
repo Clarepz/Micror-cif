@@ -9,10 +9,10 @@
 #include "simulation.h"
 #include "message.h"
 
-istringstream nextLine(ifstream& file);
+
 
 Simulation::Simulation(char * inputFile): nbSca(0){
-    std::cout<< inputFile<< std::endl;
+    //std::cout<< inputFile<< std::endl;
     readFile(inputFile);
     corIdUnicityCheck();
     corCollisionCheck();
@@ -34,11 +34,7 @@ void Simulation::readAlg(ifstream& file){
     line>>nbAlg;
     for(int i=0; i<nbAlg; i++){
         line = nextLine(file);
-
-        S2d pos;
-        int age;
-        line>>pos.x>>pos.y>>age;
-        algs.emplace_back(pos,age);
+        algs.emplace_back(line);
     }
 }
 
@@ -79,14 +75,7 @@ void Simulation::readSca(std::ifstream &file) {
     }
 }
 
-istringstream nextLine(ifstream& file) {
-    string line;
-    do {
-        getline(file >> ws, line);
-    } while (line[0] == '#');
-    istringstream lineStream(line);
-    return lineStream;
-}
+
 
 bool Simulation::corIdUnicityCheck() const {
     for(int i = 0; i< cors.size(); i++){

@@ -8,11 +8,12 @@
 #include "shape.h"
 #include "constantes.h"
 #include <vector>
+#include <sstream>
 
 
 class Alg{
 public:
-    Alg(S2d position, int age); //constructor
+    Alg(std::istringstream& line); //constructor
 private:
     S2d position_;
     unsigned age_;
@@ -48,6 +49,7 @@ private:
 
 };
 
+std::istringstream nextLine(std::ifstream& file);
 
 
 #endif //MICRORECIF_LIFEFORM_H

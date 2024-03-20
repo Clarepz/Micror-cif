@@ -6,6 +6,10 @@
 #include "message.h"
 #include "lifeform.h"
 #include "constantes.h"
+#include <fstream>
+#include <sstream>
+
+
 
 bool domainCheck(S2d center, double margin=1);
 bool ageCheck(int age);
@@ -13,11 +17,10 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
 
-Alg::Alg(S2d position, int age) {
-    domainCheck(position);
-    position_=position;
-    ageCheck(age);
-    age_=age;
+Alg::Alg(std::istringstream& line) {
+    line>>position_.x>>position_.y>>age_;
+    domainCheck(position_);
+    ageCheck(age_);
 }
 
 Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segment>& segs) {
@@ -141,4 +144,13 @@ unsigned int Sca::getTarget() const {
 
 Statut_sca Sca::getStatus() const {
     return status_;
+}
+
+std::istringstream nextLine(std::ifstream& file) {
+    std::string line;
+    do {
+        std::getline(file>>std::ws, line);
+    } while (line[0] == '#');
+    std::istringstream lineStream(line);
+    return lineStream;
 }
