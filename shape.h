@@ -22,7 +22,7 @@ public:
 private:
     S2d coor;
     double angle;
-    unsigned longueur;
+    double longueur;
     S2d secPoint;
 };
 

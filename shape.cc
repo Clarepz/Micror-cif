@@ -52,8 +52,8 @@ bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot=0)
         return(delta1==0);
     else
     {
-        bool bornInf=seg2.getAngle()<=seg1.getAngle()+(delta_rot);
-        bool bornSup=seg2.getAngle()>=seg1.getAngle()-(delta_rot);
+        bool bornInf=seg2.getAngle()<=seg1.getAngle()+delta_rot;
+        bool bornSup=seg2.getAngle()>=seg1.getAngle()-delta_rot;
         if(bornInf and bornSup)
         {
             return(signe(delta1) != signe(delta2));
