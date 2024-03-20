@@ -28,7 +28,7 @@ private:
 
 //j' ai mis en fonction
 double deltaAngle(Segment seg1, Segment seg2);
-bool suppCommun(Segment seg1, Segment seg2, Segment newSeg);//superposition de 2 segments ayant un point commun
+bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot=0);//superposition de 2 segments ayant un point commun
 bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
 
 #endif //MICRORECIF_SHAPE_H
