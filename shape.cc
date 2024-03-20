@@ -18,11 +18,11 @@ Segment::Segment(S2d coor_, double angle_, unsigned longueur_):
 
 fail Segment::getFail (Segment seg) const
 {
-    if(longueur<=0) return(negLenght);
+    if(longueur<=0) return(NEGLENGHT);
 
-    if(angle<-M_PI or angle>M_PI) return(badAngle);
+    if(angle<-M_PI or angle>M_PI) return(BADANGLE);
 
-    else return(noFail);
+    else return(NOFAIL);
 }
 
 S2d Segment::getSecPoint() const {
