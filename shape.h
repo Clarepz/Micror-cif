@@ -17,16 +17,17 @@ public:
     S2d getSecPoint() const;
     unsigned getlength() const;
     double getAngle() const;
-    fail getFail(Segment seg) const;
+    fail getFail() const;
 private:
     S2d coor;
     double angle;
     unsigned longueur;
     S2d secPoint;
 };
+
 //j' ai mis en fonction
 double deltaAngle(Segment seg1, Segment seg2);
-bool suppCommun(Segment seg1, Segment seg2, bool sensTrigo=true, bool sim=true);//superposition de 2 segments ayant un point commun
+bool suppCommun(Segment seg1, Segment seg2, Segment newSeg=seg2);//superposition de 2 segments ayant un point commun
 bool suppIndep(Segment seg1, Segment seg2, bool sim=true);//intersection de 2 segments independants
 
 #endif //MICRORECIF_SHAPE_H
