@@ -34,6 +34,7 @@ void Simulation::readAlg(ifstream& file){
     line>>nbAlg;
     for(int i=0; i<nbAlg; i++){
         line = nextLine(file);
+
         S2d pos;
         int age;
         line>>pos.x>>pos.y>>age;

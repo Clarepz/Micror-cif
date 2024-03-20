@@ -18,7 +18,6 @@ Alg::Alg(S2d position, int age) {
     position_=position;
     ageCheck(age);
     age_=age;
-    //std::cout<<position_.x<<position_.y<<age<<std::endl;
 }
 
 Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segment>& segs) {
@@ -68,7 +67,7 @@ bool ageCheck(int age){
 
 bool superposCheck(const std::vector<Segment>& segs,unsigned id){
     for(int i = 1; i < segs.size();i++){
-        if(suppCommun(segs[i],segs[i-1],false)){
+        if(suppCommun(segs[i],segs[i-1],segs[i-1])){
             std::cout << message::segment_superposition(id,i-1,i);
             exit(EXIT_FAILURE);
             return false;
