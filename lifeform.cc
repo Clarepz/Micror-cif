@@ -112,16 +112,15 @@ const std::vector<Segment>& Cor::getSegments()const{
 bool Cor::collisionCheck(const Cor &otherCor) const{
     const std::vector<Segment>& otherSegs = otherCor.getSegments();
     unsigned otherId = otherCor.getId();
-    bool intraCor = id_ == otherId;
     for (int i(0);i<nbSeg_;i++){
         for(int k(0); k<otherSegs.size();k++){
-            if(suppIndep(segments_[i],otherSegs[k],false)){
-                if(!(id_ == otherId and i == k)){ //if not (same cor same segment)
-                    std::cout << message::segment_collision(id_,i,otherId,k);;
+            if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
+                if (suppIndep(segments_[i], otherSegs[k], false)) {
+                    //if not (same cor same segment/consecutif)
+                    std::cout << message::segment_collision(id_, i, otherId, k);;
                     exit(EXIT_FAILURE);
                     return false;
                 }
-
             }
         }
     }
@@ -131,7 +130,7 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
 
 bool scaRadiusCheck(int radius){
     if(radius>r_sca and radius<r_sca_repro){
-
+        return true;
     }else{
         std::cout << message::scavenger_radius_outside(radius);
         exit(EXIT_FAILURE);
