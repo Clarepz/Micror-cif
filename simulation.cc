@@ -17,7 +17,8 @@ Simulation::Simulation(char * inputFile): nbSca(0){
     corIdUnicityCheck();
     corCollisionCheck();
     scaTargetCheck();
-
+    std::cout << message::success();
+    exit(0);
 }
 
 void Simulation::readFile(char* fileName){

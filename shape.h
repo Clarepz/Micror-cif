@@ -18,6 +18,7 @@ public:
     unsigned getlength() const;
     double getAngle() const;
     fail getFail() const;
+    Segment addAngle(double angle) const;
 private:
     S2d coor;
     double angle;
