@@ -45,7 +45,7 @@ double Segment::getAngle() const
 
 double deltaAngle(Segment seg1, Segment seg2)
 {
-    return(seg1.getAngle()-seg2.getAngle()+M_PI);
+    return(M_PI-seg2.getAngle()+seg1.getAngle());
 }
 
 bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot)
@@ -53,7 +53,7 @@ bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot)
     double delta1 = deltaAngle(seg1,seg2);
     double delta2 = deltaAngle(seg1,newSeg);
     if (delta1==delta2)
-        return(seg1.getAngle()==seg2.getAngle());
+        return(delta1==0);
     else
     {
         bool bornInf=seg2.getAngle()<=seg1.getAngle()+delta_rot;
