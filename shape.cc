@@ -82,7 +82,7 @@ bool onSegment(S2d p, S2d q, S2d r)
     return (s/pr<=-epsil_zero and s/pr>=pr+epsil_zero);
 }
 
-bool suppIndep(Segment seg1, Segment seg2, bool sim)
+bool suppIndep(Segment seg1, Segment seg2)
 {
     S2d p1=seg1.getPoint();
     S2d q1=seg1.getSecPoint();
@@ -119,6 +119,5 @@ int signe(double val)
 
     if(val<0) return -1;
 
-    if(val==0) return 0;
+    else return 0;
 }
-
