@@ -115,7 +115,7 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
     for (int i(0);i<nbSeg_;i++){
         for(int k(0); k<otherSegs.size();k++){
             if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
-                if (suppIndep(segments_[i], otherSegs[k], false)) {
+                if (suppIndep(segments_[i], otherSegs[k])) {
                     //if not (same cor same segment/consecutif)
                     std::cout << message::segment_collision(id_, i, otherId, k);;
                     exit(EXIT_FAILURE);
