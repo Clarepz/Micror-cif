@@ -53,7 +53,7 @@ bool suppCommun(Segment seg1, Segment seg2, Segment newSeg, double delta_rot)
     double delta1 = deltaAngle(seg1,seg2);
     double delta2 = deltaAngle(seg1,newSeg);
     if (delta1==delta2)
-        return(delta1==0);
+        return(delta1==M_PI);
     else
     {
         bool bornInf=seg2.getAngle()<=seg1.getAngle()+delta_rot;
