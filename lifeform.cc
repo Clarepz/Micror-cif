@@ -88,7 +88,7 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
             exit(EXIT_FAILURE);
             //return false;
         }
-        unsigned length = seg.getlength();
+        unsigned length = floor(seg.getlength());
         if(!(length >= l_repro-l_seg_interne and length < l_repro)){
             std::cout << message::segment_length_outside(id,length);
             exit(EXIT_FAILURE);
