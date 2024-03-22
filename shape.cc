@@ -1,12 +1,38 @@
 //
 // Created by Clarence Provenaz on 14.03.2024.
 //
-// faire type def
-#include "shape.h"
+
 #include <cmath>
-#include <algorithm>
+#include "shape.h"
 
 int signe(double val);
+int orientation(S2d p, S2d q, S2d r);
+bool onSegment(S2d p, S2d q, S2d r);
+
+int signe(double val)
+{
+    if(val>0) return 1;
+
+    if(val<0) return -1;
+
+    else return 0;
+}
+
+int orientation(S2d p, S2d q, S2d r)
+{
+    double val = (q.y - p.y) * (r.x - q.x) -
+                 (q.x - p.x) * (r.y - q.y);
+    double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
+    if (distance <= epsil_zero and distance >=-epsil_zero) return 0;  // collinear
+    return (val > 0)? 1: 2; // clock or counterclock wise
+}
+
+bool onSegment(S2d p, S2d q, S2d r)
+{
+    double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
+    double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
+    return (s/pr<=-epsil_zero and s/pr>=pr+epsil_zero);
+}
 
 Segment::Segment(S2d point_, double angle_, unsigned longueur_):
     point(point_),
@@ -15,15 +41,6 @@ Segment::Segment(S2d point_, double angle_, unsigned longueur_):
 {
     secPoint.x = point.x+longueur* cos(angle);
     secPoint.y = point.y+longueur* sin(angle);
-}
-
-fail Segment::getFail () const
-{
-    if(longueur<=0) return(NEGLENGHT);
-
-    if(angle<-M_PI or angle>M_PI) return(BADANGLE);
-
-    else return(NOFAIL);
 }
 
 S2d Segment::getPoint() const {
@@ -43,12 +60,28 @@ double Segment::getAngle() const
     return(angle);
 }
 
+Fail Segment::getFail () const
+{
+    if(longueur<=0) return(NEGLENGHT);
+
+    if(angle<-M_PI or angle>M_PI) return(BADANGLE);
+
+    else return(NOFAIL);
+}
+
+Segment Segment::addAngle(double angle) const
+{
+    double newAngle=angle+this->angle;
+    return(Segment(point, newAngle, longueur));
+}
+
 double deltaAngle(Segment seg1, Segment seg2)
 {
     return(seg1.getAngle()-seg2.getAngle()+M_PI);
 }
 
-bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg, double delta_rot)
+bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
+                double inter)
 {
     double delta1 = deltaAngle(seg1,seg2);
     double delta2 = deltaAngle(seg1,newSeg);
@@ -56,30 +89,14 @@ bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
         return(delta1==0);
     else
     {
-        bool bornInf=seg2.getAngle()<=seg1.getAngle()+delta_rot;
-        bool bornSup=seg2.getAngle()>=seg1.getAngle()-delta_rot;
+        bool bornInf=seg2.getAngle()<=seg1.getAngle()+inter;
+        bool bornSup=seg2.getAngle()>=seg1.getAngle()-inter;
         if(bornInf and bornSup)
         {
             return(signe(delta1) != signe(delta2));
         }
         return false;
     }
-}
-
-int orientation(S2d p, S2d q, S2d r)
-{
-    double val = (q.y - p.y) * (r.x - q.x) -
-              (q.x - p.x) * (r.y - q.y);
-    double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
-    if (distance <= epsil_zero and distance >=-epsil_zero) return 0;  // collinear
-    return (val > 0)? 1: 2; // clock or counterclock wise
-}
-
-bool onSegment(S2d p, S2d q, S2d r)
-{
-    double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
-    double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
-    return (s/pr<=-epsil_zero and s/pr>=pr+epsil_zero);
 }
 
 bool suppIndep(Segment seg1, Segment seg2)
@@ -111,13 +128,4 @@ bool suppIndep(Segment seg1, Segment seg2)
     if (o4 == 0 && onSegment(p2, q1, q2)) return true;
 
     return false;
-}
-
-int signe(double val)
-{
-    if(val>0) return 1;
-
-    if(val<0) return -1;
-
-    else return 0;
 }
