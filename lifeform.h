@@ -11,6 +11,14 @@
 #include <sstream>
 
 
+class LifeForm{
+public:
+    LifeForm(S2d position, int age);
+protected:
+    S2d position_;
+    unsigned age_;
+};
+
 class Alg{
 public:
     Alg(std::istringstream& line); //constructor

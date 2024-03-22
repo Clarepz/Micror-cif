@@ -17,10 +17,18 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
 
-Alg::Alg(std::istringstream& line) {
-    line>>position_.x>>position_.y>>age_;
+LifeForm::LifeForm(S2d position, int age)
+    : position_(position), age_(age){
     domainCheck(position_);
-    ageCheck(age_);
+    ageCheck(age);
+}
+
+Alg::Alg(std::istringstream& line) {
+    int age;
+    line>>position_.x>>position_.y>>age;
+    domainCheck(position_);
+    ageCheck(age);
+    age_=age;
 }
 
 Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segment>& segs) {
@@ -117,10 +125,10 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
         for(int k(0); k<otherSegs.size();k++){
             if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
                 if (suppIndep(segments_[i], otherSegs[k])) {
-                    //if not (same cor same segment/consecutif)
+                    //if not (same cor and same/touching segment)
                     std::cout << message::segment_collision(id_, i, otherId, k);;
                     exit(EXIT_FAILURE);
-                    return false;
+                    //return false;
                 }
             }
         }
