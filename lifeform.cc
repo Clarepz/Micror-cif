@@ -70,10 +70,11 @@ bool ageCheck(int age){
 
 bool superposCheck(const std::vector<Segment>& segs,unsigned id){
     for(int i = 1; i < segs.size();i++){
-        if(suppCommun(segs[i],segs[i-1],segs[i-1])){
+
+        if(suppCommun(segs[i-1],segs[i],segs[i])){
             std::cout << message::segment_superposition(id,i-1,i);
             exit(EXIT_FAILURE);
-            return false;
+            //return false;
         }
     }
     return true;
