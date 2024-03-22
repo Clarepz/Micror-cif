@@ -77,7 +77,9 @@ Segment Segment::addAngle(double angle) const
 
 double deltaAngle(Segment seg1, Segment seg2)
 {
-    return(seg1.getAngle()-seg2.getAngle()+M_PI);
+    double delta=seg1.getAngle()-seg2.getAngle()+M_PI;
+    if (delta>M_PI) return (delta-2*M_PI);
+    else return(delta);
 }
 
 bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
