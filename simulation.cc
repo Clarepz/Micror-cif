@@ -4,8 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-
 #include "simulation.h"
 #include "message.h"
 

@@ -5,10 +5,10 @@
 #ifndef MICRORECIF_LIFEFORM_H
 #define MICRORECIF_LIFEFORM_H
 
-#include "shape.h"
-#include "constantes.h"
 #include <vector>
 #include <sstream>
+#include "shape.h"
+#include "constantes.h"
 
 
 class LifeForm{
