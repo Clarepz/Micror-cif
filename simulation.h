@@ -11,7 +11,7 @@ using namespace std;
 
 class Simulation{
 public:
-    Simulation(char* inputFile); //constructeur lecture fichier
+    Simulation(char* inputFile);
 private:
     int nbSim;
 
@@ -24,10 +24,6 @@ private:
     vector<Sca> scas;
 
     void readFile(char* fileName);
-
-    void readAlg(ifstream& file);
-    void readCor(ifstream& file);
-    void readSca(ifstream& file);
 
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;

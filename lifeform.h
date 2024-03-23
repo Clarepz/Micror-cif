@@ -19,22 +19,17 @@ protected:
     unsigned age_;
 };
 
-class Alg{
+class Alg:public LifeForm{
 public:
-    Alg(std::istringstream& line); //constructor
-private:
-    S2d position_;
-    unsigned age_;
+    Alg(S2d position, int age); //constructor
 };
 
-class Cor{
+class Cor:public LifeForm{
 public:
     Cor(S2d position, int age, unsigned id, int nbseg,const std::vector<Segment>& segs);
     unsigned getId() const;
     bool collisionCheck(const Cor& otherCor)const;
 private:
-    S2d position_;
-    unsigned age_;
     unsigned id_;
     unsigned nbSeg_;
     std::vector<Segment> segments_;
@@ -42,20 +37,22 @@ private:
     const std::vector<Segment>& getSegments()const;
 };
 
-class Sca{
+class Sca:public LifeForm{
 public:
     Sca(S2d position, int age, int radius, int status, int targetId); //constructor
 
     unsigned getTarget() const;
     Statut_sca getStatus() const;
 private:
-    S2d position_;
-    unsigned age_;
     unsigned radius_;
     Statut_sca status_;
     unsigned targetId_;
 
 };
+
+Alg readAlg(std::istringstream& line);
+Cor readCor(std::ifstream& file);
+Sca readSca(std::istringstream& line);
 
 std::istringstream nextLine(std::ifstream& file);
 

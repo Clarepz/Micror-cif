@@ -18,41 +18,32 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
 
 LifeForm::LifeForm(S2d position, int age)
-    : position_(position), age_(age){
-    domainCheck(position_);
-    ageCheck(age);
-}
-
-Alg::Alg(std::istringstream& line) {
-    int age;
-    line>>position_.x>>position_.y>>age;
+    : position_(position){
     domainCheck(position_);
     ageCheck(age);
     age_=age;
 }
 
-Cor::Cor(S2d position, int age, unsigned id, int nbseg, const std::vector<Segment>& segs) {
-    domainCheck(position);
-    position_=position;
-    ageCheck(age);
-    age_=age;
+Alg::Alg(S2d position, int age)
+    : LifeForm(position,age){}
+
+Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segment>& segs)
+    : LifeForm(position,age){
     id_=id;
-    nbSeg_=nbseg;
+    nbSeg_=nbSeg;
     superposCheck(segs,id_);
     segCheck(segs,id_);
     segments_=segs;
 }
 
-Sca::Sca(S2d position, int age, int radius,int status, int targetId) {
-    domainCheck(position);
-    position_=position;
-    ageCheck(age);
-    age_=age;
+Sca::Sca(S2d position, int age, int radius, int status, int targetId)
+    : LifeForm(position,age){
     scaRadiusCheck(radius);
     radius_ = radius;
     status_ = static_cast<Statut_sca>(status);
     targetId_=targetId;
 }
+
 
 
 bool domainCheck(S2d center,double m){
@@ -110,13 +101,7 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
     return true;
 }
 
-unsigned Cor:: getId() const{
-    return id_;
-}
 
-const std::vector<Segment>& Cor::getSegments()const{
-    return segments_;
-}
 
 bool Cor::collisionCheck(const Cor &otherCor) const{
     const std::vector<Segment>& otherSegs = otherCor.getSegments();
@@ -146,6 +131,14 @@ bool scaRadiusCheck(int radius){
     }
 }
 
+unsigned Cor:: getId() const{
+    return id_;
+}
+
+const std::vector<Segment>& Cor::getSegments()const{
+    return segments_;
+}
+
 unsigned int Sca::getTarget() const {
     return targetId_;
 }
@@ -161,4 +154,40 @@ std::istringstream nextLine(std::ifstream& file) {
     } while (line[0] == '#');
     std::istringstream lineStream(line);
     return lineStream;
+}
+
+Alg readAlg(std::istringstream& line){
+    S2d pos;
+    int age;
+
+    line>>pos.x>>pos.y>>age;
+    return Alg(pos,age);
+}
+
+Cor readCor(std::ifstream& file){
+    std::istringstream line = nextLine(file);
+    S2d pos;
+    int age, id, statut, dir, dev, nbSeg;
+    line>>pos.x>>pos.y>>age>>id>>statut>>dir>>dev>>nbSeg;
+    std::vector<Segment> segs;
+    for(int k=0;k<nbSeg;k++) {
+        line = nextLine(file);
+        double angle;
+        unsigned length;
+        line >> angle >> length;
+        if (k == 0) {
+            segs.emplace_back(pos, angle, length);
+        } else {
+            S2d BasePoint = segs[k - 1].getSecPoint();
+            segs.emplace_back(BasePoint, angle, length);
+        }
+    }
+    return Cor(pos,age,id,nbSeg,segs);
+}
+
+Sca readSca(std::istringstream& line){
+    S2d pos;
+    int age,radius,statut,targetId;
+    line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
+    return Sca(pos, age, radius, statut, targetId);
 }

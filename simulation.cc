@@ -11,8 +11,7 @@
 
 
 
-Simulation::Simulation(char * inputFile): nbSca(0){
-    //std::cout<< inputFile<< std::endl;
+Simulation::Simulation(char * inputFile): nbSim(0){
     readFile(inputFile);
     corIdUnicityCheck();
     corCollisionCheck();
@@ -24,62 +23,36 @@ Simulation::Simulation(char * inputFile): nbSca(0){
 void Simulation::readFile(char* fileName){
     ifstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
-    readAlg(file);
-    readCor(file);
-    readSca(file);
-}
 
-void Simulation::readAlg(ifstream& file){
     istringstream line = nextLine(file);
     line>>nbAlg;
     for(int i=0; i<nbAlg; i++){
         line = nextLine(file);
-        algs.emplace_back(line);
+        algs.push_back(readAlg(line));
     }
-}
 
-void Simulation::readCor(std::ifstream &file) {
-    istringstream line = nextLine(file);
+    line = nextLine(file);
     line>>nbCor;
     for(int i=0; i<nbCor; i++){
-        line = nextLine(file);
-        S2d pos;
-        int age, id, statut, dir, dev, nbSeg;
-        line>>pos.x>>pos.y>>age>>id>>statut>>dir>>dev>>nbSeg;
-        vector<Segment> segs;
-        for(int k=0;k<nbSeg;k++){
-            line = nextLine(file);
-            double angle;
-            unsigned length;
-            line>>angle>>length;
-            if(k==0){
-                segs.emplace_back(pos,angle,length);
-            }else{
-                S2d BasePoint = segs[k-1].getSecPoint();
-                segs.emplace_back(BasePoint,angle,length);
-            }
-        }
-        cors.emplace_back(pos,age,id,nbSeg,segs);
+        cors.push_back(readCor(file));
     }
-}
 
-void Simulation::readSca(std::ifstream &file) {
-    istringstream line = nextLine(file);
+    line = nextLine(file);
     line>>nbSca;
     for(int i=0; i<nbSca; i++){
         line = nextLine(file);
-        S2d pos;
-        int age,radius,statut,targetId;
-        line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
-        scas.emplace_back(pos,age,radius,statut,targetId);
+        scas.push_back(readSca(line));
     }
+
 }
+
 
 
 
 bool Simulation::corIdUnicityCheck() const {
-    for(int i = 0; i< cors.size(); i++){
-        for(int k = 0; k< i ;k++){
+    //for all cor check with the ones before
+    for(int i = 1; i < nbCor; i++){
+        for(int k = 0; k < i; k++){
             if(cors[k].getId()==cors[i].getId()){
                 std::cout << message::lifeform_duplicated_id(cors[i].getId());
                 exit(EXIT_FAILURE);
@@ -91,7 +64,7 @@ bool Simulation::corIdUnicityCheck() const {
 }
 
 bool Simulation::corCollisionCheck() const {
-    for(int i(0);i<nbCor;i++){
+    for(int i=0; i<nbCor; i++){
         for(int k = 0; k<= i ;k++){
             cors[i].collisionCheck(cors[k]);
         }
