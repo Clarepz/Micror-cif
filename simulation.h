@@ -9,7 +9,6 @@
 #include <string>
 #include "lifeform.h"
 
-using namespace std;
 
 class Simulation{
 public:
@@ -20,9 +19,9 @@ private:
     int nbCor;
     int nbSca;
 
-    vector<Alg> algs;
-    vector<Cor> cors;
-    vector<Sca> scas;
+    std::vector<Alg> algs;
+    std::vector<Cor> cors;
+    std::vector<Sca> scas;
 
     void readFile(char* fileName);
 
