@@ -28,8 +28,9 @@ clean:
 # -- Regles de dependances generees automatiquement
 #
 # DO NOT DELETE THIS LINE
-project.o: project.cc simulation.h
-simulation.o: simulation.cc simulation.h shape.h message.h
+project.o: project.cc simulation.h lifeform.h shape.h constantes.h
+simulation.o: simulation.cc simulation.h lifeform.h shape.h constantes.h \
+  message.h
 shape.o: shape.cc shape.h
 message.o: message.cc message.h
-lifeform.o: lifeform.cc lifeform.h
+lifeform.o: lifeform.cc message.h lifeform.h shape.h constantes.h
