@@ -47,7 +47,6 @@ private:
     unsigned radius_;
     Statut_sca status_;
     unsigned targetId_;
-
 };
 
 Alg readAlg(std::istringstream& line);

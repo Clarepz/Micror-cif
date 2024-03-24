@@ -11,7 +11,7 @@
 
 
 
-bool domainCheck(S2d center, double margin=1);
+bool domainCheck(S2d center);
 bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
@@ -46,15 +46,13 @@ Sca::Sca(S2d position, int age, int radius, int status, int targetId)
 
 
 
-bool domainCheck(S2d center,double m){
-    if (center.x<max-m and center.y<max-m and center.x>m and center.y>m){
+bool domainCheck(S2d center){
+    if (center.x<=max-1 and center.y<=max-1 and center.x>=1 and center.y>=1){
         return true;
     }else{
-        if(m==1) {
-            std::cout << message::lifeform_center_outside(center.x, center.y);
-            exit(EXIT_FAILURE);
-        }
-        return false;
+        std::cout << message::lifeform_center_outside(center.x, center.y);
+        exit(EXIT_FAILURE);
+        //return false
     }
 }
 
@@ -82,7 +80,8 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id){
 bool segCheck(const std::vector<Segment>& segs,unsigned id){
     for(auto seg:segs){
         S2d point = seg.getSecPoint();
-        if(!domainCheck(point,epsil_zero)){
+        if(!(point.x<max-epsil_zero and point.y<max-epsil_zero
+        and point.x>epsil_zero and point.y>epsil_zero)){
             std::cout << message::lifeform_computed_outside(id,point.x,point.y);
             exit(EXIT_FAILURE);
             //return false;
