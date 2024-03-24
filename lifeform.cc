@@ -102,7 +102,7 @@ Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segmen
     segments_=segs;
 }
 
-unsigned Cor:: getId() const{
+unsigned Cor::getId() const{
     return id_;
 }
 
