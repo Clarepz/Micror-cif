@@ -4,12 +4,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-
 #include "simulation.h"
 #include "message.h"
 
-
+using namespace std;
 
 Simulation::Simulation(char * inputFile): nbSim(0){
     readFile(inputFile);

@@ -5,23 +5,23 @@
 
 #ifndef MICRORECIF_SIMULATION_H
 #define MICRORECIF_SIMULATION_H
-#include "lifeform.h"
+
 #include <string>
-using namespace std;
+#include "lifeform.h"
+
 
 class Simulation{
 public:
     Simulation(char* inputFile);
 private:
     int nbSim;
-
     int nbAlg;
     int nbCor;
     int nbSca;
 
-    vector<Alg> algs;
-    vector<Cor> cors;
-    vector<Sca> scas;
+    std::vector<Alg> algs;
+    std::vector<Cor> cors;
+    std::vector<Sca> scas;
 
     void readFile(char* fileName);
 

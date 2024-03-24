@@ -2,12 +2,11 @@
 // Created by Clarence Provenaz on 15.03.2024.
 //
 #include <iostream>
-
+#include <fstream>
+#include <sstream>
 #include "message.h"
 #include "lifeform.h"
 #include "constantes.h"
-#include <fstream>
-#include <sstream>
 
 
 
@@ -16,34 +15,6 @@ bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
-
-LifeForm::LifeForm(S2d position, int age)
-    : position_(position){
-    domainCheck(position_);
-    ageCheck(age);
-    age_=age;
-}
-
-Alg::Alg(S2d position, int age)
-    : LifeForm(position,age){}
-
-Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segment>& segs)
-    : LifeForm(position,age){
-    id_=id;
-    nbSeg_=nbSeg;
-    superposCheck(segs,id_);
-    segCheck(segs,id_);
-    segments_=segs;
-}
-
-Sca::Sca(S2d position, int age, int radius, int status, int targetId)
-    : LifeForm(position,age){
-    scaRadiusCheck(radius);
-    radius_ = radius;
-    status_ = static_cast<Statut_sca>(status);
-    targetId_=targetId;
-}
-
 
 
 bool domainCheck(S2d center){
@@ -86,7 +57,7 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
             exit(EXIT_FAILURE);
             //return false;
         }
-        unsigned length = floor(seg.getlength());
+        unsigned length = seg.getlength();
         if(!(length >= l_repro-l_seg_interne and length < l_repro)){
             std::cout << message::segment_length_outside(id,length);
             exit(EXIT_FAILURE);
@@ -100,7 +71,40 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
     return true;
 }
 
+bool scaRadiusCheck(int radius){
+    if(radius>r_sca and radius<r_sca_repro){
+        return true;
+    }else{
+        std::cout << message::scavenger_radius_outside(radius);
+        exit(EXIT_FAILURE);
+    }
+}
 
+
+LifeForm::LifeForm(S2d position, int age)
+    : position_(position){
+    domainCheck(position_);
+    ageCheck(age);
+    age_=age;
+}
+
+
+Alg::Alg(S2d position, int age)
+    : LifeForm(position,age){}
+
+
+Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segment>& segs)
+    : LifeForm(position,age){
+    id_=id;
+    nbSeg_=nbSeg;
+    superposCheck(segs,id_);
+    segCheck(segs,id_);
+    segments_=segs;
+}
+
+unsigned Cor:: getId() const{
+    return id_;
+}
 
 bool Cor::collisionCheck(const Cor &otherCor) const{
     const std::vector<Segment>& otherSegs = otherCor.getSegments();
@@ -120,22 +124,17 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
     return true;
 }
 
-
-bool scaRadiusCheck(int radius){
-    if(radius>r_sca and radius<r_sca_repro){
-        return true;
-    }else{
-        std::cout << message::scavenger_radius_outside(radius);
-        exit(EXIT_FAILURE);
-    }
-}
-
-unsigned Cor:: getId() const{
-    return id_;
-}
-
 const std::vector<Segment>& Cor::getSegments()const{
     return segments_;
+}
+
+
+Sca::Sca(S2d position, int age, int radius, int status, int targetId)
+    : LifeForm(position,age){
+    scaRadiusCheck(radius);
+    radius_ = radius;
+    status_ = static_cast<Statut_sca>(status);
+    targetId_=targetId;
 }
 
 unsigned int Sca::getTarget() const {
@@ -146,14 +145,6 @@ Statut_sca Sca::getStatus() const {
     return status_;
 }
 
-std::istringstream nextLine(std::ifstream& file) {
-    std::string line;
-    do {
-        std::getline(file>>std::ws, line);
-    } while (line[0] == '#');
-    std::istringstream lineStream(line);
-    return lineStream;
-}
 
 Alg readAlg(std::istringstream& line){
     S2d pos;
@@ -189,4 +180,13 @@ Sca readSca(std::istringstream& line){
     int age,radius,statut,targetId;
     line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
     return Sca(pos, age, radius, statut, targetId);
+}
+
+std::istringstream nextLine(std::ifstream& file) {
+    std::string line;
+    do {
+        std::getline(file>>std::ws, line);
+    } while (line[0] == '#');
+    std::istringstream lineStream(line);
+    return lineStream;
 }
