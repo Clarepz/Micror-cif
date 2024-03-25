@@ -1,5 +1,5 @@
 //
-// Created by Clarence Provenaz on 15.03.2024.
+// constantes.h, Provenaz Clarence, version 1
 //
 
 #ifndef MICRORECIF_CONSTANTES_H

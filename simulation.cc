@@ -1,5 +1,5 @@
 //
-// Created by Clarence Provenaz on 13.03.2024.
+// simulation.cc, Provenaz Clarence, version 1
 //
 #include <iostream>
 #include <fstream>

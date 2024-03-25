@@ -1,3 +1,7 @@
+//
+//projet.cc, Provenaz Clarence, version 1
+//
+
 #include <iostream>
 #include "simulation.h"
 

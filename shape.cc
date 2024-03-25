@@ -1,5 +1,5 @@
 //
-// Created by Clarence Provenaz on 14.03.2024.
+// shape.cc, Provenaz Clarence, version 1
 //
 
 #include <cmath>

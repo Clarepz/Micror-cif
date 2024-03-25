@@ -1,9 +1,9 @@
 //
-// Created by royer on 15.03.2024.
+// shape.h, Provenaz Clarence, version 1
 //
 
-#ifndef MICRORECIF_SHAPE_H
-#define MICRORECIF_SHAPE_H
+#ifndef SHAPE_H
+#define SHAPE_H
 
 enum Fail {NOFAIL, NEGLENGHT, BADANGLE};
 
@@ -32,4 +32,4 @@ bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
                 double inter=0);//renvoie true si les segs sont supperposés
 bool suppIndep(Segment seg1, Segment seg2);//intersection de 2 segments independants
 
-#endif //MICRORECIF_SHAPE_H
+#endif

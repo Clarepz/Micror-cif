@@ -1,10 +1,10 @@
 //
-// Created by Clarence Provenaz on 13.03.2024.
+// simulation.h, Provenaz Clarence, version 1
 //
 
 
-#ifndef MICRORECIF_SIMULATION_H
-#define MICRORECIF_SIMULATION_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
 
 #include <string>
 #include "lifeform.h"
@@ -29,4 +29,4 @@ private:
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
 };
-#endif //MICRORECIF_SIMULATION_H
+#endif

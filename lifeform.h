@@ -1,9 +1,9 @@
 //
-// Created by Clarence Provenaz on 15.03.2024.
+// lifeform.h, Provenaz Clarence, version 1
 //
 
-#ifndef MICRORECIF_LIFEFORM_H
-#define MICRORECIF_LIFEFORM_H
+#ifndef LIFEFORM_H
+#define LIFEFORM_H
 
 #include <vector>
 #include <sstream>
@@ -56,4 +56,4 @@ Sca readSca(std::istringstream& line);
 std::istringstream nextLine(std::ifstream& file);
 
 
-#endif //MICRORECIF_LIFEFORM_H
+#endif

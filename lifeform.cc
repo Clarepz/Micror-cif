@@ -1,5 +1,5 @@
 //
-// Created by Clarence Provenaz on 15.03.2024.
+// lifeform.cc, Provenaz Clarence, version 1
 //
 #include <iostream>
 #include <fstream>
