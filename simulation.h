@@ -9,7 +9,6 @@
 #include <string>
 #include "lifeform.h"
 
-
 class Simulation{
 public:
     Simulation(char* inputFile);
@@ -29,4 +28,5 @@ private:
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
 };
+
 #endif

@@ -20,8 +20,7 @@ int signe(double val)
 
 int orientation(S2d p, S2d q, S2d r)
 {
-    double val = (q.y - p.y) * (r.x - q.x) -
-                 (q.x - p.x) * (r.y - q.y);
+    double val = (q.y - p.y) * (r.x - q.x)-(q.x - p.x) * (r.y - q.y);
     double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
     if (distance <= epsil_zero and distance >=-epsil_zero) return 0;  // collinear
     return (val > 0)? 1: 2; // clock or counterclock wise
@@ -73,6 +72,7 @@ Segment Segment::addAngle(double angle) const
 {
     double newAngle=angle+this->angle;
     return(Segment(point, newAngle, longueur));
+    //sera normalié entre -pi et pi pour le rendu 2
 }
 
 double deltaAngle(Segment seg1, Segment seg2)

@@ -19,7 +19,7 @@ public:
     double getlength() const;
     double getAngle() const;
     Fail getFail() const;
-    Segment addAngle(double angle) const;
+    Segment addAngle(double angle) const; //sert pour la supperposition en simulation
 private:
     S2d point;
     double angle;
@@ -30,6 +30,7 @@ private:
 double deltaAngle(Segment seg1, Segment seg2);
 bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
                 double inter=0);//renvoie true si les segs sont supperposés
+                                //newSeg est seg2 lors de la prochaine màj
 bool suppIndep(Segment seg1, Segment seg2);//intersection de 2 segments independants
 
 #endif
