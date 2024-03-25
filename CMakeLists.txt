@@ -11,7 +11,7 @@ add_executable(Microrecif
         lifeform.h
         message.cc
         message.h
-        project.cc
+        projet.cc
         shape.cc
         shape.h
         simulation.cc
