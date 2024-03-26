@@ -82,23 +82,9 @@ double deltaAngle(Segment seg1, Segment seg2)
     else return(delta);
 }
 
-bool suppCommun(const Segment &seg1, const Segment &seg2, const Segment &newSeg,
-                double inter)
+bool suppCommun(const Segment &seg1, const Segment &seg2)
 {
-    double delta1 = deltaAngle(seg1,seg2);
-    double delta2 = deltaAngle(seg1,newSeg);
-    if (delta1==delta2)
-        return(delta1==0);
-    else
-    {
-        bool bornInf=seg2.getAngle()<=seg1.getAngle()+inter;
-        bool bornSup=seg2.getAngle()>=seg1.getAngle()-inter;
-        if(bornInf and bornSup)
-        {
-            return(signe(delta1) != signe(delta2));
-        }
-        return false;
-    }
+    return(deltaAngle(seg1,seg2)==0);
 }
 
 bool suppIndep(Segment seg1, Segment seg2)
