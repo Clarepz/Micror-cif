@@ -12,7 +12,8 @@ int orientation(S2d p, S2d q, S2d r, bool sim)
 {
     double val = (q.y - p.y) * (r.x - q.x)-(q.x - p.x) * (r.y - q.y);
     double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
-    if (distance <= epsil_zero*sim and distance >=-epsil_zero*sim) return 0;  // collinear
+    if (distance <= epsil_zero*sim and distance >=-epsil_zero*sim) return 0;
+    //collinear *sim permet de desactiver epsil_zero a la lecture
     return (val > 0)? 1: 2; // clock or counterclock wise
 }
 
