@@ -30,6 +30,7 @@ private:
 double deltaAngle(Segment seg1, Segment seg2);
 bool suppCommun(const Segment &seg1, const Segment &seg2);
 //renvoie true si les segements sont supperposés
-bool suppIndep(Segment seg1, Segment seg2);//intersection de 2 segments independants
+bool suppIndep(const Segment &seg1, const Segment &seg2, bool sim=false);
+//intersection de 2 segments independants
 
 #endif
