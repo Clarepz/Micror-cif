@@ -67,17 +67,25 @@ bool Simulation::corCollisionCheck() const {
             cors[i].collisionCheck(cors[k]);
         }
     }
+    return true;
 }
 
 bool Simulation::scaTargetCheck() const {
     for(auto sca : scas){
-        int target = sca.getTarget();
+        unsigned target = sca.getTarget();
         if(sca.getStatus()==MANGE){
-            for(auto cor : cors){
-                if(cor.getId()==target) return true;
+            bool targetExists(false);
+            for(auto const & cor : cors){
+                if(cor.getId()==target){
+                    targetExists = true;
+                }
             }
-            std::cout << message::lifeform_invalid_id(target);
-            exit(EXIT_FAILURE);
+            if(!targetExists){
+                std::cout << message::lifeform_invalid_id(target);
+                exit(EXIT_FAILURE);
+                //return false;
+            }
         }
     }
+    return true;
 }

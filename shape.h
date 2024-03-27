@@ -13,7 +13,7 @@ struct S2d {double x=0.; double y=0.;};
 
 class Segment{
 public:
-    Segment(S2d coor_,double angle_, unsigned longueur_);//constructeur
+    Segment(S2d coor_,double angle_, double longueur_);//constructeur
     S2d getPoint() const;
     S2d getSecPoint() const;
     double getlength() const;

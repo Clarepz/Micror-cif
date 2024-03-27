@@ -5,18 +5,8 @@
 #include <cmath>
 #include "shape.h"
 
-int signe(double val);
 int orientation(S2d p, S2d q, S2d r);
 bool onSegment(S2d p, S2d q, S2d r);
-
-int signe(double val)
-{
-    if(val>0) return 1;
-
-    if(val<0) return -1;
-
-    else return 0;
-}
 
 int orientation(S2d p, S2d q, S2d r)
 {
@@ -33,7 +23,7 @@ bool onSegment(S2d p, S2d q, S2d r)
     return (s/pr<=-epsil_zero and s/pr>=pr+epsil_zero);
 }
 
-Segment::Segment(S2d point_, double angle_, unsigned longueur_):
+Segment::Segment(S2d point_, double angle_, double longueur_):
     point(point_),
     angle(angle_),
     longueur(longueur_)
