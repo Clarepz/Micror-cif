@@ -15,7 +15,7 @@ Simulation::Simulation(char * inputFile): nbSim(0){
     corCollisionCheck();
     scaTargetCheck();
     std::cout << message::success();
-    exit(0);
+    //exit(0);
 }
 
 void Simulation::readFile(char* fileName){

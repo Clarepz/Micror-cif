@@ -4,7 +4,7 @@
 
 #include "graphic_gui.h"
 
-static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
+/*static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
 //fonction qui dessine les entités
 void draw (entity shape, int size, S2d position, double angle=0.)
@@ -15,4 +15,4 @@ void draw (entity shape, int size, S2d position, double angle=0.)
 void set_ptcr(const Cairo::RefPtr<Cairo::Context>& cr)
 {
     ptcr = &cr;
-}
+}*/
