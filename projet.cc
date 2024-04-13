@@ -11,6 +11,6 @@ using namespace std;
 int main(int argc, char* argv[]){
     if(argc != 2) exit(0);
     Simulation simulation(argv[1]); //initialise une simulation a partir du fichier d'entree
-
-    return 0;
+    auto app = Gtk::Application::create();
+    return app->make_window_and_run<MyEvent>(argc, argv);
 }

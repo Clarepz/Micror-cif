@@ -9,12 +9,11 @@ LDLIBS = `pkg-config --libs gtkmm-4.0`
 
 # Definition de la premiere regle
 
-project: $(OFILES)
+projet: $(OFILES)
 	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
 
 
 # Definitions de cibles particulieres
-
 depend:
 	@echo " *** MISE A JOUR DES DEPENDANCES ***"
 	@(sed '/^# DO NOT DELETE THIS LINE/q' Makefile && \
