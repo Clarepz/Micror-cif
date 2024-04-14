@@ -12,6 +12,6 @@ int main(int argc, char* argv[]){
     //if(argc != 2) exit(0);
     //Simulation simulation(argv[1]); //initialise une simulation a partir du fichier d'entree
     auto app = Gtk::Application::create();
-    app->make_window_and_run<MyEvent>(argc, argv);
+    app->make_window_and_run<MyEvent>(1, argv);
     return(0);
 }
