@@ -11,7 +11,6 @@
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
-#include "graphic.h"
 #include "simulation.h"
 
 class MyArea : public Gtk::DrawingArea

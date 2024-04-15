@@ -5,9 +5,9 @@
 #ifndef MICRORECIF_GRAPHIC_H
 #define MICRORECIF_GRAPHIC_H
 
-enum entity{ALGUE, CORAIL, SCAVENGER};
+enum Entity{gCircle, bSegment, mSegment, rCircle};
 
-void draw (entity shape, int size, double x, double y, double angle=0.);
+void drawEntity(Entity shape, double x, double y, int size=0., double angle=0.);
 
 
 #endif //MICRORECIF_GRAPHIC_H

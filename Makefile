@@ -38,6 +38,8 @@ shape.o: shape.cc shape.h graphic.h
 message.o: message.cc message.h
 lifeform.o: lifeform.cc message.h lifeform.h shape.h graphic.h \
  constantes.h
-gui.o: gui.cc gui.h graphic.h simulation.h lifeform.h shape.h constantes.h
+gui.o: gui.cc gui.h graphic.h simulation.h lifeform.h shape.h \
+constantes.h graphic_gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-graphic.o: graphic.cc graphic.h
+graphic.o: graphic.cc graphic.h graphic_gui.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
