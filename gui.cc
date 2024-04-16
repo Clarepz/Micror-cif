@@ -82,13 +82,12 @@ MyEvent::MyEvent():
 
 void MyEvent::exitClicked()
 {
-    exit(0);
 }
 
 void MyEvent::openClicked()
 {
-    drawEntity(Circle, Red, 100, 100, 10);
-    drawEntity(Square, Green, 100, 100, 10);
+    //drawEntity(Circle, Red, 100, 100, 10);
+    //drawEntity(Square, Green, 100, 100, 10);
 }
 
 void MyEvent::saveClicked()

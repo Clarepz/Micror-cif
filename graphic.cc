@@ -9,51 +9,50 @@
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 static double heightFactor, widthFactor;
 
-int convEntity(Entity ent);
 
 //fonction qui dessine les entités
-void drawEntity (Shape shape,Color color, int x, int y, int size, double angle=0.)
+void drawEntity (Shape shape,Color color, int x, int y, int size, double angle)
 {
-    *ptcr->set_line_width(2.0);
+    (*ptcr)->set_line_width(2.0);
     switch (color)
     {
         case Green:
-            *ptcr->set_source_rgb(0, 0.7, 0);
+            (*ptcr)->set_source_rgb(0, 0.7, 0);
             break;
 
         case Blue:
-            *ptcr->set_source_rgb(0, 0, 0.7);
+            (*ptcr)->set_source_rgb(0, 0, 0.7);
             break;
 
         case Black:
-            *ptcr->set_source_rgb(0, 0, 0);
+            (*ptcr)->set_source_rgb(0, 0, 0);
             break;
 
         case Red:
-            *ptcr->set_source_rgb(0.7, 0, 0);
+            (*ptcr)->set_source_rgb(0.7, 0, 0);
             break;
     }
     switch (shape)
     {
         case Circle :
-            *ptcr->move_to(x+size, y);
-            *ptcr->arc(x,y,size,0,6.5);
-            *ptcr->stroke();
+            (*ptcr)->move_to(x+size, y);
+            (*ptcr)->arc(x,y,size,0,6.5);
+            (*ptcr)->stroke();
             break;
 
-        case Segment :
-            *ptcr->move_to(x, y);
-            *ptcr->line_to(x+size*cos(angle),y+size*sin(angle));
-            *ptcr->stroke();
+        case Line :
+            (*ptcr)->move_to(x, y);
+            (*ptcr)->line_to(x+size*cos(angle),y+size*sin(angle));
+            (*ptcr)->stroke();
             break;
 
         case Square:
-            *ptcr->move_to(x+size/2, y+size/2);
-            *ptcr->line_to(x-size/2, y+size/2);
-            *ptcr->line_to(x-size/2, y-size/2);
-            *ptcr->line_to(x+size/2, y-size/2);
-            *ptcr->line_to(x+size/2, y+size/2);
-            *ptcr->stroke();
+            (*ptcr)->move_to(x+size/2, y+size/2);
+            (*ptcr)->line_to(x-size/2, y+size/2);
+            (*ptcr)->line_to(x-size/2, y-size/2);
+            (*ptcr)->line_to(x+size/2, y-size/2);
+            (*ptcr)->line_to(x+size/2, y+size/2);
+            (*ptcr)->stroke();
     }
 
 }
@@ -65,9 +64,3 @@ void set_ptcr(const Cairo::RefPtr<Cairo::Context>& cr)
     ptcr = &cr;
 }
 
-int convEntity(Entity ent)
-{
-    if (ent==ALGUE) return 0;
-    if (ent==CORAIL) return 1;
-    if (ent==SCAVENGER) return 2;
-}

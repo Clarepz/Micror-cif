@@ -5,7 +5,7 @@
 #ifndef MICRORECIF_GRAPHIC_H
 #define MICRORECIF_GRAPHIC_H
 
-enum Shape{Circle, Segment, Square};
+enum Shape{Circle, Line, Square};
 enum Color{Green, Blue, Black, Red};
 
 void drawEntity(Shape shape,Color color, int x, int y, int size, double angle=0.);
