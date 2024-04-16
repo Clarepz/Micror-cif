@@ -82,7 +82,7 @@ MyEvent::MyEvent():
 
 void MyEvent::exitClicked()
 {
-
+    exit(0);
 }
 
 void MyEvent::openClicked()

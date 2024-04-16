@@ -28,7 +28,8 @@ add_executable(Microrecif
         gui.h
         graphic.cc
         graphic.h
-        graphic_gui.h)
+        graphic_gui.h
+        simulation.cc)
 
 # Link against gtkmm libraries
 target_link_libraries(${CMAKE_PROJECT_NAME} ${GTKMM_LIBRARIES})
