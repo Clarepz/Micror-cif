@@ -12,33 +12,48 @@ static double heightFactor, widthFactor;
 int convEntity(Entity ent);
 
 //fonction qui dessine les entités
-void drawEntity (Entity entity, int x, int y, int size, double angle=0.)
+void drawEntity (Shape shape,Color color, int x, int y, int size, double angle=0.)
 {
-    switch (entity)
+    *ptcr->set_line_width(2.0);
+    switch (color)
     {
-        case gCircle :
-            *ptcr->set_line_width(2.0);
+        case Green:
             *ptcr->set_source_rgb(0, 0.7, 0);
+            break;
+
+        case Blue:
+            *ptcr->set_source_rgb(0, 0, 0.7);
+            break;
+
+        case Black:
+            *ptcr->set_source_rgb(0, 0, 0);
+            break;
+
+        case Red:
+            *ptcr->set_source_rgb(0.7, 0, 0);
+            break;
+    }
+    switch (shape)
+    {
+        case Circle :
             *ptcr->move_to(x+size, y);
             *ptcr->arc(x,y,size,0,6.5);
             *ptcr->stroke();
             break;
 
-        case mSegment :
-            *ptcr->set_line_width(2.0);
-            *ptcr->set_source_rgb(0, 0, 0.7);
+        case Segment :
             *ptcr->move_to(x, y);
             *ptcr->line_to(x+size*cos(angle),y+size*sin(angle));
-
-            break;
-
-        case rCircle :
-            *ptcr->set_line_width(2.0);
-            *ptcr->set_source_rgb(0.7, 0, 0);
-            *ptcr->move_to(x+size, y);
-            *ptcr->arc(x,y,size,0,6.5);
             *ptcr->stroke();
             break;
+
+        case Square:
+            *ptcr->move_to(x+size/2, y+size/2);
+            *ptcr->line_to(x-size/2, y+size/2);
+            *ptcr->line_to(x-size/2, y-size/2);
+            *ptcr->line_to(x+size/2, y-size/2);
+            *ptcr->line_to(x+size/2, y+size/2);
+            *ptcr->stroke();
     }
 
 }
