@@ -42,7 +42,7 @@ Segment::Segment(S2d point_, double angle_, double longueur_):
 S2d Segment::getPoint() const {
     return point;
 }
-//
+
 S2d Segment::getSecPoint() const {
     return secPoint;
 }
