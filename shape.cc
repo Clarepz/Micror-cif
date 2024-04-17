@@ -5,6 +5,12 @@
 #include <cmath>
 #include "shape.h"
 
+
+const S2d operator+(S2d const& point1, S2d const& point2)
+{
+    return(S2d{point1.x+point2.x, point1.y+point2.y});
+}
+
 int orientation(S2d p, S2d q, S2d r, bool sim);
 bool onSegment(S2d p, S2d q, S2d r, bool sim);
 

@@ -30,6 +30,7 @@ protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 
 private:
+    S2d changeCoordinates (S2d newPoint, int width, int height);
     bool empty;
 };
 

@@ -11,7 +11,13 @@ enum Fail {NOFAIL, NEGLENGHT, BADANGLE};
 
 constexpr double epsil_zero(0.5) ;
 
-struct S2d {double x=0.; double y=0.;};
+struct S2d
+{
+    double x=0.;
+    double y=0.;
+};
+
+const S2d operator+(S2d const& point1, S2d const& point2);
 
 class Segment{
 public:
