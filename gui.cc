@@ -27,25 +27,32 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     if(not empty)
     {
         // coordinates for the center of the window
-        int xc, yc;
-        xc = width / 2;
-        yc = height / 2;
-
-        cr->set_line_width(10.0);
-
-        // draw red lines out from the center of the window
-        cr->set_source_rgb(0.8, 0.0, 0.0);
-        cr->move_to(0, 0);
-        cr->line_to(xc, yc);
-        cr->line_to(0, height);
-        cr->move_to(xc, yc);
-        cr->line_to(width, yc);
-        cr->stroke();
+        drawEntity(Circle, Red, 100, 100, 10);
+        drawEntity(Square, Green, 100, 100, 10);
     }
 
 }
 
+void MyArea::exit()
+{
+    empty = true;
+    queue_draw();
+}
 
+void MyArea::open()
+{
+    empty = false;
+    queue_draw();
+}
+
+void MyArea::save()
+{}
+
+void MyArea::start()
+{}
+
+void MyArea::step()
+{}
 
 MyEvent::MyEvent():
         m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
@@ -82,19 +89,25 @@ MyEvent::MyEvent():
 
 void MyEvent::exitClicked()
 {
+    m_Area.exit();
 }
 
 void MyEvent::openClicked()
 {
-    //drawEntity(Circle, Red, 100, 100, 10);
-    //drawEntity(Square, Green, 100, 100, 10);
+    m_Area.open();
 }
 
 void MyEvent::saveClicked()
-{}
+{
+    m_Area.save();
+}
 
 void MyEvent::startClicked()
-{}
+{
+    m_Area.start();
+}
 
 void MyEvent::stepClicked()
-{}
+{
+    m_Area.step();
+}
