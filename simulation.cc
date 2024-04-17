@@ -19,6 +19,13 @@ Simulation::Simulation(char * inputFile): nbSim(0){
 
     if(initSuccess) {
         std::cout << message::success();
+    }else{
+        nbCor = 0;
+        nbAlg = 0;
+        nbSca = 0;
+        cors.clear();
+        algs.clear();
+        scas.clear();
     }
 }
 
