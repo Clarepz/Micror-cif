@@ -93,6 +93,9 @@ bool LifeForm::getInitSuccess() const {
 Alg::Alg(S2d position, int age)
     : LifeForm(position,age){}
 
+void Alg::writeFile(std::ofstream &file) const {
+    file << '\t' << position_.x << ' ' << position_.y << ' ' << age_ << std::endl;
+}
 
 Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segment>& segs)
     : LifeForm(position,age){

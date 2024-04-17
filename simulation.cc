@@ -32,6 +32,13 @@ Simulation::Simulation(char * inputFile): nbSim(0){
 void Simulation::saveAs(std::string const & fileName) const {
     ofstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
+
+    file<<nbAlg<<endl;
+    for(auto anAlg : algs ){
+        anAlg.writeFile(file);
+    }
+
+
 }
 
 bool Simulation::readFile(char* fileName){

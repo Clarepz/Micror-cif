@@ -15,6 +15,7 @@ class LifeForm{
 public:
     LifeForm(S2d position, int age);
     bool getInitSuccess() const;
+    //virtual void writeFile(std::ofstream& file) const ;
 protected:
     S2d position_;
     unsigned age_;
@@ -24,6 +25,7 @@ protected:
 class Alg:public LifeForm{
 public:
     Alg(S2d position, int age); //constructor
+    void writeFile(std::ofstream& file) const ;
 };
 
 class Cor:public LifeForm{
