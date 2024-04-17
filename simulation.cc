@@ -29,6 +29,11 @@ Simulation::Simulation(char * inputFile): nbSim(0){
     }
 }
 
+void Simulation::saveAs(std::string const & fileName) const {
+    ofstream file(fileName);
+    if(file.fail()) exit(EXIT_FAILURE);
+}
+
 bool Simulation::readFile(char* fileName){
 
     ifstream file(fileName);

@@ -12,6 +12,7 @@
 class Simulation{
 public:
     Simulation(char* inputFile);
+    void saveAs(std::string const & fileName) const;
 private:
     int nbSim;
     int nbAlg;
