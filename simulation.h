@@ -18,11 +18,13 @@ private:
     int nbCor;
     int nbSca;
 
+    bool initSuccess;
+
     std::vector<Alg> algs;
     std::vector<Cor> cors;
     std::vector<Sca> scas;
 
-    void readFile(char* fileName);
+    bool readFile(char* fileName);
 
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;

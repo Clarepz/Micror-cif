@@ -22,8 +22,7 @@ bool domainCheck(S2d center){
         return true;
     }else{
         std::cout << message::lifeform_center_outside(center.x, center.y);
-        exit(EXIT_FAILURE);
-        //return false
+        return false;
     }
 }
 
@@ -32,7 +31,7 @@ bool ageCheck(int age){
         return true;
     }else{
         std::cout << message::lifeform_age(age);
-        exit(EXIT_FAILURE);
+        return false;
     }
 }
 
@@ -41,8 +40,7 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id){
 
         if(suppCommun(segs[i-1],segs[i])){
             std::cout << message::segment_superposition(id,i-1,i);
-            exit(EXIT_FAILURE);
-            //return false;
+            return false;
         }
     }
     return true;
@@ -54,18 +52,16 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
         if(!(point.x<max-epsil_zero and point.y<max-epsil_zero
         and point.x>epsil_zero and point.y>epsil_zero)){
             std::cout << message::lifeform_computed_outside(id,point.x,point.y);
-            exit(EXIT_FAILURE);
-            //return false;
+            return false;
         }
         unsigned length = seg.getlength();
         if(!(length >= l_repro-l_seg_interne and length < l_repro)){
             std::cout << message::segment_length_outside(id,length);
-            exit(EXIT_FAILURE);
-            //return false;
+            return false;
         }
         if(seg.getFail()==BADANGLE){
             std::cout << message::segment_angle_outside(id, seg.getAngle());
-            exit(EXIT_FAILURE);
+            return false;
         }
     }
     return true;
@@ -76,16 +72,21 @@ bool scaRadiusCheck(int radius){
         return true;
     }else{
         std::cout << message::scavenger_radius_outside(radius);
-        exit(EXIT_FAILURE);
+        return false;
     }
 }
 
 
 LifeForm::LifeForm(S2d position, int age)
-    : position_(position){
-    domainCheck(position_);
-    ageCheck(age);
+    : position_(position), initSuccess(true){
+    if ( !(domainCheck(position_) and ageCheck(age)) ){
+        initSuccess = false;
+    }
     age_=age;
+}
+
+bool LifeForm::getInitSuccess() const {
+    return initSuccess;
 }
 
 
@@ -97,8 +98,9 @@ Cor::Cor(S2d position, int age, unsigned id, int nbSeg, const std::vector<Segmen
     : LifeForm(position,age){
     id_=id;
     nbSeg_=nbSeg;
-    superposCheck(segs,id_);
-    segCheck(segs,id_);
+    if ( !(superposCheck(segs,id_) and segCheck(segs,id_)) ){
+        initSuccess = false;
+    }
     segments_=segs;
 }
 
@@ -115,8 +117,7 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
                 if (suppIndep(segments_[i], otherSegs[k])) {
                     //if not (same cor and same/touching segment)
                     std::cout << message::segment_collision(id_, i, otherId, k);;
-                    exit(EXIT_FAILURE);
-                    //return false;
+                    return false;
                 }
             }
         }
@@ -131,10 +132,13 @@ const std::vector<Segment>& Cor::getSegments()const{
 
 Sca::Sca(S2d position, int age, int radius, int status, int targetId)
     : LifeForm(position,age){
-    scaRadiusCheck(radius);
+
+    if(!scaRadiusCheck(radius)){
+        initSuccess = false;
+    }
     radius_ = radius;
     status_ = static_cast<Statut_sca>(status);
-    targetId_=targetId;
+    targetId_ = targetId;
 }
 
 unsigned int Sca::getTarget() const {

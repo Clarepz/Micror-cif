@@ -14,9 +14,11 @@
 class LifeForm{
 public:
     LifeForm(S2d position, int age);
+    bool getInitSuccess() const;
 protected:
     S2d position_;
     unsigned age_;
+    bool initSuccess;
 };
 
 class Alg:public LifeForm{
