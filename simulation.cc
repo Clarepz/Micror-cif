@@ -37,7 +37,14 @@ void Simulation::saveAs(std::string const & fileName) const {
     for(auto anAlg : algs ){
         anAlg.writeFile(file);
     }
-
+    file<<nbCor<<endl;
+    for(auto aCor : cors){
+        aCor.writeFile(file);
+    }
+    file<<nbSca<<endl;
+    for(auto aSca : scas){
+        aSca.writeFile(file);
+    }
 
 }
 
@@ -110,7 +117,7 @@ bool Simulation::corCollisionCheck() const {
 bool Simulation::scaTargetCheck() const {
     for(auto sca : scas){
         unsigned target = sca.getTarget();
-        if(sca.getStatus()==MANGE){
+        if(sca.getStatus()==EATING){
             bool targetExists(false);
             for(auto const & cor : cors){
                 if(cor.getId()==target){

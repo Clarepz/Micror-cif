@@ -15,11 +15,13 @@ class LifeForm{
 public:
     LifeForm(S2d position, int age);
     bool getInitSuccess() const;
-    //virtual void writeFile(std::ofstream& file) const ;
+
 protected:
     S2d position_;
     unsigned age_;
     bool initSuccess;
+
+    virtual void writeFile(std::ofstream& file) const ;
 };
 
 class Alg:public LifeForm{
@@ -30,12 +32,20 @@ public:
 
 class Cor:public LifeForm{
 public:
-    Cor(S2d position, int age, unsigned id, int nbseg,const std::vector<Segment>& segs);
+    Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
+        const std::vector<Segment>& segs);
+
     unsigned getId() const;
     bool collisionCheck(const Cor& otherCor)const;
+    void writeFile(std::ofstream &file) const ;
 private:
+
     unsigned id_;
+    Status_cor status_;
+    Dir_rot_cor dir_;
+    Status_dev statusDev_;
     unsigned nbSeg_;
+
     std::vector<Segment> segments_;
 
     const std::vector<Segment>& getSegments()const;
@@ -46,10 +56,11 @@ public:
     Sca(S2d position, int age, int radius, int status, int targetId); //constructor
 
     unsigned getTarget() const;
-    Statut_sca getStatus() const;
+    Status_sca getStatus() const;
+    void writeFile(std::ofstream &file) const ;
 private:
     unsigned radius_;
-    Statut_sca status_;
+    Status_sca status_;
     unsigned targetId_;
 };
 
