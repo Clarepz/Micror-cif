@@ -18,6 +18,7 @@ struct S2d
 };
 
 const S2d operator+(S2d const& point1, S2d const& point2);
+//S2d can be used to define a vector starting at (0,0) operator + is then useful
 
 class Segment{
 public:

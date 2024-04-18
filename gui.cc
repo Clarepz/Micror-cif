@@ -35,7 +35,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 
 S2d changeCoordinates (S2d oldPoint, int width, int height)
 {
-
+    return(S2d{})
 }
 
 void MyArea::exit()
