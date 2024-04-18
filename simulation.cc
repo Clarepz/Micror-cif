@@ -48,6 +48,12 @@ void Simulation::saveAs(std::string const & fileName) const {
 
 }
 
+void Simulation::display() const {
+    for(auto const& anAlg : algs){
+        anAlg.display();
+    }
+}
+
 bool Simulation::readFile(char* fileName){
 
     ifstream file(fileName);

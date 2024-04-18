@@ -102,6 +102,11 @@ void Alg::writeFile(std::ofstream &file) const {
     file << std::endl;
 }
 
+void Alg::display() const {
+    drawEntity(Circle, Green, position_.x, position_.y, r_alg);
+    //drawEntity(Circle, Red, 100, 100, 10);
+}
+
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
          const std::vector<Segment>& segs): LifeForm(position,age){
     id_ = id;

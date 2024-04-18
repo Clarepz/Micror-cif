@@ -28,6 +28,7 @@ class Alg:public LifeForm{
 public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const ;
+    void display() const;
 };
 
 class Cor:public LifeForm{
