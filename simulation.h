@@ -12,17 +12,20 @@
 class Simulation{
 public:
     Simulation(char* inputFile);
+    void saveAs(std::string const & fileName) const;
 private:
     int nbSim;
     int nbAlg;
     int nbCor;
     int nbSca;
 
+    bool initSuccess;
+
     std::vector<Alg> algs;
     std::vector<Cor> cors;
     std::vector<Sca> scas;
 
-    void readFile(char* fileName);
+    bool readFile(char* fileName);
 
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;

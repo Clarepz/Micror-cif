@@ -10,37 +10,74 @@
 using namespace std;
 
 Simulation::Simulation(char * inputFile): nbSim(0){
-    readFile(inputFile);
-    corIdUnicityCheck();
-    corCollisionCheck();
-    scaTargetCheck();
-    std::cout << message::success();
+
+    initSuccess =
+            readFile(inputFile) and
+            corIdUnicityCheck() and
+            corCollisionCheck() and
+            scaTargetCheck();
+
+    if(initSuccess) {
+        std::cout << message::success();
+    }else{
+        nbCor = 0;
+        nbAlg = 0;
+        nbSca = 0;
+        cors.clear();
+        algs.clear();
+        scas.clear();
+    }
 }
 
-void Simulation::readFile(char* fileName){
-    ifstream file(fileName);
+void Simulation::saveAs(std::string const & fileName) const {
+    ofstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
+
+    file<<nbAlg<<endl;
+    for(auto anAlg : algs ){
+        anAlg.writeFile(file);
+    }
+
+
+}
+
+bool Simulation::readFile(char* fileName){
+
+    ifstream file(fileName);
+    if(file.fail()) return false;
 
     istringstream line = nextLine(file);
     line>>nbAlg;
     for(int i=0; i<nbAlg; i++){
         line = nextLine(file);
-        algs.push_back(readAlg(line));
+        Alg anAlg = readAlg(line);
+        if(!anAlg.getInitSuccess()){
+            return false;
+        }
+        algs.push_back(anAlg);
     }
 
     line = nextLine(file);
     line>>nbCor;
     for(int i=0; i<nbCor; i++){
-        cors.push_back(readCor(file));
+        Cor aCor(readCor(file));
+        if(!aCor.getInitSuccess()){
+            return false;
+        }
+        cors.push_back(aCor);
     }
 
     line = nextLine(file);
     line>>nbSca;
     for(int i=0; i<nbSca; i++){
         line = nextLine(file);
-        scas.push_back(readSca(line));
+        Sca aSca(readSca(line));
+        if(!aSca.getInitSuccess()){
+            return false;
+        }
+        scas.push_back(aSca);
     }
-
+    return true;
 }
 
 
@@ -52,8 +89,7 @@ bool Simulation::corIdUnicityCheck() const {
         for(int k = 0; k < i; k++){
             if(cors[k].getId()==cors[i].getId()){
                 std::cout << message::lifeform_duplicated_id(cors[i].getId());
-                exit(EXIT_FAILURE);
-                //return false;
+                return false;
             }
         }
     }
@@ -63,7 +99,9 @@ bool Simulation::corIdUnicityCheck() const {
 bool Simulation::corCollisionCheck() const {
     for(int i=0; i<nbCor; i++){
         for(int k = 0; k<= i ;k++){
-            cors[i].collisionCheck(cors[k]);
+            if(!cors[i].collisionCheck(cors[k])){
+                return false;
+            }
         }
     }
     return true;
@@ -81,8 +119,7 @@ bool Simulation::scaTargetCheck() const {
             }
             if(!targetExists){
                 std::cout << message::lifeform_invalid_id(target);
-                exit(EXIT_FAILURE);
-                //return false;
+                return false;
             }
         }
     }
