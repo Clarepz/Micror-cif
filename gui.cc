@@ -6,7 +6,7 @@
 #include "gui.h"
 #include "graphic_gui.h"
 
-constexpr int area_side(1000);
+constexpr int area_side(400);
 
 MyArea::MyArea(): change(false)
 {
@@ -25,7 +25,7 @@ MyArea::~MyArea()
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
 {
     set_ptcr(cr);
-    double ratio=width/height;
+    double ratio=double(width)/height;
     double xMax(255), xMin(0), yMax(255), yMin(0), delta(255), middle(255./2);
     //prevent distortion
     if( ratio > 1)
@@ -41,8 +41,8 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(width/2., height/2.);
     cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    //drawEntity(Square, Grey, 127.5, 127.5, 255);
-    //drawEntity(Line, Red, 0, 0, 200, 0.785);
+    drawEntity(SQUARE, GREY, 127.5, 127.5, 255);
+    drawEntity(LINE, RED, 0, 0, 200, 0.785);
     //if(change)
     //{
         //Simulation.display();
