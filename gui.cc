@@ -6,9 +6,9 @@
 #include "gui.h"
 #include "graphic_gui.h"
 
-constexpr int area_side(200);
+constexpr int area_side(1000);
 
-MyArea::MyArea(): empty(false)
+MyArea::MyArea(): change(false)
 {
     set_content_width(area_side);
     set_content_height(area_side);
@@ -24,12 +24,16 @@ MyArea::~MyArea()
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
 {
     set_ptcr(cr);
-    if(not empty)
-    {
-        // coordinates for the center of the window
-        drawEntity(Circle, Red, 100, 100, 10);
-        drawEntity(Square, Green, 100, 100, 10);
-    }
+    if(width>=height) drawEntity(Square, Grey, width/2, height/2, height);
+    else drawEntity(Square, Grey, width/2, height/2, width);
+    cr->translate(width/2, height/2);
+    cr->scale(width/256, -height/256);
+    cr->translate(-128, -128);
+    drawEntity(Line, Red, 0, 0, 200, 0.785);
+    //if(change)
+    //{
+        //Simulation.display();
+    //}
 
 }
 
@@ -39,13 +43,13 @@ S2d changeCoordinates (S2d oldPoint, int width, int height)
 
 void MyArea::exit()
 {
-    empty = true;
+    change = true;
     queue_draw();
 }
 
 void MyArea::open()
 {
-    empty = false;
+    change = false;
     queue_draw();
 }
 

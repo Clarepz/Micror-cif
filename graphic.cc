@@ -31,6 +31,10 @@ void drawEntity (Shape shape,Color color, int x, int y, int size, double angle)
         case Red:
             (*ptcr)->set_source_rgb(0.7, 0, 0);
             break;
+
+        case Grey:
+            (*ptcr)->set_source_rgb(0.5,0.5,0.5);
+            (*ptcr)->set_line_width(5.0);
     }
     switch (shape)
     {

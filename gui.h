@@ -31,7 +31,7 @@ protected:
 
 private:
     S2d changeCoordinates (S2d newPoint, int width, int height);
-    bool empty;
+    bool change;
 };
 
 class MyEvent : public Gtk::Window
