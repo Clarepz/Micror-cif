@@ -14,6 +14,7 @@ MyArea::MyArea(): change(false)
     set_content_height(area_side);
 
     set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
+    set_hexpand(true);
 }
 
 MyArea::~MyArea()
