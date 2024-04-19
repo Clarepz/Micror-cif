@@ -24,11 +24,23 @@ MyArea::~MyArea()
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
 {
     set_ptcr(cr);
-    if(width>=height) drawEntity(Square, Grey, width/2, height/2, height);
-    else drawEntity(Square, Grey, width/2, height/2, width);
-    cr->translate(width/2, height/2);
-    cr->scale(width/256, -height/256);
-    cr->translate(-128, -128);
+    double ratio=width/height;
+    double xMax(255), xMin(0), yMax(255), yMin(0), delta(255), middle(255./2);
+    //prevent distortion
+    if( ratio > 1)
+    {
+        xMax = middle + 0.5*ratio*delta ;
+        xMin = middle - 0.5*ratio*delta ;
+    }
+    else
+    {
+        yMax = middle + 0.5/ratio*delta ;
+        yMin = middle - 0.5/ratio*delta ;
+    }
+    cr->translate(width/2., height/2.);
+    cr->scale(width/(xMax-xMin), -height/(yMax - yMin));
+    cr->translate(-(xMin + xMax)/2, -(yMin + yMax)/2);
+    drawEntity(Square, Grey, 127.5, 127.5, 255);
     drawEntity(Line, Red, 0, 0, 200, 0.785);
     //if(change)
     //{
