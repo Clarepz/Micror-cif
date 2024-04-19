@@ -11,7 +11,7 @@ static double heightFactor, widthFactor;
 
 
 //fonction qui dessine les entités
-void drawEntity (Shape shape,Color color, double x, double y, double size, double angle)
+void drawShape (Shape shape,Color color, double x, double y, double size, double angle)
 {
     (*ptcr)->set_line_width(2.0);
     switch (color)

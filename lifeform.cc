@@ -102,8 +102,7 @@ void Alg::writeFile(std::ofstream &file) const {
 }
 
 void Alg::display() const {
-    drawEntity(CIRCLE, GREEN, position_.x, position_.y, r_alg);
-    //drawEntity(CIRCLE, Red, 100, 100, 10);
+    drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
@@ -155,7 +154,7 @@ void Cor::display() const {
     Color corColor = (status_ == ALIVE)? BLUE:BLACK;
     drawEntity(SQUARE, corColor, position_.x, position_.y, d_cor);
     for(auto aSeg : segments_){
-        drawEntity(LINE, corColor, position_.x, position_.y,
+        drawEntity(LINE, corColor, position_,
                    aSeg.getlength(), aSeg.getAngle());
     }
 }
@@ -192,7 +191,7 @@ void Sca::writeFile(std::ofstream &file) const {
 }
 
 void Sca::display() const {
-    drawEntity(CIRCLE, RED, position_.x, position_.y, radius_);
+    drawEntity(CIRCLE, RED, position_, radius_);
 }
 
 Alg readAlg(std::istringstream& line){

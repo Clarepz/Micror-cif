@@ -17,8 +17,6 @@ struct S2d
     double y=0.;
 };
 
-const S2d operator+(S2d const& point1, S2d const& point2);
-//S2d can be used to define a vector starting at (0,0) operator + is then useful
 
 class Segment{
 public:
@@ -40,6 +38,7 @@ double deltaAngle(Segment seg1, Segment seg2);
 bool suppCommun(const Segment &seg1, const Segment &seg2);
 //renvoie true si les segements sont supperposés
 bool suppIndep(const Segment &seg1, const Segment &seg2, bool sim=false);
+void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);
 //intersection de 2 segments independants
 
 #endif

@@ -6,10 +6,6 @@
 #include "shape.h"
 
 
-const S2d operator+(S2d const& point1, S2d const& point2)
-{
-    return(S2d{point1.x+point2.x, point1.y+point2.y});
-}
 
 int orientation(S2d p, S2d q, S2d r, bool sim);
 bool onSegment(S2d p, S2d q, S2d r, bool sim);
@@ -113,4 +109,9 @@ bool suppIndep(const Segment &seg1, const Segment &seg2, bool sim)
     if (o4 == 0 && onSegment(p2, q1, q2, sim)) return true;
 
     return false;
+}
+
+void drawEntity(Shape shape,Color color, S2d position, double size, double angle)
+{
+    drawShape(shape, color, position.x, position.y, size, angle);
 }
