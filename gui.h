@@ -11,6 +11,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/checkbutton.h>
 #include "simulation.h"
 
 class MyArea : public Gtk::DrawingArea
@@ -46,6 +47,7 @@ protected:
     void saveClicked();
     void startClicked();
     void stepClicked();
+    void algue_toggled();
 
     MyArea m_Area;
 
@@ -56,6 +58,10 @@ protected:
     Gtk::Button save;
     Gtk::Button start;
     Gtk::Button step;
+
+private:
+    Gtk::CheckButton algue;
+    bool stop=false;
 };
 
 #endif //MICRORECIF_GUI_H

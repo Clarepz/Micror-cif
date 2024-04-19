@@ -82,7 +82,8 @@ MyEvent::MyEvent():
         open("Open"),
         save("Save"),
         start("Start"),
-        step("Step")
+        step("Step"),
+        algue("Naissance d'algue")
 {
     set_title("Microrecif");
     set_resizable(true);
@@ -96,6 +97,7 @@ MyEvent::MyEvent():
     button.append(save);
     button.append(start);
     button.append(step);
+    button.append(algue);
 
     exit.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::exitClicked));
 
@@ -106,6 +108,8 @@ MyEvent::MyEvent():
     start.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::startClicked));
 
     step.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::stepClicked));
+
+    algue.signal_toggled().connect(sigc::mem_fun(*this,&MyEvent::algue_toggled));
 }
 
 void MyEvent::exitClicked()
@@ -125,10 +129,24 @@ void MyEvent::saveClicked()
 
 void MyEvent::startClicked()
 {
-    m_Area.start();
+    if (stop==false)
+    {
+        stop=true;
+        start.set_label("Stop");
+    }
+    else
+    {
+        stop=false;
+        start.set_label("Start");
+    }
 }
 
 void MyEvent::stepClicked()
 {
     m_Area.step();
+}
+
+void MyEvent::algue_toggled()
+{
+
 }
