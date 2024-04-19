@@ -40,8 +40,8 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(width/2., height/2.);
     cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    drawEntity(Square, Grey, 127.5, 127.5, 255);
-    drawEntity(Line, Red, 0, 0, 200, 0.785);
+    //drawEntity(Square, Grey, 127.5, 127.5, 255);
+    //drawEntity(Line, Red, 0, 0, 200, 0.785);
     //if(change)
     //{
         //Simulation.display();

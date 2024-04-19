@@ -49,8 +49,14 @@ void Simulation::saveAs(std::string const & fileName) const {
 }
 
 void Simulation::display() const {
-    for(auto const& anAlg : algs){
-        anAlg.display();
+    for(auto const& alifeForm : algs){
+        alifeForm.display();
+    }
+    for(auto const& alifeForm : cors){
+        alifeForm.display();
+    }
+    for(auto const& alifeForm : scas){
+        alifeForm.display();
     }
 }
 

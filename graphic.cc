@@ -16,41 +16,41 @@ void drawEntity (Shape shape,Color color, double x, double y, double size, doubl
     (*ptcr)->set_line_width(2.0);
     switch (color)
     {
-        case Green:
+        case GREEN:
             (*ptcr)->set_source_rgb(0, 0.7, 0);
             break;
 
-        case Blue:
+        case BLUE:
             (*ptcr)->set_source_rgb(0, 0, 0.7);
             break;
 
-        case Black:
+        case BLACK:
             (*ptcr)->set_source_rgb(0, 0, 0);
             break;
 
-        case Red:
+        case RED:
             (*ptcr)->set_source_rgb(0.7, 0, 0);
             break;
 
-        case Grey:
+        case GREY:
             (*ptcr)->set_source_rgb(0.5,0.5,0.5);
             (*ptcr)->set_line_width(5.0);
     }
     switch (shape)
     {
-        case Circle :
+        case CIRCLE :
             (*ptcr)->move_to(x+size, y);
             (*ptcr)->arc(x,y,size,0,6.5);
             (*ptcr)->stroke();
             break;
 
-        case Line :
+        case LINE :
             (*ptcr)->move_to(x, y);
             (*ptcr)->line_to(x+size*cos(angle),y+size*sin(angle));
             (*ptcr)->stroke();
             break;
 
-        case Square:
+        case SQUARE:
             (*ptcr)->move_to(x+size/2, y+size/2);
             (*ptcr)->line_to(x-size/2, y+size/2);
             (*ptcr)->line_to(x-size/2, y-size/2);

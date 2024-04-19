@@ -93,7 +93,6 @@ void LifeForm::writeFile(std::ofstream &file) const {
     file << '\t' << position_.x << ' ' << position_.y << ' ' << age_ << ' ' ;
 }
 
-
 Alg::Alg(S2d position, int age)
     : LifeForm(position,age){}
 
@@ -103,8 +102,8 @@ void Alg::writeFile(std::ofstream &file) const {
 }
 
 void Alg::display() const {
-    drawEntity(Circle, Green, position_.x, position_.y, r_alg);
-    //drawEntity(Circle, Red, 100, 100, 10);
+    drawEntity(CIRCLE, GREEN, position_.x, position_.y, r_alg);
+    //drawEntity(CIRCLE, Red, 100, 100, 10);
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
@@ -150,7 +149,15 @@ void Cor::writeFile(std::ofstream &file) const{
     for(auto aSeg : segments_){
         file << "\t\t" << aSeg.getAngle() << ' ' << aSeg.getlength() << std::endl;
     }
+}
 
+void Cor::display() const {
+    Color corColor = (status_ == ALIVE)? BLUE:BLACK;
+    drawEntity(SQUARE, corColor, position_.x, position_.y, d_cor);
+    for(auto aSeg : segments_){
+        drawEntity(LINE, corColor, position_.x, position_.y,
+                   aSeg.getlength(), aSeg.getAngle());
+    }
 }
 
 const std::vector<Segment>& Cor::getSegments()const{
@@ -182,6 +189,10 @@ void Sca::writeFile(std::ofstream &file) const {
     file << radius_ << ' ' << status_ << ' ';
     if(status_ == EATING) file << targetId_ ;
     file << std::endl;
+}
+
+void Sca::display() const {
+    drawEntity(CIRCLE, RED, position_.x, position_.y, radius_);
 }
 
 Alg readAlg(std::istringstream& line){

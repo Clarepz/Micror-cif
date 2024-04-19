@@ -39,8 +39,9 @@ public:
     unsigned getId() const;
     bool collisionCheck(const Cor& otherCor)const;
     void writeFile(std::ofstream &file) const ;
-private:
+    void display() const;
 
+private:
     unsigned id_;
     Status_cor status_;
     Dir_rot_cor dir_;
@@ -59,6 +60,7 @@ public:
     unsigned getTarget() const;
     Status_sca getStatus() const;
     void writeFile(std::ofstream &file) const ;
+    void display() const;
 private:
     unsigned radius_;
     Status_sca status_;
