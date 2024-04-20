@@ -83,7 +83,13 @@ MyEvent::MyEvent():
         save("Save"),
         start("Start"),
         step("Step"),
-        algue("Naissance d'algue")
+        algue("Naissance d'algue"),
+        titre1("Commandes"),
+        titre2("Informations sur la simulation :"),
+        miseAJour("Nombre de mises à jour : "),
+        label_Algue("Nombre d'algues : "),
+        corail("Nombre de coraux : "),
+        charognards("Nombre de charognards : ")
 {
     set_title("Microrecif");
     set_resizable(true);

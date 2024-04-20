@@ -152,7 +152,7 @@ void Cor::writeFile(std::ofstream &file) const{
 
 void Cor::display() const {
     Color corColor = (status_ == ALIVE)? BLUE:BLACK;
-    drawEntity(SQUARE, corColor, position_.x, position_.y, d_cor);
+    drawEntity(SQUARE, corColor, position_, d_cor);
     for(auto aSeg : segments_){
         drawEntity(LINE, corColor, position_,
                    aSeg.getlength(), aSeg.getAngle());

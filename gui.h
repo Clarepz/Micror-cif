@@ -53,11 +53,21 @@ protected:
 
     Gtk::Box m_Main_Box;
     Gtk::Box button;
+    Gtk::Box cmd_et_infos;
+    Gtk::Box sujetsInfos;
+    Gtk::Box nbSujets;
     Gtk::Button exit;
     Gtk::Button open;
     Gtk::Button save;
     Gtk::Button start;
     Gtk::Button step;
+
+    Gtk::Label titre1;
+    Gtk::Label titre2;
+    Gtk::Label miseAJour;
+    Gtk::Label label_Algue;
+    Gtk::Label corail;
+    Gtk::Label charognards;
 
 private:
     Gtk::CheckButton algue;
