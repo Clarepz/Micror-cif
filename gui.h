@@ -12,6 +12,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm.h>
 #include "simulation.h"
 
 class MyArea : public Gtk::DrawingArea
@@ -48,6 +49,7 @@ public:
 
 protected:
     //Button Signal handlers:
+    void on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog);
     void exitClicked();
     void openClicked();
     void saveClicked();
@@ -60,6 +62,7 @@ protected:
     Gtk::Box m_Main_Box;
     Gtk::Box button;
     Gtk::Box cmd_et_infos;
+    Gtk::Box infos;
     Gtk::Box sujetsInfos;
     Gtk::Box nbSujets;
     Gtk::Button exit;
@@ -74,6 +77,11 @@ protected:
     Gtk::Label label_Algue;
     Gtk::Label corail;
     Gtk::Label charognards;
+    Gtk::Label nbMiseAJour;
+    Gtk::Label nbAlgue;
+    Gtk::Label nbCorail;
+    Gtk::Label nbCharognards;
+
 
     static Simulation simulation_;
 
@@ -81,6 +89,10 @@ protected:
 private:
     Gtk::CheckButton algue;
     bool stop=false;
+    void setCounters ();
+
 };
+
+
 
 #endif //MICRORECIF_GUI_H
