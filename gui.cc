@@ -146,7 +146,7 @@ MyEvent::MyEvent():
 
 }
 
-void MyEvent::on_file_dialog_response(int response_id,
+void MyEvent::on_file_dialog_response_save(int response_id,
                                             Gtk::FileChooserDialog* dialog)
 {
     //Handle the response:
@@ -159,6 +159,40 @@ void MyEvent::on_file_dialog_response(int response_id,
             //Notice that this is a std::string, not a Glib::ustring.
             auto filename = dialog->get_file()->get_path();
             std::cout << "File selected: " <<  filename << std::endl;
+            char* fileName = &filename[0];
+            simulation_.saveAs(fileName);
+            break;
+        }
+        case Gtk::ResponseType::CANCEL:
+        {
+            std::cout << "Cancel clicked." << std::endl;
+            break;
+        }
+        default:
+        {
+            std::cout << "Unexpected button clicked." << std::endl;
+            break;
+        }
+    }
+    delete dialog;
+}
+
+void MyEvent::on_file_dialog_response_open(int response_id,
+                                           Gtk::FileChooserDialog* dialog)
+{
+    //Handle the response:
+    switch (response_id)
+    {
+        case Gtk::ResponseType::OK:
+        {
+            std::cout << "Open or Save clicked." << std::endl;
+
+            //Notice that this is a std::string, not a Glib::ustring.
+            auto filename = dialog->get_file()->get_path();
+            std::cout << "File selected: " <<  filename << std::endl;
+            char* fileName = &filename[0];
+            Simulation newSimulation(fileName);
+            setSimulation(newSimulation);
             break;
         }
         case Gtk::ResponseType::CANCEL:
@@ -196,7 +230,7 @@ void MyEvent::openClicked()
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response_open), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -232,7 +266,7 @@ void MyEvent::saveClicked()
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response_save), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);

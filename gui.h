@@ -49,7 +49,8 @@ public:
 
 protected:
     //Button Signal handlers:
-    void on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog);
+    void on_file_dialog_response_save(int response_id, Gtk::FileChooserDialog* dialog);
+    void on_file_dialog_response_open(int response_id, Gtk::FileChooserDialog* dialog);
     void exitClicked();
     void openClicked();
     void saveClicked();

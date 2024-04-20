@@ -38,6 +38,7 @@ Simulation::Simulation(char* inputFile): nbSim(0){
     }
 }
 
+
 void Simulation::saveAs(std::string const & fileName) const {
     ofstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
@@ -107,9 +108,6 @@ bool Simulation::readFile(char* fileName){
     }
     return true;
 }
-
-
-
 
 bool Simulation::corIdUnicityCheck() const {
     //for all cor check with the ones before
