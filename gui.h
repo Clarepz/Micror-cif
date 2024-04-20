@@ -18,6 +18,7 @@ class MyArea : public Gtk::DrawingArea
 {
 public:
     MyArea();
+
     virtual ~MyArea();
 
     void exit();
@@ -29,16 +30,22 @@ public:
 
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+    //Simulation* simulation_;
 
 private:
     S2d changeCoordinates (S2d newPoint, int width, int height);
     bool change;
+
 };
 
 class MyEvent : public Gtk::Window
 {
 public:
+    //MyEvent(Simulation& simulation);
     MyEvent();
+
+    static void setSimulation(Simulation& simulation);
+    static Simulation* getSimulation();
 
 protected:
     //Button Signal handlers:
@@ -58,6 +65,9 @@ protected:
     Gtk::Button save;
     Gtk::Button start;
     Gtk::Button step;
+
+    static Simulation simulation_;
+
 
 private:
     Gtk::CheckButton algue;

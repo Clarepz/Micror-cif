@@ -41,11 +41,12 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(width/2., height/2.);
     cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    drawEntity(SQUARE, GREY, 127.5, 127.5, 255);
-    drawEntity(LINE, RED, 0, 0, 200, 0.785);
+    drawEntity(SQUARE, GREY, {127.5, 127.5}, 255);
+    //drawEntity(LINE, RED, 0, 0, 200, 0.785);
     //if(change)
     //{
-        //Simulation.display();
+    //Simulation& simulation()
+    MyEvent::getSimulation()->display();
     //}
 
 }
@@ -84,6 +85,7 @@ MyEvent::MyEvent():
         start("Start"),
         step("Step"),
         algue("Naissance d'algue")
+        //simulation_(simulation)
 {
     set_title("Microrecif");
     set_resizable(true);
@@ -110,6 +112,15 @@ MyEvent::MyEvent():
     step.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::stepClicked));
 
     algue.signal_toggled().connect(sigc::mem_fun(*this,&MyEvent::algue_toggled));
+
+}
+
+void MyEvent::setSimulation(Simulation(& simulation)) {
+    simulation_=simulation;
+}
+
+Simulation* MyEvent::getSimulation() {
+    return &simulation_;
 }
 
 void MyEvent::exitClicked()
@@ -150,3 +161,7 @@ void MyEvent::algue_toggled()
 {
 
 }
+
+Simulation MyEvent::simulation_ = nullptr;
+
+
