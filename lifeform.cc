@@ -89,6 +89,10 @@ bool LifeForm::getInitSuccess() const {
     return initSuccess;
 }
 
+void LifeForm::update() {
+    age_++;
+}
+
 void LifeForm::writeFile(std::ofstream &file) const {
     file << '\t' << position_.x << ' ' << position_.y << ' ' << age_ << ' ' ;
 }
@@ -103,6 +107,10 @@ void Alg::writeFile(std::ofstream &file) const {
 
 void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
+}
+
+bool Alg::isTooOld() const {
+    return age_>max_life_alg;
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,

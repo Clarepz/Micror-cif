@@ -26,7 +26,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 {
     set_ptcr(cr);
     double ratio=double(width)/height;
-    double xMax(255), xMin(0), yMax(255), yMin(0), delta(255), middle(255./2);
+    double xMax(dmax), xMin(0), yMax(dmax), yMin(0), delta(dmax), middle(dmax/2);
     //prevent distortion
     if( ratio > 1)
     {
@@ -41,13 +41,11 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(width/2., height/2.);
     cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    drawEntity(SQUARE, GREY, {127.5, 127.5}, 255);
-    //drawEntity(LINE, RED, 0, 0, 200, 0.785);
-    //if(change)
-    //{
-    //Simulation& simulation()
+    drawEntity(SQUARE, GREY, {middle, middle}, 256);
+
+
     MyEvent::getSimulation()->display();
-    //}
+
 
 }
 
@@ -74,7 +72,9 @@ void MyArea::start()
 {}
 
 void MyArea::step()
-{}
+{
+    queue_draw();
+}
 
 MyEvent::MyEvent():
         m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
@@ -154,6 +154,7 @@ void MyEvent::startClicked()
 
 void MyEvent::stepClicked()
 {
+    simulation_.update(algue.get_active());
     m_Area.step();
 }
 

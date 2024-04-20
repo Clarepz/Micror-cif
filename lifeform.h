@@ -15,6 +15,7 @@ class LifeForm{
 public:
     LifeForm(S2d position, int age);
     bool getInitSuccess() const;
+    void update();
 
 protected:
     S2d position_;
@@ -29,6 +30,7 @@ public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const ;
     void display() const;
+    bool isTooOld() const;
 };
 
 class Cor:public LifeForm{
