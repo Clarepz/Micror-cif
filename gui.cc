@@ -193,6 +193,7 @@ void MyEvent::on_file_dialog_response_open(int response_id,
             char* fileName = &filename[0];
             Simulation newSimulation(fileName);
             setSimulation(newSimulation);
+            //newSimulation.display();
             break;
         }
         case Gtk::ResponseType::CANCEL:
