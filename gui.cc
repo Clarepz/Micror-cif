@@ -162,6 +162,6 @@ void MyEvent::algue_toggled()
 
 }
 
-Simulation MyEvent::simulation_ = nullptr;
+Simulation MyEvent::simulation_ = Simulation();
 
 

@@ -9,7 +9,9 @@
 
 using namespace std;
 
-Simulation::Simulation(char * inputFile): nbSim(0){
+Simulation::Simulation(): nbSim(0), nbCor(0), nbSca(0), nbAlg(0), initSuccess(true) {}
+
+Simulation::Simulation(char* inputFile): nbSim(0){
 
     initSuccess =
             readFile(inputFile) and

@@ -11,6 +11,7 @@
 
 class Simulation{
 public:
+    Simulation();
     Simulation(char* inputFile);
     void saveAs(std::string const & fileName) const;
     void display() const ;
