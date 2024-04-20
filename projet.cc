@@ -1,5 +1,5 @@
 //
-//projet.cc, Provenaz Clarence, version 1
+//projet.cc, Provenaz Clarence 50%, Royer Yann 50%
 //
 
 #include <iostream>
@@ -14,10 +14,11 @@ int main(int argc, char* argv[]){
     Simulation simulation(argv[1]); //initialise une simulation a partir du fichier d'entree
     simulation.saveAs("save.txt");
 
+    MyEvent::setSimulation(simulation);
+
     auto app = Gtk::Application::create();
     app->make_window_and_run<MyEvent>(1, argv);
 
-    simulation.display();
 
     return(0);
 }

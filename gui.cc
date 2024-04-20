@@ -1,5 +1,5 @@
 //
-// Created by royer on 06.04.2024.
+// gui.cc, Provenaz Clarence 10%, Royer Yann 90%
 //
 
 #include <cairomm/context.h>
@@ -26,7 +26,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 {
     set_ptcr(cr);
     double ratio=double(width)/height;
-    double xMax(255), xMin(0), yMax(255), yMin(0), delta(255), middle(255./2);
+    double xMax(dmax), xMin(0), yMax(dmax), yMin(0), delta(dmax), middle(dmax/2);
     //prevent distortion
     if( ratio > 1)
     {
@@ -41,12 +41,11 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(width/2., height/2.);
     cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    drawEntity(SQUARE, GREY, 127.5, 127.5, 255);
-    drawEntity(LINE, RED, 0, 0, 200, 0.785);
-    //if(change)
-    //{
-        //Simulation.display();
-    //}
+    drawEntity(SQUARE, GREY, {middle, middle}, 256);
+
+
+    MyEvent::getSimulation()->display();
+
 
 }
 
@@ -73,7 +72,9 @@ void MyArea::start()
 {}
 
 void MyArea::step()
-{}
+{
+    queue_draw();
+}
 
 MyEvent::MyEvent():
         m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
@@ -90,6 +91,8 @@ MyEvent::MyEvent():
         label_Algue("Nombre d'algues : "),
         corail("Nombre de coraux : "),
         charognards("Nombre de charognards : ")
+        algue("Naissance d'algue")
+        //simulation_(simulation)
 {
     set_title("Microrecif");
     set_resizable(true);
@@ -116,6 +119,15 @@ MyEvent::MyEvent():
     step.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::stepClicked));
 
     algue.signal_toggled().connect(sigc::mem_fun(*this,&MyEvent::algue_toggled));
+
+}
+
+void MyEvent::setSimulation(Simulation(& simulation)) {
+    simulation_=simulation;
+}
+
+Simulation* MyEvent::getSimulation() {
+    return &simulation_;
 }
 
 void MyEvent::exitClicked()
@@ -149,6 +161,7 @@ void MyEvent::startClicked()
 
 void MyEvent::stepClicked()
 {
+    simulation_.update(algue.get_active());
     m_Area.step();
 }
 
@@ -156,3 +169,7 @@ void MyEvent::algue_toggled()
 {
 
 }
+
+Simulation MyEvent::simulation_ = Simulation();
+
+

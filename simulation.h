@@ -11,9 +11,11 @@
 
 class Simulation{
 public:
+    Simulation();
     Simulation(char* inputFile);
     void saveAs(std::string const & fileName) const;
     void display() const ;
+    void update(bool algBirthOn);
 private:
     int nbSim;
     int nbAlg;
@@ -31,6 +33,8 @@ private:
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
+
+
 };
 
 #endif

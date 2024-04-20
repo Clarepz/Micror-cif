@@ -1,5 +1,5 @@
 //
-// shape.cc, Provenaz Clarence, version 1
+// shape.cc, Provenaz Clarence 0%, Royer Yann 100%
 //
 
 #include <cmath>

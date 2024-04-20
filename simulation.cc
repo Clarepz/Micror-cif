@@ -1,15 +1,24 @@
 //
-// simulation.cc, Provenaz Clarence, version 1
+// simulation.cc, Provenaz Clarence 100%, Royer Yann 0%
 //
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <random>
 #include "simulation.h"
 #include "message.h"
 
 using namespace std;
 
-Simulation::Simulation(char * inputFile): nbSim(0){
+static default_random_engine randomEngine ;
+
+Simulation::Simulation(): nbSim(0), nbCor(0), nbSca(0), nbAlg(0), initSuccess(true) {
+    randomEngine.seed(1);
+}
+
+Simulation::Simulation(char* inputFile): nbSim(0){
+    randomEngine.seed(1);
 
     initSuccess =
             readFile(inputFile) and
@@ -143,4 +152,26 @@ bool Simulation::scaTargetCheck() const {
         }
     }
     return true;
+}
+
+void Simulation::update(bool algBirthOn) {
+    nbSim++;
+    for(int i(0); i<nbAlg; i++){
+        algs[i].update();
+        if(algs[i].isTooOld()){
+            algs.erase(algs.begin()+i);
+            nbAlg--;
+        }
+    }
+    if(algBirthOn){
+        bernoulli_distribution randomBool(alg_birth_rate);
+        uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
+        if(randomBool(randomEngine)){
+            nbAlg++;
+            double x = randomCoordinate(randomEngine);
+            double y = randomCoordinate(randomEngine);
+            S2d randomPosition = {x,y};
+            algs.emplace_back(randomPosition,1);
+        }
+    }
 }

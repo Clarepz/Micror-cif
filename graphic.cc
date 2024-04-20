@@ -1,5 +1,5 @@
 //
-// Created by royer on 06.04.2024.
+//graphic.cc, Provenaz Clarence 0%, Royer Yann 100%
 //
 
 #include <cmath>
@@ -13,7 +13,7 @@ static double heightFactor, widthFactor;
 //fonction qui dessine les entités
 void drawShape (Shape shape,Color color, double x, double y, double size, double angle)
 {
-    (*ptcr)->set_line_width(2.0);
+    (*ptcr)->set_line_width(1.0);
     switch (color)
     {
         case GREEN:
@@ -34,7 +34,7 @@ void drawShape (Shape shape,Color color, double x, double y, double size, double
 
         case GREY:
             (*ptcr)->set_source_rgb(0.5,0.5,0.5);
-            (*ptcr)->set_line_width(5.0);
+            //(*ptcr)->set_line_width(5.0);
     }
     switch (shape)
     {
@@ -55,7 +55,7 @@ void drawShape (Shape shape,Color color, double x, double y, double size, double
             (*ptcr)->line_to(x-size/2, y+size/2);
             (*ptcr)->line_to(x-size/2, y-size/2);
             (*ptcr)->line_to(x+size/2, y-size/2);
-            (*ptcr)->line_to(x+size/2, y+size/2);
+            (*ptcr)->line_to(x+size/2, y+size/2+(*ptcr)->get_line_width()/2);
             (*ptcr)->stroke();
     }
 

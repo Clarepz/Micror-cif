@@ -1,14 +1,13 @@
 //
-// lifeform.cc, Provenaz Clarence, version 1
+// lifeform.cc, Provenaz Clarence 100%, Royer Yann 0%
 //
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include "message.h"
 #include "lifeform.h"
 #include "constantes.h"
-
-
 
 bool domainCheck(S2d center);
 bool ageCheck(int age);
@@ -89,6 +88,10 @@ bool LifeForm::getInitSuccess() const {
     return initSuccess;
 }
 
+void LifeForm::update() {
+    age_++;
+}
+
 void LifeForm::writeFile(std::ofstream &file) const {
     file << '\t' << position_.x << ' ' << position_.y << ' ' << age_ << ' ' ;
 }
@@ -103,6 +106,10 @@ void Alg::writeFile(std::ofstream &file) const {
 
 void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
+}
+
+bool Alg::isTooOld() const {
+    return age_>=max_life_alg;
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
@@ -154,7 +161,7 @@ void Cor::display() const {
     Color corColor = (status_ == ALIVE)? BLUE:BLACK;
     drawEntity(SQUARE, corColor, position_, d_cor);
     for(auto aSeg : segments_){
-        drawEntity(LINE, corColor, position_,
+        drawEntity(LINE, corColor, aSeg.getPoint(),
                    aSeg.getlength(), aSeg.getAngle());
     }
 }
