@@ -1,14 +1,13 @@
 //
-// lifeform.cc, Provenaz Clarence, version 1
+// lifeform.cc, Provenaz Clarence 100%, Royer Yann 0%
 //
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include "message.h"
 #include "lifeform.h"
 #include "constantes.h"
-
-
 
 bool domainCheck(S2d center);
 bool ageCheck(int age);
@@ -110,7 +109,7 @@ void Alg::display() const {
 }
 
 bool Alg::isTooOld() const {
-    return age_>max_life_alg;
+    return age_>=max_life_alg;
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,

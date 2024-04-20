@@ -1,6 +1,7 @@
 //
-// simulation.cc, Provenaz Clarence, version 1
+// simulation.cc, Provenaz Clarence 100%, Royer Yann 0%
 //
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

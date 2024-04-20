@@ -1,5 +1,5 @@
 //
-// Created by royer on 06.04.2024.
+//graphic.cc, Provenaz Clarence 0%, Royer Yann 100%
 //
 
 #include <cmath>

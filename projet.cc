@@ -1,5 +1,5 @@
 //
-//projet.cc, Provenaz Clarence, version 1
+//projet.cc, Provenaz Clarence 50%, Royer Yann 50%
 //
 
 #include <iostream>

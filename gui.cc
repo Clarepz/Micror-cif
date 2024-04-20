@@ -1,5 +1,5 @@
 //
-// Created by royer on 06.04.2024.
+// gui.cc, Provenaz Clarence 10%, Royer Yann 90%
 //
 
 #include <cairomm/context.h>

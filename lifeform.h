@@ -1,5 +1,5 @@
 //
-// lifeform.h, Provenaz Clarence, version 1
+// lifeform.h, Provenaz Clarence, Royer Yann
 //
 
 #ifndef LIFEFORM_H
