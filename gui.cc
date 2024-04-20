@@ -91,7 +91,6 @@ MyEvent::MyEvent():
         label_Algue("Nombre d'algues : "),
         corail("Nombre de coraux : "),
         charognards("Nombre de charognards : ")
-        algue("Naissance d'algue")
         //simulation_(simulation)
 {
     set_title("Microrecif");
