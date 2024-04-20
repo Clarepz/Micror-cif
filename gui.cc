@@ -96,10 +96,10 @@ MyEvent::MyEvent():
         label_Algue("Nombre d'algues : "),
         corail("Nombre de coraux : "),
         charognards("Nombre de charognards :  "),
-        nbMiseAJour("0"),
-        nbAlgue("0"),
-        nbCorail("0"),
-        nbCharognards("0")
+        nbMiseAJour(std::to_string(simulation_.getNbSim())),
+        nbAlgue(std::to_string(simulation_.getNbAlg())),
+        nbCorail(std::to_string(simulation_.getNbCor())),
+        nbCharognards(std::to_string(simulation_.getNbSca()))
         //simulation_(simulation)
 {
     set_title("Microrecif");
@@ -212,7 +212,7 @@ void MyEvent::on_file_dialog_response_open(int response_id,
 
 void MyEvent::setSimulation(Simulation(& simulation)) {
     simulation_=simulation;
-    //setCounters();
+    &MyEvent::setCounters;
 }
 
 Simulation* MyEvent::getSimulation() {
@@ -329,6 +329,7 @@ void MyEvent::setCounters ()
     nbAlgue.set_text(std::to_string(simulation_.getNbAlg()));
     nbCorail.set_text(std::to_string(simulation_.getNbCor()));
     nbCharognards.set_text(std::to_string(simulation_.getNbSca()));
+    nbCharognards.set_text("123");
 }
 
 
