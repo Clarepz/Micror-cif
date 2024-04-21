@@ -263,7 +263,7 @@ Simulation* MyEvent::getSimulation() {
 
 void MyEvent::exitClicked()
 {
-    m_Area.exit();
+    hide();
 }
 
 void MyEvent::openClicked()
