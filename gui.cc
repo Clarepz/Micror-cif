@@ -212,6 +212,24 @@ void MyEvent::on_file_dialog_response_open(int response_id,
     delete dialog;
 }
 
+bool MyEvent::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
+{
+    switch(gdk_keyval_to_unicode(keyval))
+    {
+        case 's':
+            startClicked();
+            return true;
+            break;
+
+        case '1':
+            stepClicked();
+            return true;
+            break;
+    }
+//the event has not been handled
+    return false;
+}
+
 void MyEvent::setSimulation(Simulation(& simulation)) {
     simulation_=simulation;
     //&MyEvent::setCounters;
@@ -336,7 +354,6 @@ void MyEvent::setCounters ()
     nbAlgue.set_text(std::to_string(simulation_.getNbAlg()));
     nbCorail.set_text(std::to_string(simulation_.getNbCor()));
     nbCharognards.set_text(std::to_string(simulation_.getNbSca()));
-    //nbCharognards.set_text("123");
 }
 
 
