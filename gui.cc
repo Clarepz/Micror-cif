@@ -3,13 +3,14 @@
 //
 
 #include <cairomm/context.h>
+#include <gtkmm.h>
 #include <iostream>
 #include "gui.h"
 #include "graphic_gui.h"
 
 constexpr int area_side(400);
 
-MyArea::MyArea(): change(false)
+MyArea::MyArea()
 {
     set_content_width(area_side);
     set_content_height(area_side);
@@ -56,13 +57,11 @@ S2d changeCoordinates (S2d oldPoint, int width, int height)
 
 void MyArea::exit()
 {
-    change = true;
     queue_draw();
 }
 
 void MyArea::open()
 {
-    change = false;
     queue_draw();
 }
 
@@ -99,7 +98,9 @@ MyEvent::MyEvent():
         nbMiseAJour(std::to_string(simulation_.getNbSim())),
         nbAlgue(std::to_string(simulation_.getNbAlg())),
         nbCorail(std::to_string(simulation_.getNbCor())),
-        nbCharognards(std::to_string(simulation_.getNbSca()))
+        nbCharognards(std::to_string(simulation_.getNbSca())),
+        disconnect(false), // to handle a single timer
+        timeoutValue(25)
         //simulation_(simulation)
 {
     set_title("Microrecif");
@@ -143,6 +144,11 @@ MyEvent::MyEvent():
     step.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::stepClicked));
 
     algue.signal_toggled().connect(sigc::mem_fun(*this,&MyEvent::algue_toggled));
+
+    auto controller = Gtk::EventControllerKey::create();
+    controller->signal_key_pressed().connect(
+            sigc::mem_fun(*this, &MyEvent::on_window_key_pressed), false);
+    add_controller(controller);
 
 }
 
@@ -228,6 +234,22 @@ bool MyEvent::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state
     }
 //the event has not been handled
     return false;
+}
+
+bool MyEvent::on_timeout()
+{
+
+    if(disconnect)
+    {
+        disconnect = false; // reset for next time a Timer is created
+
+        return false; // End of Timer
+    }
+  // display he simulation clock
+    simulation_.update(algue.get_active());
+    m_Area.step();
+    setCounters();
+    return true;
 }
 
 void MyEvent::setSimulation(Simulation(& simulation)) {
@@ -323,11 +345,17 @@ void MyEvent::startClicked()
     {
         stop=true;
         start.set_label("Stop");
+        sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
+                                                              &MyEvent::on_timeout));
+
+        // This is where we connect the slot to the Glib::signal_timeout()
+        auto conn = Glib::signal_timeout().connect(my_slot,timeoutValue);
     }
     else
     {
         stop=false;
         start.set_label("Start");
+        disconnect  = true;
     }
 }
 

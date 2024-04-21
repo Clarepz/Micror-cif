@@ -12,7 +12,8 @@
 #include <gtkmm/label.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm.h>
+#include <gtkmm/filechooserdialog.h>
+#include <map>
 #include "simulation.h"
 
 class MyArea : public Gtk::DrawingArea
@@ -33,8 +34,6 @@ protected:
     //Simulation* simulation_;
 
 private:
-    S2d changeCoordinates (S2d newPoint, int width, int height);
-    bool change;
 
 };
 
@@ -52,6 +51,7 @@ protected:
     void on_file_dialog_response_save(int response_id, Gtk::FileChooserDialog* dialog);
     void on_file_dialog_response_open(int response_id, Gtk::FileChooserDialog* dialog);
     bool on_window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);
+    bool on_timeout();
     void exitClicked();
     void openClicked();
     void saveClicked();
@@ -87,11 +87,14 @@ protected:
 
     static Simulation simulation_;
 
+    const int timeoutValue;
+
 
 private:
     Gtk::CheckButton algue;
     bool stop=false;
     void setCounters ();
+    bool disconnect=false;
 
 };
 
