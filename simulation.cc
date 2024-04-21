@@ -44,15 +44,15 @@ void Simulation::saveAs(std::string const & fileName) const {
     if(file.fail()) exit(EXIT_FAILURE);
 
     file<<nbAlg<<endl;
-    for(auto anAlg : algs ){
+    for(auto &anAlg : algs ){
         anAlg.writeFile(file);
     }
     file<<nbCor<<endl;
-    for(auto aCor : cors){
+    for(auto &aCor : cors){
         aCor.writeFile(file);
     }
     file<<nbSca<<endl;
-    for(auto aSca : scas){
+    for(auto &aSca : scas){
         aSca.writeFile(file);
     }
 

@@ -16,10 +16,10 @@ public:
     void saveAs(std::string const & fileName) const;
     void display() const ;
     void update(bool algBirthOn);
-    int getNbSim() {return nbSim;}
-    int getNbAlg() {return nbAlg;}
-    int getNbCor() {return nbCor;}
-    int getNbSca() {return nbSca;}
+    int getNbSim() const {return nbSim;}
+    int getNbAlg() const {return nbAlg;}
+    int getNbCor() const {return nbCor;}
+    int getNbSca() const {return nbSca;}
 private:
     int nbSim;
     int nbAlg;

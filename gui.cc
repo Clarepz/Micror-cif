@@ -193,6 +193,8 @@ void MyEvent::on_file_dialog_response_open(int response_id,
             char* fileName = &filename[0];
             Simulation newSimulation(fileName);
             setSimulation(newSimulation);
+            setCounters();
+            m_Area.step();
             //newSimulation.display();
             break;
         }
@@ -212,7 +214,7 @@ void MyEvent::on_file_dialog_response_open(int response_id,
 
 void MyEvent::setSimulation(Simulation(& simulation)) {
     simulation_=simulation;
-    &MyEvent::setCounters;
+    //&MyEvent::setCounters;
 }
 
 Simulation* MyEvent::getSimulation() {
@@ -258,6 +260,7 @@ void MyEvent::openClicked()
 
     //Show the dialog and wait for a user response:
     dialog->show();
+
 }
 
 void MyEvent::saveClicked()
@@ -298,7 +301,7 @@ void MyEvent::saveClicked()
 
 void MyEvent::startClicked()
 {
-    if (stop==false)
+    if (!stop)
     {
         stop=true;
         start.set_label("Stop");
@@ -314,6 +317,7 @@ void MyEvent::stepClicked()
 {
     simulation_.update(algue.get_active());
     m_Area.step();
+    setCounters();
 }
 
 void MyEvent::algue_toggled()
@@ -329,7 +333,7 @@ void MyEvent::setCounters ()
     nbAlgue.set_text(std::to_string(simulation_.getNbAlg()));
     nbCorail.set_text(std::to_string(simulation_.getNbCor()));
     nbCharognards.set_text(std::to_string(simulation_.getNbSca()));
-    nbCharognards.set_text("123");
+    //nbCharognards.set_text("123");
 }
 
 
