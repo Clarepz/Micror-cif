@@ -364,7 +364,8 @@ void MyEvent::stepClicked()
     if (not stop)
     {
         simulation_.update(algue.get_active());
-        m_Area.step();
+        //m_Area.step();
+        m_Area.queue_draw();
         setCounters();
     }
 }
