@@ -315,9 +315,12 @@ void MyEvent::startClicked()
 
 void MyEvent::stepClicked()
 {
-    simulation_.update(algue.get_active());
-    m_Area.step();
-    setCounters();
+    if (not stop)
+    {
+        simulation_.update(algue.get_active());
+        m_Area.step();
+        setCounters();
+    }
 }
 
 void MyEvent::algue_toggled()
