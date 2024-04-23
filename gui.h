@@ -22,11 +22,6 @@ public:
     MyArea();
     virtual ~MyArea();
 
-    void exit();
-    void open();
-    void save();
-    void start();
-    void step();
 
 
 protected:
@@ -48,8 +43,7 @@ public:
 
 protected:
     //Button Signal handlers:
-    void on_file_dialog_response_save(int response_id, Gtk::FileChooserDialog* dialog);
-    void on_file_dialog_response_open(int response_id, Gtk::FileChooserDialog* dialog);
+    void on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog);
     bool on_window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);
     bool on_timeout();
     void exitClicked();
@@ -87,14 +81,15 @@ protected:
 
     static Simulation simulation_;
 
-    const int timeoutValue;
+
 
 
 private:
     Gtk::CheckButton algue;
-    bool stop=false;
-    void setCounters ();
+    bool started=false;
+    void setCounters();
     bool disconnect=false;
+    bool saveMode;
 
 };
 

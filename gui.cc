@@ -9,6 +9,7 @@
 #include "graphic_gui.h"
 
 constexpr int area_side(400);
+constexpr int timeoutValue(25);
 
 MyArea::MyArea()
 {
@@ -51,30 +52,6 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 
 }
 
-S2d changeCoordinates (S2d oldPoint, int width, int height)
-{
-}
-
-void MyArea::exit()
-{
-    queue_draw();
-}
-
-void MyArea::open()
-{
-    queue_draw();
-}
-
-void MyArea::save()
-{}
-
-void MyArea::start()
-{}
-
-void MyArea::step()
-{
-    queue_draw();
-}
 
 MyEvent::MyEvent():
         m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
@@ -99,8 +76,7 @@ MyEvent::MyEvent():
         nbAlgue(std::to_string(simulation_.getNbAlg())),
         nbCorail(std::to_string(simulation_.getNbCor())),
         nbCharognards(std::to_string(simulation_.getNbSca())),
-        disconnect(false), // to handle a single timer
-        timeoutValue(25)
+        disconnect(false) // to handle a single timer
         //simulation_(simulation)
 {
     set_title("Microrecif");
@@ -152,7 +128,7 @@ MyEvent::MyEvent():
 
 }
 
-void MyEvent::on_file_dialog_response_save(int response_id,
+void MyEvent::on_file_dialog_response(int response_id,
                                             Gtk::FileChooserDialog* dialog)
 {
     //Handle the response:
@@ -166,8 +142,18 @@ void MyEvent::on_file_dialog_response_save(int response_id,
             auto filename = dialog->get_file()->get_path();
             std::cout << "File selected: " <<  filename << std::endl;
             char* fileName = &filename[0];
-            simulation_.saveAs(fileName);
-            break;
+            if(saveMode)
+            {
+                simulation_.saveAs(fileName);
+                break;
+            }
+            else
+            {
+                Simulation newSimulation(fileName);
+                setSimulation(newSimulation);
+                setCounters();
+                m_Area.queue_draw();
+            }
         }
         case Gtk::ResponseType::CANCEL:
         {
@@ -183,40 +169,7 @@ void MyEvent::on_file_dialog_response_save(int response_id,
     delete dialog;
 }
 
-void MyEvent::on_file_dialog_response_open(int response_id,
-                                           Gtk::FileChooserDialog* dialog)
-{
-    //Handle the response:
-    switch (response_id)
-    {
-        case Gtk::ResponseType::OK:
-        {
-            std::cout << "Open or Save clicked." << std::endl;
 
-            //Notice that this is a std::string, not a Glib::ustring.
-            auto filename = dialog->get_file()->get_path();
-            std::cout << "File selected: " <<  filename << std::endl;
-            char* fileName = &filename[0];
-            Simulation newSimulation(fileName);
-            setSimulation(newSimulation);
-            setCounters();
-            m_Area.step();
-            //newSimulation.display();
-            break;
-        }
-        case Gtk::ResponseType::CANCEL:
-        {
-            std::cout << "Cancel clicked." << std::endl;
-            break;
-        }
-        default:
-        {
-            std::cout << "Unexpected button clicked." << std::endl;
-            break;
-        }
-    }
-    delete dialog;
-}
 
 bool MyEvent::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
 {
@@ -247,7 +200,7 @@ bool MyEvent::on_timeout()
     }
   // display he simulation clock
     simulation_.update(algue.get_active());
-    m_Area.step();
+    m_Area.queue_draw();
     setCounters();
     return true;
 }
@@ -268,12 +221,13 @@ void MyEvent::exitClicked()
 
 void MyEvent::openClicked()
 {
+    saveMode=false;
     auto dialog = new Gtk::FileChooserDialog("Please choose a file",
                                              Gtk::FileChooser::Action::OPEN);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response_open), dialog));
+            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -305,12 +259,13 @@ void MyEvent::openClicked()
 
 void MyEvent::saveClicked()
 {
+    saveMode=true;
     auto dialog = new Gtk::FileChooserDialog("Please choose a file",
                                              Gtk::FileChooser::Action::SAVE);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response_save), dialog));
+            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -341,9 +296,8 @@ void MyEvent::saveClicked()
 
 void MyEvent::startClicked()
 {
-    if (!stop)
+    if (not started)
     {
-        stop=true;
         start.set_label("Stop");
         sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
                                                               &MyEvent::on_timeout));
@@ -353,18 +307,18 @@ void MyEvent::startClicked()
     }
     else
     {
-        stop=false;
         start.set_label("Start");
         disconnect  = true;
     }
+    started=not started;
 }
 
 void MyEvent::stepClicked()
 {
-    if (not stop)
+    if (not started)
     {
         simulation_.update(algue.get_active());
-        m_Area.step();
+        m_Area.queue_draw();
         setCounters();
     }
 }
