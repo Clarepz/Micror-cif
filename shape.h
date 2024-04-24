@@ -1,6 +1,6 @@
 //
-// shape.h, Provenaz Clarence, version 1
-//
+// shape.h, royer yann, verion 2
+// conventions ok
 
 #ifndef SHAPE_H
 #define SHAPE_H
@@ -26,7 +26,7 @@ public:
     double getlength() const;
     double getAngle() const;
     Fail getFail() const;
-    Segment addAngle(double angle) const; //sert pour la supperposition en simulation
+    Segment addAngle(double angle) const;//servira pour la supperposition en simulation
 private:
     S2d point;
     double angle;
@@ -36,9 +36,9 @@ private:
 
 double deltaAngle(Segment seg1, Segment seg2);
 bool suppCommun(const Segment &seg1, const Segment &seg2);
-//renvoie true si les segements sont supperposés
+//renvoie true si deux segements avec un point commun sont supperposés
 bool suppIndep(const Segment &seg1, const Segment &seg2, bool sim=false);
-void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);
 //intersection de 2 segments independants
+void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);
 
 #endif

@@ -1,10 +1,12 @@
 //
-// gui.cc, Provenaz Clarence 10%, Royer Yann 90%
+// gui.cc, Provenaz Clarence 10%, Royer Yann 90%, version 1
 //
 
 #include <cairomm/context.h>
-#include <gtkmm.h>
 #include <iostream>
+#include <gtkmm/eventcontrollerkey.h>
+#include <glibmm/main.h>
+#include <map>
 #include "gui.h"
 #include "graphic_gui.h"
 
@@ -15,14 +17,11 @@ MyArea::MyArea()
 {
     set_content_width(area_side);
     set_content_height(area_side);
-
     set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
     set_hexpand(true);
 }
 
-MyArea::~MyArea()
-{
-}
+MyArea::~MyArea() {}
 
 
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
@@ -31,7 +30,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     double ratio=double(width)/height;
     double xMax(dmax), xMin(0), yMax(dmax), yMin(0), delta(dmax), middle(dmax/2);
     //prevent distortion
-    if( ratio > 1)
+    if(ratio > 1)
     {
         xMax = middle + 0.5*ratio*delta ;
         xMin = middle - 0.5*ratio*delta ;
@@ -42,21 +41,19 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
         yMin = middle - 0.5/ratio*delta ;
     }
     cr->translate(width/2., height/2.);
-    cr->scale(double(width/(xMax-xMin)), double(-height/(yMax - yMin)));
+    cr->scale(width/(xMax-xMin), -height/(yMax - yMin));
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
-    drawEntity(SQUARE, GREY, {middle, middle}, 256);
+    drawEntity(SQUARE, GREY, {middle, middle}, 256); //bord du monde
 
-
-    MyEvent::getSimulation()->display();
-
+    UserInterface::getSimulation()->display();
 
 }
 
 
-MyEvent::MyEvent():
+UserInterface::UserInterface():
         m_Main_Box(Gtk::Orientation::HORIZONTAL, 0),
-        button(Gtk::Orientation::VERTICAL, 2),
         cmd_et_infos(Gtk::Orientation::VERTICAL,5),
+        button(Gtk::Orientation::VERTICAL, 2),
         infos(Gtk::Orientation::HORIZONTAL,5),
         sujetsInfos(Gtk::Orientation::VERTICAL,5),
         nbSujets(Gtk::Orientation::VERTICAL, 5),
@@ -85,13 +82,13 @@ MyEvent::MyEvent():
 
     m_Main_Box.append(cmd_et_infos);
     m_Main_Box.append(m_Area);
+    cmd_et_infos.append(titre1);
     cmd_et_infos.append(button);
     cmd_et_infos.append(titre2);
     cmd_et_infos.append(infos);
     infos.append(sujetsInfos);
     infos.append(nbSujets);
 
-    button.append(titre1);
     button.append(exit);
     button.append(open);
     button.append(save);
@@ -109,26 +106,34 @@ MyEvent::MyEvent():
     nbSujets.append(nbCorail);
     nbSujets.append(nbCharognards);
 
-    exit.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::exitClicked));
+    exit.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::exitClicked));
 
-    open.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::openClicked));
+    open.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::openClicked));
 
-    save.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::saveClicked));
+    save.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::saveClicked));
 
-    start.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::startClicked));
+    start.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::startClicked));
 
-    step.signal_clicked().connect(sigc::mem_fun(*this, &MyEvent::stepClicked));
+    step.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::stepClicked));
 
-    algue.signal_toggled().connect(sigc::mem_fun(*this,&MyEvent::algue_toggled));
+    algue.signal_toggled().connect(sigc::mem_fun(*this,&UserInterface::algue_toggled));
 
     auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(
-            sigc::mem_fun(*this, &MyEvent::on_window_key_pressed), false);
+            sigc::mem_fun(*this, &UserInterface::on_window_key_pressed), false);
     add_controller(controller);
 
 }
 
-void MyEvent::on_file_dialog_response(int response_id,
+void UserInterface::setSimulation(Simulation(& simulation)) {
+    simulation_=simulation;
+}
+
+Simulation* UserInterface::getSimulation() {
+    return &simulation_;
+}
+
+void UserInterface::on_file_dialog_response(int response_id,
                                             Gtk::FileChooserDialog* dialog)
 {
     //Handle the response:
@@ -137,8 +142,6 @@ void MyEvent::on_file_dialog_response(int response_id,
         case Gtk::ResponseType::OK:
         {
             std::cout << "Open or Save clicked." << std::endl;
-
-            //Notice that this is a std::string, not a Glib::ustring.
             auto filename = dialog->get_file()->get_path();
             std::cout << "File selected: " <<  filename << std::endl;
             char* fileName = &filename[0];
@@ -147,7 +150,7 @@ void MyEvent::on_file_dialog_response(int response_id,
                 simulation_.saveAs(fileName);
                 break;
             }
-            else
+            else //open mode
             {
                 Simulation newSimulation(fileName);
                 setSimulation(newSimulation);
@@ -169,9 +172,7 @@ void MyEvent::on_file_dialog_response(int response_id,
     delete dialog;
 }
 
-
-
-bool MyEvent::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
+bool UserInterface::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
 {
     switch(gdk_keyval_to_unicode(keyval))
     {
@@ -185,41 +186,28 @@ bool MyEvent::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state
             return true;
             break;
     }
-//the event has not been handled
-    return false;
+    return false;//in case of another key
 }
 
-bool MyEvent::on_timeout()
+bool UserInterface::on_timeout()
 {
-
     if(disconnect)
     {
-        disconnect = false; // reset for next time a Timer is created
-
-        return false; // End of Timer
+        disconnect = false;
+        return false;
     }
-  // display he simulation clock
     simulation_.update(algue.get_active());
     m_Area.queue_draw();
     setCounters();
     return true;
 }
 
-void MyEvent::setSimulation(Simulation(& simulation)) {
-    simulation_=simulation;
-    //&MyEvent::setCounters;
-}
-
-Simulation* MyEvent::getSimulation() {
-    return &simulation_;
-}
-
-void MyEvent::exitClicked()
+void UserInterface::exitClicked()
 {
     hide();
 }
 
-void MyEvent::openClicked()
+void UserInterface::openClicked()
 {
     saveMode=false;
     auto dialog = new Gtk::FileChooserDialog("Please choose a file",
@@ -227,7 +215,7 @@ void MyEvent::openClicked()
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+            sigc::mem_fun(*this, &UserInterface::on_file_dialog_response), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -257,7 +245,7 @@ void MyEvent::openClicked()
 
 }
 
-void MyEvent::saveClicked()
+void UserInterface::saveClicked()
 {
     saveMode=true;
     auto dialog = new Gtk::FileChooserDialog("Please choose a file",
@@ -265,7 +253,7 @@ void MyEvent::saveClicked()
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->signal_response().connect(sigc::bind(
-            sigc::mem_fun(*this, &MyEvent::on_file_dialog_response), dialog));
+            sigc::mem_fun(*this, &UserInterface::on_file_dialog_response), dialog));
 
     //Add response buttons to the dialog:
     dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
@@ -294,26 +282,25 @@ void MyEvent::saveClicked()
     dialog->show();
 }
 
-void MyEvent::startClicked()
+void UserInterface::startClicked()
 {
-    if (not started)
-    {
-        start.set_label("Stop");
-        sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
-                                                              &MyEvent::on_timeout));
-
-        // This is where we connect the slot to the Glib::signal_timeout()
-        auto conn = Glib::signal_timeout().connect(my_slot,timeoutValue);
-    }
-    else
+    if (started)
     {
         start.set_label("Start");
         disconnect  = true;
     }
+    else
+    {
+        start.set_label("Stop");
+        sigc::slot<bool()> my_slot = sigc::bind(
+                sigc::mem_fun(*this,&UserInterface::on_timeout));
+
+        auto conn = Glib::signal_timeout().connect(my_slot,timeoutValue);
+    }
     started=not started;
 }
 
-void MyEvent::stepClicked()
+void UserInterface::stepClicked()
 {
     if (not started)
     {
@@ -323,14 +310,14 @@ void MyEvent::stepClicked()
     }
 }
 
-void MyEvent::algue_toggled()
+void UserInterface::algue_toggled()
 {
 
 }
 
-Simulation MyEvent::simulation_ = Simulation();
+Simulation UserInterface::simulation_ = Simulation();
 
-void MyEvent::setCounters ()
+void UserInterface::setCounters ()
 {
     nbMiseAJour.set_text(std::to_string(simulation_.getNbSim()));
     nbAlgue.set_text(std::to_string(simulation_.getNbAlg()));

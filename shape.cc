@@ -1,10 +1,9 @@
 //
-// shape.cc, Provenaz Clarence 0%, Royer Yann 100%
-//
+// shape.cc, Provenaz Clarence 0%, Royer Yann 100%, verion 2
+// conventions ok
 
 #include <cmath>
 #include "shape.h"
-
 
 
 int orientation(S2d p, S2d q, S2d r, bool sim);

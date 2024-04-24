@@ -1,6 +1,6 @@
 //
-// lifeform.cc, Provenaz Clarence 100%, Royer Yann 0%
-//
+// lifeform.cc, Provenaz Clarence 100%, Royer Yann 0%, verion 2
+// convention ok
 
 #include <iostream>
 #include <fstream>
@@ -16,7 +16,7 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
 
 
-bool domainCheck(S2d center){
+bool domainCheck(S2d center) {
     if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1){
         return true;
     }else{
@@ -25,7 +25,7 @@ bool domainCheck(S2d center){
     }
 }
 
-bool ageCheck(int age){
+bool ageCheck(int age) {
     if (age>0){
         return true;
     }else{
@@ -34,7 +34,7 @@ bool ageCheck(int age){
     }
 }
 
-bool superposCheck(const std::vector<Segment>& segs,unsigned id){
+bool superposCheck(const std::vector<Segment>& segs,unsigned id) {
     for(int i = 1; i < segs.size();i++){
 
         if(suppCommun(segs[i-1],segs[i])){
@@ -45,7 +45,7 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id){
     return true;
 }
 
-bool segCheck(const std::vector<Segment>& segs,unsigned id){
+bool segCheck(const std::vector<Segment>& segs,unsigned id) {
     for(auto seg:segs){
         S2d point = seg.getSecPoint();
         if(!(point.x<dmax-epsil_zero and point.y<dmax-epsil_zero
@@ -66,7 +66,7 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id){
     return true;
 }
 
-bool scaRadiusCheck(int radius){
+bool scaRadiusCheck(int radius) {
     if(radius>=r_sca and radius<r_sca_repro){
         return true;
     }else{
@@ -77,7 +77,7 @@ bool scaRadiusCheck(int radius){
 
 
 LifeForm::LifeForm(S2d position, int age)
-    : position_(position), initSuccess(true){
+    : position_(position), initSuccess(true) {
     if ( !(domainCheck(position_) and ageCheck(age)) ){
         initSuccess = false;
     }
@@ -113,7 +113,7 @@ bool Alg::isTooOld() const {
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
-         const std::vector<Segment>& segs): LifeForm(position,age){
+         const std::vector<Segment>& segs): LifeForm(position,age) {
     id_ = id;
     status_ = static_cast<Status_cor>(status);
     dir_ = static_cast<Dir_rot_cor>(dir);
@@ -127,11 +127,11 @@ Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int 
     segments_=segs;
 }
 
-unsigned Cor::getId() const{
+unsigned Cor::getId() const {
     return id_;
 }
 
-bool Cor::collisionCheck(const Cor &otherCor) const{
+bool Cor::collisionCheck(const Cor &otherCor) const {
     const std::vector<Segment>& otherSegs = otherCor.getSegments();
     unsigned otherId = otherCor.getId();
     for (int i(0);i<nbSeg_;i++){
@@ -148,7 +148,7 @@ bool Cor::collisionCheck(const Cor &otherCor) const{
     return true;
 }
 
-void Cor::writeFile(std::ofstream &file) const{
+void Cor::writeFile(std::ofstream &file) const {
     LifeForm::writeFile(file);
     file << id_ << ' ' << status_ << ' ' << dir_ << ' ' << statusDev_ << ' '
     << nbSeg_ << std::endl;
@@ -166,13 +166,13 @@ void Cor::display() const {
     }
 }
 
-const std::vector<Segment>& Cor::getSegments()const{
+const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
 }
 
 
 Sca::Sca(S2d position, int age, int radius, int status, int targetId)
-    : LifeForm(position,age){
+    : LifeForm(position,age) {
 
     if(!scaRadiusCheck(radius)){
         initSuccess = false;
@@ -201,7 +201,7 @@ void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
 }
 
-Alg readAlg(std::istringstream& line){
+Alg readAlg(std::istringstream& line) {
     S2d pos;
     int age;
 
@@ -209,7 +209,7 @@ Alg readAlg(std::istringstream& line){
     return Alg(pos,age);
 }
 
-Cor readCor(std::ifstream& file){
+Cor readCor(std::ifstream& file) {
     std::istringstream line = nextLine(file);
     S2d pos;
     int age, id, statut, dir, dev, nbSeg;
@@ -230,7 +230,7 @@ Cor readCor(std::ifstream& file){
     return Cor(pos,age,id,statut,dir,dev,nbSeg,segs);
 }
 
-Sca readSca(std::istringstream& line){
+Sca readSca(std::istringstream& line) {
     S2d pos;
     int age,radius,statut,targetId;
     line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;

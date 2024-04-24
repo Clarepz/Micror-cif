@@ -1,17 +1,13 @@
 //
-//graphic.cc, Provenaz Clarence 0%, Royer Yann 100%
-//
+//graphic.cc, Provenaz Clarence 0%, Royer Yann 100%, verion 2
+//conventions ok
 
 #include <cmath>
 #include "graphic_gui.h"
-#include "constantes.h"
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
-static double heightFactor, widthFactor;
 
-
-//fonction qui dessine les entités
-void drawShape (Shape shape,Color color, double x, double y, double size, double angle)
+void drawShape(Shape shape,Color color, double x, double y, double size, double angle)
 {
     (*ptcr)->set_line_width(1.0);
     switch (color)
@@ -34,7 +30,6 @@ void drawShape (Shape shape,Color color, double x, double y, double size, double
 
         case GREY:
             (*ptcr)->set_source_rgb(0.5,0.5,0.5);
-            //(*ptcr)->set_line_width(5.0);
     }
     switch (shape)
     {
@@ -58,10 +53,7 @@ void drawShape (Shape shape,Color color, double x, double y, double size, double
             (*ptcr)->line_to(x+size/2, y+size/2+(*ptcr)->get_line_width()/2);
             (*ptcr)->stroke();
     }
-
 }
-//y sont prédéfinies une table de couleur et des fonctions pour dessiner les entitées
-
 
 void set_ptcr(const Cairo::RefPtr<Cairo::Context>& cr)
 {

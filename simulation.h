@@ -1,6 +1,6 @@
 //
-// simulation.h, Provenaz Clarence, version 1
-//
+// simulation.h, Provenaz Clarence, verion 2
+// conventions ok
 
 
 #ifndef SIMULATION_H
@@ -9,12 +9,12 @@
 #include <string>
 #include "lifeform.h"
 
-class Simulation{
+class Simulation {
 public:
     Simulation();
     Simulation(char* inputFile);
     void saveAs(std::string const & fileName) const;
-    void display() const ;
+    void display() const;
     void update(bool algBirthOn);
     int getNbSim() const {return nbSim;}
     int getNbAlg() const {return nbAlg;}
@@ -37,7 +37,6 @@ private:
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
-
 
 };
 

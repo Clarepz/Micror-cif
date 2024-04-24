@@ -1,6 +1,6 @@
 //
-// Created by royer on 13.04.2024.
-//
+// graphic_gui.h, royer yann, verion 1
+// conventions ok
 
 #ifndef MICRORECIF_GRAPHIC_GUI_H
 #define MICRORECIF_GRAPHIC_GUI_H

@@ -1,6 +1,6 @@
 //
-// lifeform.h, Provenaz Clarence, Royer Yann
-//
+// lifeform.h, Provenaz Clarence, verion 2
+// convention ok
 
 #ifndef LIFEFORM_H
 #define LIFEFORM_H
@@ -11,9 +11,9 @@
 #include "constantes.h"
 
 
-class LifeForm{
+class LifeForm {
 public:
-    LifeForm(S2d position, int age);
+    LifeForm(S2d position, int age);//constructeur
     bool getInitSuccess() const;
     void update();
 
@@ -21,25 +21,23 @@ protected:
     S2d position_;
     unsigned age_;
     bool initSuccess;
-
-    virtual void writeFile(std::ofstream& file) const ;
+    virtual void writeFile(std::ofstream& file) const;
 };
 
-class Alg:public LifeForm{
+class Alg:public LifeForm {
 public:
     Alg(S2d position, int age); //constructor
-    void writeFile(std::ofstream& file) const ;
+    void writeFile(std::ofstream& file) const;
     void display() const;
     bool isTooOld() const;
 };
 
-class Cor:public LifeForm{
+class Cor:public LifeForm {
 public:
     Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
         const std::vector<Segment>& segs);
-
     unsigned getId() const;
-    bool collisionCheck(const Cor& otherCor)const;
+    bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
 
@@ -52,13 +50,12 @@ private:
 
     std::vector<Segment> segments_;
 
-    const std::vector<Segment>& getSegments()const;
+    const std::vector<Segment>& getSegments() const;
 };
 
-class Sca:public LifeForm{
+class Sca:public LifeForm {
 public:
     Sca(S2d position, int age, int radius, int status, int targetId); //constructor
-
     unsigned getTarget() const;
     Status_sca getStatus() const;
     void writeFile(std::ofstream &file) const ;
