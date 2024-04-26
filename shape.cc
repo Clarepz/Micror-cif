@@ -1,6 +1,6 @@
 //
 // shape.cc, Provenaz Clarence 0%, Royer Yann 100%, verion 2
-// conventions ok
+//
 
 #include <cmath>
 #include "shape.h"

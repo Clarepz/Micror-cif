@@ -1,6 +1,6 @@
 //
-// gui.h, royer yann, version 1
-// conventions ok
+// gui.h, Provenaz Clarence, Royer Yann
+//
 
 #ifndef MICRORECIF_GUI_H
 #define MICRORECIF_GUI_H

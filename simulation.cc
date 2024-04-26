@@ -1,5 +1,5 @@
 //
-// simulation.cc, Provenaz Clarence 100%, Royer Yann 0%, verion 2
+// simulation.cc, Provenaz Clarence 100%, Royer Yann 0%
 // conventions ok
 
 #include <iostream>

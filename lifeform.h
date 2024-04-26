@@ -1,6 +1,6 @@
 //
-// lifeform.h, Provenaz Clarence, verion 2
-// convention ok
+// lifeform.h, Provenaz Clarence, Royer Yann verion 2
+//
 
 #ifndef LIFEFORM_H
 #define LIFEFORM_H

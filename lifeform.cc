@@ -1,6 +1,6 @@
 //
 // lifeform.cc, Provenaz Clarence 100%, Royer Yann 0%, verion 2
-// convention ok
+//
 
 #include <iostream>
 #include <fstream>

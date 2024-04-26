@@ -1,5 +1,5 @@
 //
-// graphic.h, royer yann, verion 1
+// graphic.h, Provenaz Clarence, Royer Yann
 // conventions ok
 
 #ifndef MICRORECIF_GRAPHIC_H

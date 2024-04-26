@@ -1,5 +1,5 @@
 //
-// simulation.h, Provenaz Clarence, verion 2
+// simulation.h, Provenaz Clarence, Royer Yann
 // conventions ok
 
 

@@ -1,6 +1,6 @@
 //
-// graphic_gui.h, royer yann, verion 1
-// conventions ok
+// graphic_gui.h, Provenaz Clarence, Royer Yann
+//
 
 #ifndef MICRORECIF_GRAPHIC_GUI_H
 #define MICRORECIF_GRAPHIC_GUI_H

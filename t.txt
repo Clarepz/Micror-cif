@@ -20,7 +20,7 @@
 
 2
     100. 100. 1 8 1 99
-    200. 100. 1 8 1 9
+    200. 100. 1 8 1 99
 
 
 quelqu’un peut il exécuter le programme avec cette fichier et me dire l affichage?

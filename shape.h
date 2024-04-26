@@ -1,5 +1,5 @@
 //
-// shape.h, royer yann, verion 2
+// shape.h, Provenaz Clarence, Royer Yann
 // conventions ok
 
 #ifndef SHAPE_H
