@@ -115,8 +115,6 @@ UserInterface::UserInterface():
 
     step.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::stepClicked));
 
-    algue.signal_toggled().connect(sigc::mem_fun(*this,&UserInterface::algue_toggled));
-
     auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &UserInterface::on_window_key_pressed), false);
@@ -307,11 +305,6 @@ void UserInterface::stepClicked()
         m_Area.queue_draw();
         setCounters();
     }
-}
-
-void UserInterface::algue_toggled()
-{
-
 }
 
 //initialisation de l'attribut static:
