@@ -18,7 +18,6 @@ MyArea::MyArea()
     set_content_width(area_side);
     set_content_height(area_side);
     set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
-    set_hexpand(true);
 }
 
 
@@ -88,6 +87,8 @@ UserInterface::UserInterface():
     infos.append(sujetsInfos);
     infos.append(nbSujets);
 
+    m_Area.set_expand();
+
     button.append(exit);
     button.append(open);
     button.append(save);
@@ -123,11 +124,13 @@ UserInterface::UserInterface():
 }
 
 
-void UserInterface::setSimulation(char *inputFilename) {
+void UserInterface::setSimulation(char *inputFilename)
+{
     simulation_ = Simulation(inputFilename);
 }
 
-const Simulation& UserInterface::getSimulation() {
+const Simulation& UserInterface::getSimulation()
+{
     return simulation_;
 }
 
