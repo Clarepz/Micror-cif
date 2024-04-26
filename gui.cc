@@ -21,7 +21,6 @@ MyArea::MyArea()
     set_hexpand(true);
 }
 
-MyArea::~MyArea() {}
 
 
 void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
@@ -45,7 +44,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     cr->translate(-(xMin + xMax)/2., -(yMin + yMax)/2.);
     drawEntity(SQUARE, GREY, {middle, middle}, 256); //bord du monde
 
-    UserInterface::getSimulation()->display();
+    UserInterface::getSimulation().display();
 
 }
 
@@ -125,12 +124,13 @@ UserInterface::UserInterface():
 
 }
 
-void UserInterface::setSimulation(Simulation(& simulation)) {
-    simulation_=simulation;
+
+void UserInterface::setSimulation(char *inputFilename) {
+    simulation_ = Simulation(inputFilename);
 }
 
-Simulation* UserInterface::getSimulation() {
-    return &simulation_;
+const Simulation& UserInterface::getSimulation() {
+    return simulation_;
 }
 
 void UserInterface::on_file_dialog_response(int response_id,
@@ -152,8 +152,7 @@ void UserInterface::on_file_dialog_response(int response_id,
             }
             else //open mode
             {
-                Simulation newSimulation(fileName);
-                setSimulation(newSimulation);
+                setSimulation(fileName);
                 setCounters();
                 m_Area.queue_draw();
             }
@@ -315,6 +314,7 @@ void UserInterface::algue_toggled()
 
 }
 
+//initialisation de l'attribut static:
 Simulation UserInterface::simulation_ = Simulation();
 
 void UserInterface::setCounters ()
@@ -324,5 +324,7 @@ void UserInterface::setCounters ()
     nbCorail.set_text(std::to_string(simulation_.getNbCor()));
     nbCharognards.set_text(std::to_string(simulation_.getNbSca()));
 }
+
+
 
 

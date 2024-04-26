@@ -20,7 +20,6 @@ class MyArea : public Gtk::DrawingArea
 {
 public:
     MyArea();
-    virtual ~MyArea();
 
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
@@ -30,9 +29,8 @@ class UserInterface : public Gtk::Window
 {
 public:
     UserInterface();
-    static void setSimulation(Simulation& simulation);
-    static Simulation* getSimulation();
-
+    static void setSimulation(char* inputFilename);
+    static const Simulation& getSimulation();
 protected:
     void on_file_dialog_response(int response_id, Gtk::FileChooserDialog* dialog);
     bool on_window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);
@@ -72,7 +70,7 @@ protected:
     Gtk::Label nbCorail;
     Gtk::Label nbCharognards;
 
-    static Simulation simulation_;
+    static Simulation simulation_ ;
 
 private:
     Gtk::CheckButton algue;

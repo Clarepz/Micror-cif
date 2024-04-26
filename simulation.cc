@@ -17,7 +17,7 @@ Simulation::Simulation(): nbSim(0), nbCor(0), nbSca(0), nbAlg(0), initSuccess(tr
     randomEngine.seed(1);
 }
 
-Simulation::Simulation(char* inputFile): nbSim(0){
+Simulation::Simulation(char* inputFile): nbSim(0) {
     randomEngine.seed(1);
 
     initSuccess = readFile(inputFile) and corIdUnicityCheck() and
