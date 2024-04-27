@@ -81,7 +81,9 @@ void Simulation::update(bool algBirthOn) {
             nbAlg--;
         }
     }
+
     if(algBirthOn) {
+        //create random alg
         bernoulli_distribution randomBool(alg_birth_rate);
         uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
         if(randomBool(randomEngine)) {
