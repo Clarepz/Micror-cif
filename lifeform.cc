@@ -17,18 +17,20 @@ bool scaRadiusCheck(int radius);
 
 
 bool domainCheck(S2d center) {
-    if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1){
+    if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1) {
         return true;
-    }else{
+    }
+    else {
         std::cout << message::lifeform_center_outside(center.x, center.y);
         return false;
     }
 }
 
 bool ageCheck(int age) {
-    if (age>0){
+    if (age>0) {
         return true;
-    }else{
+    }
+    else {
         std::cout << message::lifeform_age(age);
         return false;
     }
@@ -37,7 +39,7 @@ bool ageCheck(int age) {
 bool superposCheck(const std::vector<Segment>& segs,unsigned id) {
     for(int i = 1; i < segs.size();i++){
 
-        if(suppCommun(segs[i-1],segs[i])){
+        if(suppCommun(segs[i-1],segs[i])) {
             std::cout << message::segment_superposition(id,i-1,i);
             return false;
         }
@@ -46,19 +48,19 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id) {
 }
 
 bool segCheck(const std::vector<Segment>& segs,unsigned id) {
-    for(auto seg:segs){
+    for(auto seg:segs) {
         S2d point = seg.getSecPoint();
         if(!(point.x<dmax-epsil_zero and point.y<dmax-epsil_zero
-        and point.x>epsil_zero and point.y>epsil_zero)){
+        and point.x>epsil_zero and point.y>epsil_zero)) {
             std::cout << message::lifeform_computed_outside(id,point.x,point.y);
             return false;
         }
         unsigned length = seg.getlength();
-        if(!(length >= l_repro-l_seg_interne and length < l_repro)){
+        if(!(length >= l_repro-l_seg_interne and length < l_repro)) {
             std::cout << message::segment_length_outside(id,length);
             return false;
         }
-        if(seg.getFail()==BADANGLE){
+        if(seg.getFail()==BADANGLE) {
             std::cout << message::segment_angle_outside(id, seg.getAngle());
             return false;
         }
@@ -69,7 +71,8 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id) {
 bool scaRadiusCheck(int radius) {
     if(radius>=r_sca and radius<r_sca_repro){
         return true;
-    }else{
+    }
+    else {
         std::cout << message::scavenger_radius_outside(radius);
         return false;
     }
@@ -78,7 +81,7 @@ bool scaRadiusCheck(int radius) {
 
 LifeForm::LifeForm(S2d position, int age)
     : position_(position), initSuccess(true) {
-    if ( !(domainCheck(position_) and ageCheck(age)) ){
+    if ( !(domainCheck(position_) and ageCheck(age)) ) {
         initSuccess = false;
     }
     age_=age;
@@ -120,7 +123,7 @@ Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int 
     statusDev_ = static_cast<Status_dev>(statusDev);
 
     nbSeg_ = nbSeg;
-    if ( !(superposCheck(segs,id_) and segCheck(segs,id_)) ){
+    if ( !(superposCheck(segs,id_) and segCheck(segs,id_)) ) {
         initSuccess = false;
     }
 
@@ -134,8 +137,8 @@ unsigned Cor::getId() const {
 bool Cor::collisionCheck(const Cor &otherCor) const {
     const std::vector<Segment>& otherSegs = otherCor.getSegments();
     unsigned otherId = otherCor.getId();
-    for (int i(0);i<nbSeg_;i++){
-        for(int k(0); k<otherSegs.size();k++){
+    for (int i(0);i<nbSeg_;i++) {
+        for(int k(0); k<otherSegs.size();k++) {
             if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
                 if (suppIndep(segments_[i], otherSegs[k])) {
                     //if not (same cor and same/touching segment)
@@ -152,7 +155,7 @@ void Cor::writeFile(std::ofstream &file) const {
     LifeForm::writeFile(file);
     file << id_ << ' ' << status_ << ' ' << dir_ << ' ' << statusDev_ << ' '
     << nbSeg_ << std::endl;
-    for(auto aSeg : segments_){
+    for(auto aSeg : segments_) {
         file << "\t\t" << aSeg.getAngle() << ' ' << aSeg.getlength() << std::endl;
     }
 }
@@ -160,7 +163,7 @@ void Cor::writeFile(std::ofstream &file) const {
 void Cor::display() const {
     Color corColor = (status_ == ALIVE)? BLUE:BLACK;
     drawEntity(SQUARE, corColor, position_, d_cor);
-    for(auto aSeg : segments_){
+    for(auto aSeg : segments_) {
         drawEntity(LINE, corColor, aSeg.getPoint(),
                    aSeg.getlength(), aSeg.getAngle());
     }
@@ -174,7 +177,7 @@ const std::vector<Segment>& Cor::getSegments()const {
 Sca::Sca(S2d position, int age, int radius, int status, int targetId)
     : LifeForm(position,age) {
 
-    if(!scaRadiusCheck(radius)){
+    if(!scaRadiusCheck(radius)) {
         initSuccess = false;
     }
     radius_ = radius;
@@ -222,7 +225,8 @@ Cor readCor(std::ifstream& file) {
         line >> angle >> length;
         if (k == 0) {
             segs.emplace_back(pos, angle, length);
-        } else {
+        }
+        else {
             S2d BasePoint = segs[k - 1].getSecPoint();
             segs.emplace_back(BasePoint, angle, length);
         }

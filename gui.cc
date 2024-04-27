@@ -3,7 +3,6 @@
 //
 
 #include <cairomm/context.h>
-#include <iostream>
 #include <gtkmm/eventcontrollerkey.h>
 #include <glibmm/main.h>
 #include <map>
@@ -18,7 +17,6 @@ MyArea::MyArea()
     set_content_width(area_side);
     set_content_height(area_side);
     set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
-    set_hexpand(true);
 }
 
 
@@ -28,7 +26,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     set_ptcr(cr);
     double ratio=double(width)/height;
     double xMax(dmax), xMin(0), yMax(dmax), yMin(0), delta(dmax), middle(dmax/2);
-    //prevent distortion
+    //prevent distortion by adjusting xmax/xmin or ymax/ymin
     if(ratio > 1)
     {
         xMax = middle + 0.5*ratio*delta ;
@@ -72,8 +70,7 @@ UserInterface::UserInterface():
         nbAlgue(std::to_string(simulation_.getNbAlg())),
         nbCorail(std::to_string(simulation_.getNbCor())),
         nbCharognards(std::to_string(simulation_.getNbSca())),
-        disconnect(false) // to handle a single timer
-        //simulation_(simulation)
+        disconnect(false)
 {
     set_title("Microrecif");
     set_resizable(true);
@@ -87,6 +84,8 @@ UserInterface::UserInterface():
     cmd_et_infos.append(infos);
     infos.append(sujetsInfos);
     infos.append(nbSujets);
+
+    m_Area.set_expand();
 
     button.append(exit);
     button.append(open);
@@ -115,8 +114,6 @@ UserInterface::UserInterface():
 
     step.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::stepClicked));
 
-    algue.signal_toggled().connect(sigc::mem_fun(*this,&UserInterface::algue_toggled));
-
     auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &UserInterface::on_window_key_pressed), false);
@@ -125,11 +122,13 @@ UserInterface::UserInterface():
 }
 
 
-void UserInterface::setSimulation(char *inputFilename) {
+void UserInterface::setSimulation(char *inputFilename)
+{
     simulation_ = Simulation(inputFilename);
 }
 
-const Simulation& UserInterface::getSimulation() {
+const Simulation& UserInterface::getSimulation()
+{
     return simulation_;
 }
 
@@ -141,9 +140,7 @@ void UserInterface::on_file_dialog_response(int response_id,
     {
         case Gtk::ResponseType::OK:
         {
-            std::cout << "Open or Save clicked." << std::endl;
             auto filename = dialog->get_file()->get_path();
-            std::cout << "File selected: " <<  filename << std::endl;
             char* fileName = &filename[0];
             if(saveMode)
             {
@@ -159,12 +156,10 @@ void UserInterface::on_file_dialog_response(int response_id,
         }
         case Gtk::ResponseType::CANCEL:
         {
-            std::cout << "Cancel clicked." << std::endl;
             break;
         }
         default:
         {
-            std::cout << "Unexpected button clicked." << std::endl;
             break;
         }
     }
@@ -239,7 +234,6 @@ void UserInterface::openClicked()
     filter_any->add_pattern("*");
     dialog->add_filter(filter_any);
 
-    //Show the dialog and wait for a user response:
     dialog->show();
 
 }
@@ -307,11 +301,6 @@ void UserInterface::stepClicked()
         m_Area.queue_draw();
         setCounters();
     }
-}
-
-void UserInterface::algue_toggled()
-{
-
 }
 
 //initialisation de l'attribut static:

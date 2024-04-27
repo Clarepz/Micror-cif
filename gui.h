@@ -42,7 +42,6 @@ protected:
     void saveClicked();
     void startClicked();
     void stepClicked();
-    void algue_toggled();
 
     MyArea m_Area;
 
