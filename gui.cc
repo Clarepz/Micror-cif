@@ -3,7 +3,6 @@
 //
 
 #include <cairomm/context.h>
-#include <iostream>
 #include <gtkmm/eventcontrollerkey.h>
 #include <glibmm/main.h>
 #include <map>
@@ -27,7 +26,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
     set_ptcr(cr);
     double ratio=double(width)/height;
     double xMax(dmax), xMin(0), yMax(dmax), yMin(0), delta(dmax), middle(dmax/2);
-    //prevent distortion
+    //prevent distortion by adjusting xmax/xmin or ymax/ymin
     if(ratio > 1)
     {
         xMax = middle + 0.5*ratio*delta ;
@@ -71,8 +70,7 @@ UserInterface::UserInterface():
         nbAlgue(std::to_string(simulation_.getNbAlg())),
         nbCorail(std::to_string(simulation_.getNbCor())),
         nbCharognards(std::to_string(simulation_.getNbSca())),
-        disconnect(false) // to handle a single timer
-        //simulation_(simulation)
+        disconnect(false)
 {
     set_title("Microrecif");
     set_resizable(true);
@@ -142,9 +140,7 @@ void UserInterface::on_file_dialog_response(int response_id,
     {
         case Gtk::ResponseType::OK:
         {
-            std::cout << "Open or Save clicked." << std::endl;
             auto filename = dialog->get_file()->get_path();
-            std::cout << "File selected: " <<  filename << std::endl;
             char* fileName = &filename[0];
             if(saveMode)
             {
@@ -160,12 +156,10 @@ void UserInterface::on_file_dialog_response(int response_id,
         }
         case Gtk::ResponseType::CANCEL:
         {
-            std::cout << "Cancel clicked." << std::endl;
             break;
         }
         default:
         {
-            std::cout << "Unexpected button clicked." << std::endl;
             break;
         }
     }
@@ -240,7 +234,6 @@ void UserInterface::openClicked()
     filter_any->add_pattern("*");
     dialog->add_filter(filter_any);
 
-    //Show the dialog and wait for a user response:
     dialog->show();
 
 }
