@@ -18,7 +18,7 @@ int orientation(S2d p, S2d q, S2d r, double simConstante)
     return (val > 0)? 1: 2; // clock or counterclock wise
 }
 
-bool onSegment(S2d p, S2d q, S2d r, bool simConstante)
+bool onSegment(S2d p, S2d q, S2d r, double simConstante)
 {
     double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
     double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
@@ -75,9 +75,9 @@ double deltaAngle(Segment seg1, Segment seg2)
     else return(delta);
 }
 
-bool suppCommun(const Segment &seg1, const Segment &seg2)
+bool suppCommun(const Segment &seg1, const Segment &seg2, double simConstante)
 {
-    return(deltaAngle(seg1,seg2)==0);
+    return(abs(deltaAngle(seg1,seg2))<=simConstante);
 }
 
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante)
