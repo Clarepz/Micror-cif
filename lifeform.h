@@ -15,8 +15,7 @@ class LifeForm {
 public:
     LifeForm(S2d position, int age);//constructeur
     bool getInitSuccess() const;
-    virtual void update();
-    virtual bool isTooOld() const;
+    //virtual void update();
 
 protected:
     S2d position_;
@@ -30,7 +29,7 @@ public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const;
     void display() const;
-    bool isTooOld() const;
+    void update(bool &dead);
 };
 
 class Cor:public LifeForm {
@@ -39,10 +38,10 @@ public:
         const std::vector<Segment>& segs);
     unsigned getId() const;
     bool collisionCheck(const Cor& otherCor) const;
-    void writeFile(std::ofstream &file) const ;
+    void writeFile(std::ofstream &file) const;
     void display() const;
-    void update();
-    bool isTooOld() const;
+    void update(const std::vector<Cor>& cors);
+    const std::vector<Segment>& getSegments() const;
 
 private:
     unsigned id_;
@@ -53,7 +52,7 @@ private:
 
     std::vector<Segment> segments_;
 
-    const std::vector<Segment>& getSegments() const;
+
 };
 
 class Sca:public LifeForm {
@@ -63,8 +62,7 @@ public:
     Status_sca getStatus() const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
-    void update();
-    bool isTooOld() const;
+    void update(bool &dead);
 
 private:
     unsigned radius_;

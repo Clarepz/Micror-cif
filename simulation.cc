@@ -74,9 +74,12 @@ void Simulation::display() const {
 
 void Simulation::update(bool algBirthOn) {
     nbSim++;
+    bool isDead = false;
+
     for(int i(0); i<nbAlg; i++) {
-        algs[i].update();
-        if(algs[i].isTooOld()) {
+        isDead = false;
+        algs[i].update(isDead);
+        if(isDead){
             algs.erase(algs.begin()+i);
             nbAlg--;
         }
@@ -96,16 +99,13 @@ void Simulation::update(bool algBirthOn) {
     }
 
     for(int i(0); i<nbCor; i++) {
-        cors[i].update();
-        if(cors[i].isTooOld()) {
-            cors.erase(cors.begin()+i);
-            nbCor--;
-        }
+        cors[i].update(cors);
     }
 
     for(int i(0); i<nbSca; i++) {
-        scas[i].update();
-        if(scas[i].isTooOld()) {
+        isDead = false;
+        scas[i].update(isDead);
+        if(isDead) {
             scas.erase(scas.begin()+i);
             nbSca--;
         }

@@ -14,7 +14,7 @@ bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
-
+bool segCollisionCheck(const Segment& segment, const Cor& otherCor);
 
 bool domainCheck(S2d center) {
     if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1) {
@@ -78,6 +78,21 @@ bool scaRadiusCheck(int radius) {
     }
 }
 
+bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
+    for(Segment otherSegment : otherCor.getSegments()){
+        if(segment.getPoint() == otherSegment.getSecPoint() ){
+            if (suppCommun(otherSegment,segment,delta_rot)) {
+                return false;
+            }
+        }else{
+            if (suppIndep(segment,otherSegment,epsil_zero) and !(segment.getPoint() == otherSegment.getPoint())){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 LifeForm::LifeForm(S2d position, int age)
     : position_(position), initSuccess(true) {
@@ -89,10 +104,6 @@ LifeForm::LifeForm(S2d position, int age)
 
 bool LifeForm::getInitSuccess() const {
     return initSuccess;
-}
-
-void LifeForm::update() {
-    age_++;
 }
 
 void LifeForm::writeFile(std::ofstream &file) const {
@@ -111,9 +122,14 @@ void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
-bool Alg::isTooOld() const {
-    return age_>=max_life_alg;
+void Alg::update(bool &dead) {
+    age_++;
+    if(age_>=max_life_alg){
+        dead = true;
+        return;
+    }
 }
+
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
          const std::vector<Segment>& segs): LifeForm(position,age) {
@@ -151,6 +167,8 @@ bool Cor::collisionCheck(const Cor &otherCor) const {
     return true;
 }
 
+
+
 void Cor::writeFile(std::ofstream &file) const {
     LifeForm::writeFile(file);
     file << id_ << ' ' << status_ << ' ' << dir_ << ' ' << statusDev_ << ' '
@@ -169,9 +187,23 @@ void Cor::display() const {
     }
 }
 
-bool Cor::isTooOld() const {
-    return age_ >= max_life_cor;
+void Cor::update(const std::vector<Cor>& cors) {
+    age_++ ;
+    if(age_ >= max_life_cor){
+        status_ = DEAD;
+        return;
+    }
+    Segment & lastSeg =  segments_[segments_.size()-1];
+    Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
+    for(const Cor& aCor : cors){
+        if (!segCollisionCheck(newLastSeg,aCor)){
+            dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
+        }else{
+            lastSeg = newLastSeg;
+        }
+    }
 }
+
 
 const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
@@ -208,13 +240,10 @@ void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
 }
 
-void Sca::update() {
-
+void Sca::update(bool &dead) {
+    return;
 }
 
-bool Sca::isTooOld() const {
-    return age_ >= max_life_sca;
-}
 
 Alg readAlg(std::istringstream& line) {
     S2d pos;

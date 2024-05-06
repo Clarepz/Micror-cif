@@ -15,6 +15,7 @@ struct S2d
 {
     double x=0.;
     double y=0.;
+    bool operator==(S2d point);
 };
 
 
