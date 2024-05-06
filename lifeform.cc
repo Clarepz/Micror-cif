@@ -169,6 +169,10 @@ void Cor::display() const {
     }
 }
 
+bool Cor::isTooOld() const {
+    return age_ >= max_life_cor;
+}
+
 const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
 }
@@ -202,6 +206,14 @@ void Sca::writeFile(std::ofstream &file) const {
 
 void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
+}
+
+void Sca::update() {
+
+}
+
+bool Sca::isTooOld() const {
+    return age_ >= max_life_sca;
 }
 
 Alg readAlg(std::istringstream& line) {

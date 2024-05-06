@@ -94,6 +94,22 @@ void Simulation::update(bool algBirthOn) {
             algs.emplace_back(randomPosition,1);
         }
     }
+
+    for(int i(0); i<nbCor; i++) {
+        cors[i].update();
+        if(cors[i].isTooOld()) {
+            cors.erase(cors.begin()+i);
+            nbCor--;
+        }
+    }
+
+    for(int i(0); i<nbSca; i++) {
+        scas[i].update();
+        if(scas[i].isTooOld()) {
+            scas.erase(scas.begin()+i);
+            nbSca--;
+        }
+    }
 }
 
 bool Simulation::readFile(char* fileName) {

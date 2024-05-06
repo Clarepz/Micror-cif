@@ -15,7 +15,8 @@ class LifeForm {
 public:
     LifeForm(S2d position, int age);//constructeur
     bool getInitSuccess() const;
-    void update();
+    virtual void update();
+    virtual bool isTooOld() const;
 
 protected:
     S2d position_;
@@ -40,6 +41,8 @@ public:
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
+    void update();
+    bool isTooOld() const;
 
 private:
     unsigned id_;
@@ -60,6 +63,9 @@ public:
     Status_sca getStatus() const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
+    void update();
+    bool isTooOld() const;
+
 private:
     unsigned radius_;
     Status_sca status_;
