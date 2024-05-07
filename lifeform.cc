@@ -187,26 +187,78 @@ void Cor::display() const {
     }
 }
 
-void Cor::update(const std::vector<Cor>& cors) {
+void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
         return;
     }
+
     Segment & lastSeg =  segments_[segments_.size()-1];
     Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
+
+    bool updateCheck = true;
     for(const Cor& aCor : cors){
         if (!segCollisionCheck(newLastSeg,aCor)){
             dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
-        }else{
-            lastSeg = newLastSeg;
+            updateCheck = false;
+            break;
         }
     }
+    //check collision with domain border
+    S2d endPoint = newLastSeg.getSecPoint();
+    if(!(endPoint.x<dmax-epsil_zero and endPoint.y<dmax-epsil_zero
+         and endPoint.x>epsil_zero and endPoint.y>epsil_zero)) {
+        dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
+        updateCheck = false;
+    }
+
+    for(int i=0; i<algs.size(); i++){
+        double angleToAlg;
+        if(shouldEat(algs[i],angleToAlg)){
+            updateCheck = false;
+            lastSeg = lastSeg.addAngle(angleToAlg);
+            lastSeg.addLength(delta_l);
+
+            if(lastSeg.getlength()>=l_repro){
+                if(statusDev_==REPRO){
+                    //extend();
+                }else{
+
+                }
+            }
+            algs.erase(algs.begin()+i);
+        }
+    }
+
+    if(updateCheck) lastSeg = newLastSeg;
+
 }
 
 
 const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
+}
+
+bool Cor::shouldEat(Alg anAlg, double &angleToAlg)const {
+    Segment lastSeg = segments_[nbSeg_-1];
+    Segment algToCor(anAlg.getPosition(),lastSeg.getPoint());
+    if(algToCor.getlength() <= lastSeg.getlength()){
+        angleToAlg = deltaAngle(algToCor,lastSeg);
+        switch (dir_) {
+            case TRIGO:
+                return angleToAlg <= delta_rot and angleToAlg >=0;
+            case INVTRIGO:
+                return angleToAlg >= -delta_rot and angleToAlg <=0;
+        }
+    }
+}
+
+void Cor::extend() {
+    Segment lastSeg = segments_[nbSeg_-1];
+    lastSeg.addLength(-(l_repro-l_seg_interne));
+    segments_.emplace_back(lastSeg.getSecPoint(),lastSeg.getAngle(),l_repro-l_seg_interne);
+    nbSeg_++;
 }
 
 

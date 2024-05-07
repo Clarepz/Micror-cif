@@ -98,8 +98,9 @@ void Simulation::update(bool algBirthOn) {
         }
     }
 
-    for(int i(0); i<nbCor; i++) {
-        cors[i].update(cors);
+    for(Cor& aCor : cors) {
+        aCor.update(cors, algs);
+        nbAlg = algs.size(); //in case some algs died
     }
 
     for(int i(0); i<nbSca; i++) {

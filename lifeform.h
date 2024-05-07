@@ -15,6 +15,7 @@ class LifeForm {
 public:
     LifeForm(S2d position, int age);//constructeur
     bool getInitSuccess() const;
+    S2d getPosition() const {return position_;}
     //virtual void update();
 
 protected:
@@ -37,10 +38,11 @@ public:
     Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
         const std::vector<Segment>& segs);
     unsigned getId() const;
+    unsigned getNbSeg() const {return nbSeg_;}
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
-    void update(const std::vector<Cor>& cors);
+    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs);
     const std::vector<Segment>& getSegments() const;
 
 private:
@@ -49,10 +51,10 @@ private:
     Dir_rot_cor dir_;
     Status_dev statusDev_;
     unsigned nbSeg_;
-
     std::vector<Segment> segments_;
 
-
+    bool shouldEat(Alg anAlg, double &angleToAlg) const ;
+    void extend();
 };
 
 class Sca:public LifeForm {
