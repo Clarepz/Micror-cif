@@ -15,6 +15,7 @@ struct S2d
 {
     double x=0.;
     double y=0.;
+    bool operator==(S2d point) const;
 };
 
 
@@ -27,6 +28,7 @@ public:
     double getAngle() const;
     Fail getFail() const;
     Segment addAngle(double angle_) const;//servira pour la supperposition en simulation
+    void addToSize(double change);
 private:
     S2d point;
     double angle;

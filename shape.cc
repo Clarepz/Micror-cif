@@ -25,6 +25,11 @@ bool onSegment(S2d p, S2d q, S2d r, double simConstante)
     return (s/pr>=-simConstante and s/pr<=pr+simConstante);
 }
 
+bool S2d::operator==(S2d point) const
+{
+    return(point.x==x and point.y==y);
+}
+
 Segment::Segment(S2d point_, double angle_, double longueur_):
     point(point_),
     angle(angle_),
@@ -66,6 +71,11 @@ Segment Segment::addAngle(double angle_) const
                       (angle+angle_>M_PI) ? angle+angle_-M_PI : angle+angle_;
     return(Segment(point, newAngle, longueur));
 
+}
+
+void Segment::addToSize(double change)
+{
+    longueur+=change;
 }
 
 double deltaAngle(Segment seg1, Segment seg2)

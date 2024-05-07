@@ -95,19 +95,32 @@ void Simulation::update(bool algBirthOn) {
         }
     }
 
-    for(int i(0); i<nbCor; i++) {
+    /*for(int i(0); i<nbCor; i++) {
         cors[i].update();
         if(cors[i].isTooOld()) {
             cors.erase(cors.begin()+i);
             nbCor--;
         }
-    }
+    }*/
 
+    bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {
-        scas[i].update();
-        if(scas[i].isTooOld()) {
+        scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
+        if(scaTooOld) {
             scas.erase(scas.begin()+i);
             nbSca--;
+        }
+        if(corDestroy) {
+            int id=scas[i].getTarget();
+            for(int i(0); i<nbCor; ++i) {
+                if(cors[i].getId()==id) {
+                    cors.erase(cors.begin()+i);
+                    i=nbCor;//pour quitter la boucle for
+                }
+            }
+        }
+        if(scaBirth) {
+            scas.emplace_back(corLastSegmentById(scas[i].getTarget()));
         }
     }
 }
@@ -192,4 +205,20 @@ bool Simulation::scaTargetCheck() const {
         }
     }
     return true;
+}
+
+Cor* Simulation::findCorById(int id) {
+    for(int i(0); i<nbCor; ++i) {
+        if(cors[i].getId()==id) return(&cors[i]);
+    }
+    cout<<"La cible du scavenger n'a pas été trouvée";
+    exit(1);
+}
+
+Segment Simulation::corLastSegmentById(int id) {
+    for(int i(0); i<nbCor; ++i) {
+        if(cors[i].getId()==id) return(cors[i].getLastSegment());
+    }
+    cout<<"La cible du scavenger n'a pas été trouvée";
+    exit(1);
 }

@@ -38,11 +38,16 @@ public:
     Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
         const std::vector<Segment>& segs);
     unsigned getId() const;
+    unsigned getNbCor() const {return(nbSeg_);}
+    S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
+    Segment getLastSegment() {return(segments_[nbSeg_-1]);}
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
-    void update();
+    //void update();
     bool isTooOld() const;
+    bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
+    //return true when the coral's fully eaten
 
 private:
     unsigned id_;
@@ -59,17 +64,20 @@ private:
 class Sca:public LifeForm {
 public:
     Sca(S2d position, int age, int radius, int status, int targetId); //constructor
+    Sca(Segment seg); //constructor for reproduction
     unsigned getTarget() const;
     Status_sca getStatus() const;
     void writeFile(std::ofstream &file) const ;
     void display() const;
-    void update();
-    bool isTooOld() const;
+    //corDestroy let simulation when to destroy the coral
+    void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
+    void endEating();
 
 private:
     unsigned radius_;
     Status_sca status_;
     unsigned targetId_;
+    bool onTarget;
 };
 
 Alg readAlg(std::istringstream& line);

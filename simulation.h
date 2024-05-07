@@ -37,6 +37,8 @@ private:
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
+    Cor* findCorById (int id);
+    Segment corLastSegmentById(int id);
 
 };
 

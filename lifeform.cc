@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
+#include <cmath>
 #include "message.h"
 #include "lifeform.h"
 #include "constantes.h"
@@ -14,6 +14,9 @@ bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
+bool goToTarget(S2d actualPosition, S2d targetPosition);
+//return true when the scavenger reach the target
+bool eatTarget(S2d actualPostion, Segment &target); //return true when everything's eaten
 
 
 bool domainCheck(S2d center) {
@@ -173,6 +176,23 @@ bool Cor::isTooOld() const {
     return age_ >= max_life_cor;
 }
 
+bool Cor::eaten(S2d &nextScaPos) {
+    //si le segment restant est court, on le mange jusqu'au prochain segment
+    if(segments_[nbSeg_-1].getlength()<=delta_l)
+    {
+        nextScaPos=segments_[0].getPoint();
+        segments_.pop_back();
+        nbSeg_--;
+        //si nbSeg==0 on renvoie true pour informer que le corail est mangé en entier
+        return(nbSeg_==0);
+    }
+    else {
+        segments_[nbSeg_ - 1].addToSize(-delta_l);
+        nextScaPos = segments_[nbSeg_ - 1].getSecPoint();
+    }
+    return(false);
+}
+
 const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
 }
@@ -187,6 +207,15 @@ Sca::Sca(S2d position, int age, int radius, int status, int targetId)
     radius_ = radius;
     status_ = static_cast<Status_sca>(status);
     targetId_ = targetId;
+    onTarget=false; //j'éspère que ça va pas faire de la merde
+}
+
+Sca::Sca(Segment seg) : LifeForm({seg.getSecPoint().x+cos(seg.getAngle())*delta_l,
+                                  seg.getSecPoint().y+sin(seg.getAngle())*delta_l},1) {
+    radius_ = r_sca;
+    status_ = FREE;
+    targetId_ = 0;
+    onTarget = false;
 }
 
 unsigned int Sca::getTarget() const {
@@ -208,13 +237,47 @@ void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
 }
 
-void Sca::update() {
-
+void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target) {
+    //gestion de l'age et màj du booleen dead
+    ++age_;
+    if(age_ >= max_life_sca) {
+        scaTooOld=true;
+        return;
+    }
+    if(status_ == EATING) {
+        //cas ou le scavenger n'a pas encore atteind le corail
+        if(!onTarget) {
+            double deltaX=position_.x-target.getLastSegmentSecPoint().x;
+            double deltaY=position_.y-target.getLastSegmentSecPoint().y;
+            //scavenger --> près du corail, il se déplace directement sur lui
+            if(sqrt(pow(deltaX,2)+ pow(deltaY, 2))<=delta_l) {
+                position_=target.getLastSegmentSecPoint();
+                onTarget=true;
+            }
+            else {
+                double angle = atan2(deltaX, deltaY);
+                position_.x += cos(angle) * delta_l;
+                position_.y += sin(angle) * delta_l;
+            }
+        }
+        else {
+            /*mange un bout du corail, si ce dernier est fini, destroy <- true. La méthode
+            modifie la position du scavenger pour la mettre au niveau de la fin du corail*/
+            if(target.eaten(position_)) corDestroy=true;
+            if((radius_+=delta_r_sca) >= r_sca_repro) {
+                scaBirth=true;
+                radius_=r_sca;
+            }
+        }
+    }
 }
 
-bool Sca::isTooOld() const {
-    return age_ >= max_life_sca;
+
+void Sca::endEating()
+{
+    onTarget=false;
 }
+
 
 Alg readAlg(std::istringstream& line) {
     S2d pos;
@@ -252,6 +315,7 @@ Sca readSca(std::istringstream& line) {
     line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
     return Sca(pos, age, radius, statut, targetId);
 }
+
 
 std::istringstream nextLine(std::ifstream& file) {
     std::string line;
