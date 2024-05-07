@@ -157,7 +157,7 @@ bool Cor::collisionCheck(const Cor &otherCor) const {
             if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
                 if (suppIndep(segments_[i], otherSegs[k])) {
                     //if not (same cor and same/touching segment)
-                    std::cout << message::segment_collision(id_, i, otherId, k);;
+                    std::cout << message::segment_collision(id_, i, otherId, k);
                     return false;
                 }
             }
@@ -184,7 +184,7 @@ void Cor::display() const {
     }
 }
 
-void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
+void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
@@ -194,7 +194,27 @@ void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
     Segment & lastSeg =  segments_[segments_.size()-1];
     Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
 
+
+    int closestAlg = 0;
+    double closestAlgAngle = delta_rot ;
+
+    for(int i=0; i<algs.size(); i++){
+        double angleToAlg ;
+
+        if(shouldEat(algs[i], angleToAlg) and abs(angleToAlg) <= abs(closestAlgAngle)){
+            closestAlgAngle = angleToAlg;
+            closestAlg = i;
+        }
+    }
+
+    if(algs.size()>0 and shouldEat(algs[closestAlg],closestAlgAngle)){
+        newLastSeg = lastSeg.addAngle(closestAlgAngle);
+        newLastSeg = newLastSeg.addLength(delta_l);
+        algs.erase(algs.begin()+closestAlg);
+    }
+
     bool updateCheck = true;
+
     for(const Cor& aCor : cors){
         if (!segCollisionCheck(newLastSeg,aCor)){
             dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
@@ -210,26 +230,21 @@ void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
         updateCheck = false;
     }
 
-    for(int i=0; i<algs.size(); i++){
-        double angleToAlg;
-        if(shouldEat(algs[i],angleToAlg)){
-            updateCheck = false;
-            lastSeg = lastSeg.addAngle(angleToAlg);
-            lastSeg.addLength(delta_l);
-
-            if(lastSeg.getlength()>=l_repro){
-                if(statusDev_==REPRO){
-                    //extend();
-                }else{
-
-                }
-            }
-            algs.erase(algs.begin()+i);
-        }
-    }
-
     if(updateCheck) lastSeg = newLastSeg;
 
+    if(lastSeg.getlength()>=l_repro){
+        if(statusDev_==EXTEND){
+            extend();
+            statusDev_ = REPRO;
+        }else{
+            unsigned newId = cors[cors.size()-1].getId() + 1;
+            for(Cor aCor : cors){
+                if(aCor.getId()==newId) newId++;
+            }
+            cors.emplace_back(repro(newId));
+            statusDev_ = EXTEND;
+        }
+    }
 }
 
 bool Cor::eaten(S2d &nextScaPos) {
@@ -253,11 +268,11 @@ const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
 }
 
-bool Cor::shouldEat(Alg anAlg, double &angleToAlg)const {
+bool Cor::shouldEat(const Alg &anAlg, double &angleToAlg)const {
     Segment lastSeg = segments_[nbSeg_-1];
     Segment algToCor(anAlg.getPosition(),lastSeg.getPoint());
+    angleToAlg = deltaAngle(algToCor,lastSeg);
     if(algToCor.getlength() <= lastSeg.getlength()){
-        angleToAlg = deltaAngle(algToCor,lastSeg);
         switch (dir_) {
             case TRIGO:
                 return angleToAlg <= delta_rot and angleToAlg >=0;
@@ -265,13 +280,26 @@ bool Cor::shouldEat(Alg anAlg, double &angleToAlg)const {
                 return angleToAlg >= -delta_rot and angleToAlg <=0;
         }
     }
+    return false;
 }
 
 void Cor::extend() {
-    Segment lastSeg = segments_[nbSeg_-1];
-    lastSeg.addLength(-(l_repro-l_seg_interne));
+    Segment& lastSeg = segments_[nbSeg_-1];
+    lastSeg = lastSeg.addLength(-int(l_repro-l_seg_interne));
     segments_.emplace_back(lastSeg.getSecPoint(),lastSeg.getAngle(),l_repro-l_seg_interne);
+
     nbSeg_++;
+}
+
+Cor Cor::repro(unsigned id) {
+    Segment& lastSeg = segments_[nbSeg_-1];
+    lastSeg = lastSeg.addLength(-int(l_repro/2));
+
+    Segment constructionSeg(lastSeg.getPoint(), lastSeg.getAngle(), l_seg_interne);
+    Segment newSeg(constructionSeg.getSecPoint(), lastSeg.getAngle(), l_repro-l_seg_interne);
+    std::vector<Segment> newSegs{newSeg};
+
+    return Cor(newSeg.getPoint(), 1, id, ALIVE, TRIGO, EXTEND, 1, newSegs);
 }
 
 

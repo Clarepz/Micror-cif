@@ -98,11 +98,12 @@ void Simulation::update(bool algBirthOn) {
         }
     }
 
-    for(Cor& aCor : cors) {
-        aCor.update(cors, algs);
+    for(int i=0; i<nbCor; i++) {
+        cors[i].update(cors, algs);
         nbAlg = algs.size(); //in case some algs died
+        nbCor = cors.size(); //in case of repro
     }
-
+    /*
     bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {
         scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
@@ -122,7 +123,7 @@ void Simulation::update(bool algBirthOn) {
         if(scaBirth) {
             scas.emplace_back(corLastSegmentById(scas[i].getTarget()));
         }
-    }
+    }*/
 }
 
 bool Simulation::readFile(char* fileName) {

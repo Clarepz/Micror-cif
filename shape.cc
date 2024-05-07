@@ -81,9 +81,8 @@ Segment Segment::addAngle(double angle_) const
 
 }
 
-void Segment::addLength(double length){
-    longueur+=length;
-    updateSecPoint();
+Segment Segment::addLength(double length){
+    return Segment(point, angle, longueur+length);
 }
 
 void Segment::updateSecPoint() {

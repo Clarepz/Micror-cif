@@ -44,7 +44,7 @@ public:
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
-    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs);
+    void update(std::vector<Cor>& cors, std::vector<Alg>& algs);
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
@@ -57,8 +57,9 @@ private:
     unsigned nbSeg_;
     std::vector<Segment> segments_;
 
-    bool shouldEat(Alg anAlg, double &angleToAlg) const ;
+    bool shouldEat(const Alg& anAlg, double &angleToAlg) const ;
     void extend();
+    Cor repro(unsigned id);
 };
 
 class Sca:public LifeForm {
