@@ -35,8 +35,15 @@ Segment::Segment(S2d point_, double angle_, double longueur_):
     angle(angle_),
     longueur(longueur_)
 {
-    secPoint.x = point.x+longueur* cos(angle);
-    secPoint.y = point.y+longueur* sin(angle);
+    updateSecPoint();
+}
+
+Segment::Segment(S2d basePoint, S2d secPoint_):
+    point(basePoint),
+    secPoint(secPoint_)
+{
+    longueur = distance(basePoint,secPoint);
+    angle = atan2((secPoint.y-point.y),(secPoint.x-point.x));
 }
 
 S2d Segment::getPoint() const {
@@ -67,15 +74,21 @@ Fail Segment::getFail () const
 
 Segment Segment::addAngle(double angle_) const
 {
-    double newAngle = (angle+angle_<=-M_PI) ? angle+angle_+M_PI :
-                      (angle+angle_>M_PI) ? angle+angle_-M_PI : angle+angle_;
+    double newAngle = (angle+angle_<=-M_PI) ? angle+angle_+2*M_PI :
+                      (angle+angle_>M_PI) ? angle+angle_-2*M_PI : angle+angle_;
+
     return(Segment(point, newAngle, longueur));
 
 }
 
-void Segment::addToSize(double change)
-{
-    longueur+=change;
+void Segment::addLength(double length){
+    longueur+=length;
+    updateSecPoint();
+}
+
+void Segment::updateSecPoint() {
+    secPoint.x = point.x+longueur* cos(angle);
+    secPoint.y = point.y+longueur* sin(angle);
 }
 
 double deltaAngle(Segment seg1, Segment seg2)
@@ -118,4 +131,8 @@ bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante)
 void drawEntity(Shape shape,Color color, S2d position, double size, double angle)
 {
     drawShape(shape, color, position.x, position.y, size, angle);
+}
+
+double distance(S2d p1, S2d p2){
+    return sqrt(pow(p1.x-p2.x,2)+pow(p1.y-p2.y,2));
 }

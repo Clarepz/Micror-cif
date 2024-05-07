@@ -15,8 +15,8 @@ class LifeForm {
 public:
     LifeForm(S2d position, int age);//constructeur
     bool getInitSuccess() const;
-    virtual void update();
-    virtual bool isTooOld() const;
+    S2d getPosition() const {return position_;}
+    //virtual void update();
 
 protected:
     S2d position_;
@@ -30,7 +30,7 @@ public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const;
     void display() const;
-    bool isTooOld() const;
+    void update(bool &dead);
 };
 
 class Cor:public LifeForm {
@@ -42,10 +42,10 @@ public:
     S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
     Segment getLastSegment() {return(segments_[nbSeg_-1]);}
     bool collisionCheck(const Cor& otherCor) const;
-    void writeFile(std::ofstream &file) const ;
+    void writeFile(std::ofstream &file) const;
     void display() const;
-    //void update();
-    bool isTooOld() const;
+    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs);
+    const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
 
@@ -55,10 +55,10 @@ private:
     Dir_rot_cor dir_;
     Status_dev statusDev_;
     unsigned nbSeg_;
-
     std::vector<Segment> segments_;
 
-    const std::vector<Segment>& getSegments() const;
+    bool shouldEat(Alg anAlg, double &angleToAlg) const ;
+    void extend();
 };
 
 class Sca:public LifeForm {

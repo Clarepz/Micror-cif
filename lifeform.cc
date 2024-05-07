@@ -14,10 +14,7 @@ bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
-bool goToTarget(S2d actualPosition, S2d targetPosition);
-//return true when the scavenger reach the target
-bool eatTarget(S2d actualPostion, Segment &target); //return true when everything's eaten
-
+bool segCollisionCheck(const Segment& segment, const Cor& otherCor);
 
 bool domainCheck(S2d center) {
     if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1) {
@@ -81,6 +78,21 @@ bool scaRadiusCheck(int radius) {
     }
 }
 
+bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
+    for(Segment otherSegment : otherCor.getSegments()){
+        if(segment.getPoint() == otherSegment.getSecPoint() ){
+            if (suppCommun(otherSegment,segment,delta_rot)) {
+                return false;
+            }
+        }else{
+            if (suppIndep(segment,otherSegment,epsil_zero) and !(segment.getPoint() == otherSegment.getPoint())){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 LifeForm::LifeForm(S2d position, int age)
     : position_(position), initSuccess(true) {
@@ -92,10 +104,6 @@ LifeForm::LifeForm(S2d position, int age)
 
 bool LifeForm::getInitSuccess() const {
     return initSuccess;
-}
-
-void LifeForm::update() {
-    age_++;
 }
 
 void LifeForm::writeFile(std::ofstream &file) const {
@@ -114,8 +122,12 @@ void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
-bool Alg::isTooOld() const {
-    return age_>=max_life_alg;
+void Alg::update(bool &dead) {
+    age_++;
+    if(age_>=max_life_alg){
+        dead = true;
+        return;
+    }
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
@@ -172,8 +184,52 @@ void Cor::display() const {
     }
 }
 
-bool Cor::isTooOld() const {
-    return age_ >= max_life_cor;
+void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
+    age_++ ;
+    if(age_ >= max_life_cor){
+        status_ = DEAD;
+        return;
+    }
+
+    Segment & lastSeg =  segments_[segments_.size()-1];
+    Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
+
+    bool updateCheck = true;
+    for(const Cor& aCor : cors){
+        if (!segCollisionCheck(newLastSeg,aCor)){
+            dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
+            updateCheck = false;
+            break;
+        }
+    }
+    //check collision with domain border
+    S2d endPoint = newLastSeg.getSecPoint();
+    if(!(endPoint.x<dmax-epsil_zero and endPoint.y<dmax-epsil_zero
+         and endPoint.x>epsil_zero and endPoint.y>epsil_zero)) {
+        dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
+        updateCheck = false;
+    }
+
+    for(int i=0; i<algs.size(); i++){
+        double angleToAlg;
+        if(shouldEat(algs[i],angleToAlg)){
+            updateCheck = false;
+            lastSeg = lastSeg.addAngle(angleToAlg);
+            lastSeg.addLength(delta_l);
+
+            if(lastSeg.getlength()>=l_repro){
+                if(statusDev_==REPRO){
+                    //extend();
+                }else{
+
+                }
+            }
+            algs.erase(algs.begin()+i);
+        }
+    }
+
+    if(updateCheck) lastSeg = newLastSeg;
+
 }
 
 bool Cor::eaten(S2d &nextScaPos) {
@@ -187,7 +243,7 @@ bool Cor::eaten(S2d &nextScaPos) {
         return(nbSeg_==0);
     }
     else {
-        segments_[nbSeg_ - 1].addToSize(-delta_l);
+        segments_[nbSeg_ - 1].addLength(-delta_l);
         nextScaPos = segments_[nbSeg_ - 1].getSecPoint();
     }
     return(false);
@@ -195,6 +251,27 @@ bool Cor::eaten(S2d &nextScaPos) {
 
 const std::vector<Segment>& Cor::getSegments()const {
     return segments_;
+}
+
+bool Cor::shouldEat(Alg anAlg, double &angleToAlg)const {
+    Segment lastSeg = segments_[nbSeg_-1];
+    Segment algToCor(anAlg.getPosition(),lastSeg.getPoint());
+    if(algToCor.getlength() <= lastSeg.getlength()){
+        angleToAlg = deltaAngle(algToCor,lastSeg);
+        switch (dir_) {
+            case TRIGO:
+                return angleToAlg <= delta_rot and angleToAlg >=0;
+            case INVTRIGO:
+                return angleToAlg >= -delta_rot and angleToAlg <=0;
+        }
+    }
+}
+
+void Cor::extend() {
+    Segment lastSeg = segments_[nbSeg_-1];
+    lastSeg.addLength(-(l_repro-l_seg_interne));
+    segments_.emplace_back(lastSeg.getSecPoint(),lastSeg.getAngle(),l_repro-l_seg_interne);
+    nbSeg_++;
 }
 
 
@@ -315,7 +392,6 @@ Sca readSca(std::istringstream& line) {
     line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
     return Sca(pos, age, radius, statut, targetId);
 }
-
 
 std::istringstream nextLine(std::ifstream& file) {
     std::string line;

@@ -22,18 +22,21 @@ struct S2d
 class Segment{
 public:
     Segment(S2d coor_,double angle_, double longueur_);//constructeur
+    Segment(S2d basePoint, S2d secPoint_);
     S2d getPoint() const;
     S2d getSecPoint() const;
     double getlength() const;
     double getAngle() const;
     Fail getFail() const;
     Segment addAngle(double angle_) const;//servira pour la supperposition en simulation
-    void addToSize(double change);
+    void addLength(double length);
 private:
     S2d point;
     double angle;
     double longueur;
     S2d secPoint;
+
+    void updateSecPoint();
 };
 
 double deltaAngle(Segment seg1, Segment seg2);
@@ -42,5 +45,5 @@ bool suppCommun(const Segment &seg1, const Segment &seg2, double simConstante=0)
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante=0);
 //intersection de 2 segments independants                       (epsil_zero)
 void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);
-
+double distance(S2d p1, S2d p2);
 #endif
