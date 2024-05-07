@@ -236,11 +236,11 @@ bool Cor::eaten(S2d &nextScaPos) {
     //si le segment restant est court, on le mange jusqu'au prochain segment
     if(segments_[nbSeg_-1].getlength()<=delta_l)
     {
-        nextScaPos=segments_[0].getPoint();
-        segments_.pop_back();
+        nextScaPos=segments_[nbSeg_-1].getPoint();
         nbSeg_--;
         //si nbSeg==0 on renvoie true pour informer que le corail est mangé en entier
-        return(nbSeg_==0);
+        if(nbSeg_==0) return(true);
+        segments_.pop_back();
     }
     else {
         segments_[nbSeg_ - 1].addLength(-delta_l);
@@ -332,7 +332,7 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
                 onTarget=true;
             }
             else {
-                double angle = atan2(deltaX, deltaY);
+                double angle = atan2(deltaY, deltaX);
                 position_.x += cos(angle) * delta_l;
                 position_.y += sin(angle) * delta_l;
             }

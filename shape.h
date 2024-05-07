@@ -28,7 +28,7 @@ public:
     double getlength() const;
     double getAngle() const;
     Fail getFail() const;
-    Segment addAngle(double angle_) const;//servira pour la supperposition en simulation
+    Segment addAngle(double angle_) const;
     void addLength(double length);
 private:
     S2d point;
