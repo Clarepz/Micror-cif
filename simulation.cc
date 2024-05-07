@@ -211,14 +211,10 @@ Cor* Simulation::findCorById(int id) {
     for(int i(0); i<nbCor; ++i) {
         if(cors[i].getId()==id) return(&cors[i]);
     }
-    cout<<"La cible du scavenger n'a pas été trouvée";
-    exit(1);
 }
 
 Segment Simulation::corLastSegmentById(int id) {
     for(int i(0); i<nbCor; ++i) {
         if(cors[i].getId()==id) return(cors[i].getLastSegment());
     }
-    cout<<"La cible du scavenger n'a pas été trouvée";
-    exit(1);
 }
