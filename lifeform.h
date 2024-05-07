@@ -71,7 +71,7 @@ public:
     void display() const;
     //corDestroy let simulation when to destroy the coral
     void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
-    void endEating();
+    void endEating(bool &corDestroy);
 
 private:
     unsigned radius_;

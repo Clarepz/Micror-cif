@@ -243,7 +243,7 @@ bool Cor::eaten(S2d &nextScaPos) {
         segments_.pop_back();
     }
     else {
-        segments_[nbSeg_ - 1].addLength(-delta_l);
+        segments_[nbSeg_ - 1].addLength(-int(delta_l));
         nextScaPos = segments_[nbSeg_ - 1].getSecPoint();
     }
     return(false);
@@ -324,8 +324,8 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
     if(status_ == EATING) {
         //cas ou le scavenger n'a pas encore atteind le corail
         if(!onTarget) {
-            double deltaX=position_.x-target.getLastSegmentSecPoint().x;
-            double deltaY=position_.y-target.getLastSegmentSecPoint().y;
+            double deltaX=target.getLastSegmentSecPoint().x-position_.x;
+            double deltaY=target.getLastSegmentSecPoint().y-position_.y;
             //scavenger --> près du corail, il se déplace directement sur lui
             if(sqrt(pow(deltaX,2)+ pow(deltaY, 2))<=delta_l) {
                 position_=target.getLastSegmentSecPoint();
@@ -350,9 +350,10 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
 }
 
 
-void Sca::endEating()
+void Sca::endEating(bool &corDestroy)
 {
     onTarget=false;
+    corDestroy=false;
 }
 
 

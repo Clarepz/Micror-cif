@@ -112,9 +112,10 @@ void Simulation::update(bool algBirthOn) {
         }
         if(corDestroy) {
             int id=scas[i].getTarget();
-            for(int i(0); i<nbCor; ++i) {
+            for(int j(0); j<nbCor; ++j) {
                 if(cors[i].getId()==id) {
-                    cors.erase(cors.begin()+i);
+                    scas[i].endEating(corDestroy);
+                    cors.erase(cors.begin()+j);
                     i=nbCor;//pour quitter la boucle for
                 }
             }
