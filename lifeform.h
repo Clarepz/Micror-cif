@@ -44,6 +44,7 @@ public:
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
+    void swapSegment(Cor &coral);
     void update(const std::vector<Cor>& cors, std::vector<Alg>& algs);
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten

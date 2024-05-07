@@ -184,6 +184,25 @@ void Cor::display() const {
     }
 }
 
+void Cor::swapSegment(Cor &coral) {
+    segments_.swap(coral.segments_);
+    int switchId=id_;
+    id_=coral.id_;
+    coral.id_=switchId;
+    Status_cor switchStatus=status_;
+    status_=coral.status_;
+    coral.status_=switchStatus;
+    Dir_rot_cor switchDir=dir_;
+    dir_=coral.dir_;
+    coral.dir_=switchDir;
+    Status_dev switchStatusDev=statusDev_;
+    statusDev_=coral.statusDev_;
+    coral.statusDev_=switchStatusDev;
+    unsigned switchNbSeg=nbSeg_;
+    nbSeg_=coral.nbSeg_;
+    coral.nbSeg_=switchNbSeg;
+}
+
 void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {
     age_++ ;
     if(age_ >= max_life_cor){
