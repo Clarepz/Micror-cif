@@ -184,7 +184,7 @@ void Cor::display() const {
     }
 }
 
-void Cor::swapSegment(Cor &coral) {
+void Cor::swapCoral(Cor &coral) {
     segments_.swap(coral.segments_);
     int switchId=id_;
     id_=coral.id_;
@@ -201,6 +201,12 @@ void Cor::swapSegment(Cor &coral) {
     unsigned switchNbSeg=nbSeg_;
     nbSeg_=coral.nbSeg_;
     coral.nbSeg_=switchNbSeg;
+    S2d switchPosition=position_;
+    position_=coral.position_;
+    coral.position_=switchPosition;
+    unsigned switchAge=age_;
+    age_=coral.age_;
+    coral.age_=switchAge;
 }
 
 
@@ -275,7 +281,7 @@ bool Cor::eaten(S2d &nextScaPos) {
         nbSeg_--;
         //si nbSeg==0 on renvoie true pour informer que le corail est mangé en entier
         if(nbSeg_==0) return(true);
-        segments_.pop_back();
+        else segments_.pop_back();
     }
     else {
         segments_[nbSeg_ - 1].addLength(-int(delta_l));
@@ -398,10 +404,10 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
 }
 
 
-void Sca::endEating(bool &corDestroy)
-{
+void Sca::setStatus(bool &corDestroy) {
     onTarget=false;
     corDestroy=false;
+    status_=FREE;
 }
 
 
