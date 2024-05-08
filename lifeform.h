@@ -45,6 +45,7 @@ public:
     void writeFile(std::ofstream &file) const;
     void display() const;
     void update(std::vector<Cor>& cors, std::vector<Alg>& algs);
+    void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
@@ -72,7 +73,7 @@ public:
     void display() const;
     //corDestroy let simulation when to destroy the coral
     void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
-    void endEating();
+    void endEating(bool &corDestroy);
 
 private:
     unsigned radius_;

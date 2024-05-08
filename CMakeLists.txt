@@ -8,10 +8,11 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
 
 include_directories(${GTKMM_INCLUDE_DIRS})
-include_directories(.)
 
 # Link directories
 link_directories(${GTKMM_LIBRARY_DIRS})
+
+add_definitions(${GTK4_CFLAGS_OTHER})
 
 add_executable(Microrecif
         constantes.h

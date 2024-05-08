@@ -113,10 +113,11 @@ void Simulation::update(bool algBirthOn) {
         }
         if(corDestroy) {
             int id=scas[i].getTarget();
-            for(int i(0); i<nbCor; ++i) {
-                if(cors[i].getId()==id) {
-                    cors.erase(cors.begin()+i);
-                    i=nbCor;//pour quitter la boucle for
+            for(int j(0); j<nbCor; ++j) {
+                if(cors[j].getId()==id) {
+                    scas[i].endEating(corDestroy);
+                    killCoral(j);
+                    j=nbCor;//pour quitter la boucle for
                 }
             }
         }
@@ -218,4 +219,10 @@ Segment Simulation::corLastSegmentById(int id) {
     for(int i(0); i<nbCor; ++i) {
         if(cors[i].getId()==id) return(cors[i].getLastSegment());
     }
+}
+
+void Simulation::killCoral(int index) {
+    cors[nbCor-1].swapSegment(cors[index]);
+    cors.pop_back();
+    nbCor--;
 }

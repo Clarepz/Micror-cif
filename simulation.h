@@ -39,6 +39,7 @@ private:
     bool scaTargetCheck() const;
     Cor* findCorById (int id);
     Segment corLastSegmentById(int id);
+    void killCoral(int index);
 
 };
 
