@@ -41,11 +41,13 @@ public:
     unsigned getNbCor() const {return(nbSeg_);}
     S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
     Segment getLastSegment() {return(segments_[nbSeg_-1]);}
+    bool isIdAllocated () const {return allocatedId;}
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
     void swapCoral(Cor &coral);
     void update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &coralIsDead);
+    void setAllocatedId(bool allocId);
     void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
@@ -58,6 +60,7 @@ private:
     Status_dev statusDev_;
     unsigned nbSeg_;
     std::vector<Segment> segments_;
+    bool allocatedId=false;
 
     bool shouldEat(const Alg& anAlg, double &angleToAlg) const ;
     void extend();

@@ -141,7 +141,7 @@ Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int 
     if ( !(superposCheck(segs,id_) and segCheck(segs,id_)) ) {
         initSuccess = false;
     }
-
+    allocatedId=false;
     segments_=segs;
 }
 
@@ -272,6 +272,10 @@ void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &coralIsDe
             statusDev_ = EXTEND;
         }
     }
+}
+
+void Cor::setAllocatedId(bool allocId) {
+    allocatedId=allocId;
 }
 
 bool Cor::eaten(S2d &nextScaPos) {

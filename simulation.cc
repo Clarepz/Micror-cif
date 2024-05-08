@@ -101,7 +101,7 @@ void Simulation::update(bool algBirthOn) {
     for(int i=0; i<nbCor; i++) {
         bool coralIsDead(false), noScavengerFree(false);
         cors[i].update(cors, algs, coralIsDead);
-        if(coralIsDead) allocateTargetToScavenger(cors[i]);
+        if(coralIsDead and !cors[i].isIdAllocated()) allocateTargetToScavenger(cors[i]);
         nbAlg = algs.size(); //in case some algs died
         nbCor = cors.size(); //in case of repro
     }
@@ -257,7 +257,10 @@ void Simulation::allocateTargetToScavenger(Cor deadCoral) {
             }*/
         }
     }
-    if(distance_!=356) scas[index].setTarget(deadCoral.getId());
+    if(distance_!=356) {
+        scas[index].setTarget(deadCoral.getId());
+        deadCoral.setAllocatedId(true);
+    }
     //if no scavengers are free the fonction will try again on next update
 
 }
