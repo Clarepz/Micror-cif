@@ -44,6 +44,7 @@ public:
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
+    void swapCoral(Cor &coral);
     void update(std::vector<Cor>& cors, std::vector<Alg>& algs);
     void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;
