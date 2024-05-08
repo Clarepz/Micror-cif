@@ -114,7 +114,7 @@ void Simulation::update(bool algBirthOn) {
             int id=scas[i].getTarget();
             for(int j(0); j<nbCor; ++j) {
                 if(cors[j].getId()==id) {
-                    scas[i].endEating(corDestroy);
+                    scas[i].setStatus(corDestroy);
                     killCoral(j);
                     j=nbCor;//pour quitter la boucle for
                 }
@@ -122,6 +122,7 @@ void Simulation::update(bool algBirthOn) {
         }
         if(scaBirth) {
             scas.emplace_back(corLastSegmentById(scas[i].getTarget()));
+            nbSca++;
         }
     }
 }
