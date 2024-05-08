@@ -20,6 +20,7 @@ public:
     int getNbAlg() const {return nbAlg;}
     int getNbCor() const {return nbCor;}
     int getNbSca() const {return nbSca;}
+    void updateNbSca ();
 private:
     int nbSim;
     int nbAlg;

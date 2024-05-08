@@ -184,7 +184,7 @@ void Cor::display() const {
     }
 }
 
-void Cor::swapSegment(Cor &coral) {
+void Cor::swapCoral(Cor &coral) {
     segments_.swap(coral.segments_);
     int switchId=id_;
     id_=coral.id_;
@@ -201,6 +201,12 @@ void Cor::swapSegment(Cor &coral) {
     unsigned switchNbSeg=nbSeg_;
     nbSeg_=coral.nbSeg_;
     coral.nbSeg_=switchNbSeg;
+    S2d switchPosition=position_;
+    position_=coral.position_;
+    coral.position_=switchPosition;
+    unsigned switchAge=age_;
+    age_=coral.age_;
+    coral.age_=switchAge;
 }
 
 void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs) {

@@ -123,8 +123,14 @@ void Simulation::update(bool algBirthOn) {
         if(scaBirth) {
             scas.emplace_back(corLastSegmentById(scas[i].getTarget()));
             nbSca++;
+            scaBirth=false;
         }
     }
+}
+
+void Simulation::updateNbSca () {
+
+    nbSca=scas.size();
 }
 
 bool Simulation::readFile(char* fileName) {
@@ -222,7 +228,7 @@ Segment Simulation::corLastSegmentById(int id) {
 }
 
 void Simulation::killCoral(int index) {
-    cors[nbCor-1].swapSegment(cors[index]);
+    cors[nbCor-1].swapCoral(cors[index]);
     cors.pop_back();
     nbCor--;
 }
