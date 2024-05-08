@@ -99,11 +99,13 @@ void Simulation::update(bool algBirthOn) {
     }
 
     for(int i=0; i<nbCor; i++) {
-        cors[i].update(cors, algs);
+        bool coralIsDead(false), noScavengerFree(false);
+        cors[i].update(cors, algs, coralIsDead);
+        if(coralIsDead) allocateTargetToScavenger(cors[i]);
         nbAlg = algs.size(); //in case some algs died
         nbCor = cors.size(); //in case of repro
     }
-    /*
+//traiter coral
     bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {
         scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
@@ -126,7 +128,7 @@ void Simulation::update(bool algBirthOn) {
             nbSca++;
             scaBirth=false;
         }
-    }*/
+    }
 }
 
 void Simulation::updateNbSca () {
@@ -232,4 +234,30 @@ void Simulation::killCoral(int index) {
     cors[nbCor-1].swapCoral(cors[index]);
     cors.pop_back();
     nbCor--;
+}
+
+void Simulation::allocateTargetToScavenger(Cor deadCoral) {
+    S2d segLastPoint=deadCoral.getLastSegmentSecPoint();
+    double distance_ = 356; // > 256*sqrt(2) to be sure it's the largest
+    int index=-1;
+    for(int i(0); i<nbSca; i++) {
+        double testDistance=distance(segLastPoint, scas[i].getPosition());
+        if(testDistance<=distance_) {
+            if(scas[i].getStatus()==FREE) {
+                distance_=testDistance;
+                index=i;
+            }
+            /*Si deux coraux meurent en meme temps : else {
+                if(distance(scas[i].getPosition(),
+                            corLastSegmentById(scas[i].getTarget()).getSecPoint())
+                   < testDistance) {
+                    distance_=testDistance;
+                    index=i;
+                }
+            }*/
+        }
+    }
+    if(distance_!=356) scas[index].setTarget(deadCoral.getId());
+    //if no scavengers are free the fonction will try again on next update
+
 }

@@ -210,10 +210,11 @@ void Cor::swapCoral(Cor &coral) {
 }
 
 
-void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
+void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &coralIsDead) {
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
+        coralIsDead=true;
         return;
     }
 
@@ -410,6 +411,10 @@ void Sca::setStatus(bool &corDestroy) {
     status_=FREE;
 }
 
+void Sca::setTarget(int coralId) {
+    targetId_=coralId;
+    status_=EATING;
+}
 
 Alg readAlg(std::istringstream& line) {
     S2d pos;

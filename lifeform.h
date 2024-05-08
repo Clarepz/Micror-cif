@@ -45,7 +45,7 @@ public:
     void writeFile(std::ofstream &file) const;
     void display() const;
     void swapCoral(Cor &coral);
-    void update(std::vector<Cor>& cors, std::vector<Alg>& algs);
+    void update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &coralIsDead);
     void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
@@ -75,6 +75,7 @@ public:
     //corDestroy let simulation when to destroy the coral
     void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
     void setStatus(bool &corDestroy);
+    void setTarget(int coralId);
 
 private:
     unsigned radius_;

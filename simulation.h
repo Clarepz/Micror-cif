@@ -41,6 +41,7 @@ private:
     Cor* findCorById (int id);
     Segment corLastSegmentById(int id);
     void killCoral(int index);
+    void allocateTargetToScavenger(Cor deadCoral);
 
 };
 
