@@ -99,9 +99,8 @@ void Simulation::update(bool algBirthOn) {
     }
 
     for(int i=0; i<nbCor; i++) {
-        bool justDied = false;
-        cors[i].update(cors, algs, justDied);
-        if(justDied and !cors[i].isIdAllocated())
+        cors[i].update(cors, algs);
+        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
             allocateTargetToScavenger(cors[i]);
 
         nbAlg = algs.size(); //in case some algs died
