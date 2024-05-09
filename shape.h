@@ -35,9 +35,6 @@ private:
     S2d point;
     double angle;
     double longueur;
-    S2d secPoint;
-
-    void updateSecPoint();
 };
 
 double deltaAngle(Segment seg1, Segment seg2);
