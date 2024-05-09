@@ -207,6 +207,9 @@ void Cor::swapCoral(Cor &coral) {
     unsigned switchAge=age_;
     age_=coral.age_;
     coral.age_=switchAge;
+    bool switchAllocatedId=allocatedId;
+    allocatedId=coral.allocatedId;
+    coral.allocatedId=switchAllocatedId;
 }
 
 
