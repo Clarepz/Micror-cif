@@ -133,7 +133,6 @@ void Simulation::update(bool algBirthOn) {
 }
 
 void Simulation::updateNbSca () {
-
     nbSca=scas.size();
 }
 

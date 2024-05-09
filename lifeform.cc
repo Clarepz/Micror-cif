@@ -213,13 +213,13 @@ void Cor::swapCoral(Cor &coral) {
 }
 
 
-void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool justdied) {
+void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &justdied) {
     if(status_==DEAD) return;
 
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
-        justdied=true;
+        justdied = true;
         return;
     }
 
