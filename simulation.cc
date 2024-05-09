@@ -97,10 +97,13 @@ void Simulation::update(bool algBirthOn) {
             algs.emplace_back(randomPosition,1);
         }
     }
+
     for(int i=0; i<nbCor; i++) {
-        bool coralIsDead(false);
-        cors[i].update(cors, algs, coralIsDead);
-        if(coralIsDead and !cors[i].isIdAllocated()) allocateTargetToScavenger(cors[i]);
+        bool justDied = false;
+        cors[i].update(cors, algs, justDied);
+        if(justDied and !cors[i].isIdAllocated())
+            allocateTargetToScavenger(cors[i]);
+
         nbAlg = algs.size(); //in case some algs died
         nbCor = cors.size(); //in case of repro
     }

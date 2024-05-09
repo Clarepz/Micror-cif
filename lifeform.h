@@ -38,6 +38,7 @@ public:
     Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
         const std::vector<Segment>& segs);
     unsigned getId() const;
+    Status_cor getStatus() {return status_;}
     unsigned getNbCor() const {return(nbSeg_);}
     S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
     Segment getLastSegment() {return(segments_[nbSeg_-1]);}
@@ -46,7 +47,7 @@ public:
     void writeFile(std::ofstream &file) const;
     void display() const;
     void swapCoral(Cor &coral);
-    void update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool &coralIsDead);
+    void update(std::vector<Cor>& cors, std::vector<Alg>& algs, bool justdied);
     void setAllocatedId(bool allocId);
     void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;
