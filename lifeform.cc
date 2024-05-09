@@ -269,9 +269,19 @@ void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
             statusDev_ = REPRO;
         }else{
             unsigned newId = cors[cors.size()-1].getId() + 1;
-            for(Cor aCor : cors){
-                if(aCor.getId()==newId) newId++;
-            }
+            bool IdAlreadyPicked;
+            do{
+                IdAlreadyPicked = false;
+                for(Cor aCor : cors){
+                    if(aCor.getId()==newId){
+                        IdAlreadyPicked = true;
+                        newId ++;
+                        break;
+                    }
+                }
+            }while (IdAlreadyPicked);
+
+
             cors.emplace_back(repro(newId));
             statusDev_ = EXTEND;
         }
