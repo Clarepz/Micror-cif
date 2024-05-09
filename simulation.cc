@@ -102,10 +102,10 @@ void Simulation::update(bool algBirthOn) {
         cors[i].update(cors, algs);
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
             allocateTargetToScavenger(cors[i]);
-
         nbAlg = algs.size(); //in case some algs died
         nbCor = cors.size(); //in case of repro
     }
+    
     bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {
         scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));

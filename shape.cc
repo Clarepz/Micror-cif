@@ -30,28 +30,22 @@ bool S2d::operator==(S2d point) const
     return(point.x==x and point.y==y);
 }
 
+
 Segment::Segment(S2d point_, double angle_, double longueur_):
     point(point_),
     angle(angle_),
     longueur(longueur_)
-{
-    updateSecPoint();
-}
+{}
 
 Segment::Segment(S2d basePoint, S2d secPoint_):
-    point(basePoint),
-    secPoint(secPoint_)
+    point(basePoint)
 {
-    longueur = distance(basePoint,secPoint);
-    angle = atan2((secPoint.y-point.y),(secPoint.x-point.x));
+    longueur = distance(basePoint,secPoint_);
+    angle = atan2((secPoint_.y-point.y),(secPoint_.x-point.x));
 }
 
 S2d Segment::getPoint() const {
     return point;
-}
-
-S2d Segment::getSecPoint() const {
-    return secPoint;
 }
 
 double Segment::getlength() const{
@@ -89,9 +83,8 @@ void Segment::changeLength(double sizeOfTheChange) {
     longueur+=sizeOfTheChange;
 }
 
-void Segment::updateSecPoint() {
-    secPoint.x = point.x+longueur* cos(angle);
-    secPoint.y = point.y+longueur* sin(angle);
+S2d Segment::getSecPoint() const {
+    return(S2d {point.x+longueur* cos(angle), point.y+longueur* sin(angle)});
 }
 
 double deltaAngle(Segment seg1, Segment seg2)
