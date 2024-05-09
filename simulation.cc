@@ -105,7 +105,6 @@ void Simulation::update(bool algBirthOn) {
         nbAlg = algs.size(); //in case some algs died
         nbCor = cors.size(); //in case of repro
     }
-//traiter coral
     bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {
         scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
@@ -236,7 +235,7 @@ void Simulation::killCoral(int index) {
     nbCor--;
 }
 
-void Simulation::allocateTargetToScavenger(Cor deadCoral) {
+void Simulation::allocateTargetToScavenger(Cor &deadCoral) {
     S2d segLastPoint=deadCoral.getLastSegmentSecPoint();
     double distance_ = 356; // > 256*sqrt(2) to be sure it's the largest
     int index=-1;

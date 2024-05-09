@@ -289,7 +289,7 @@ bool Cor::eaten(S2d &nextScaPos) {
         else segments_.pop_back();
     }
     else {
-        segments_[nbSeg_ - 1].addLength(-int(delta_l));
+        segments_[nbSeg_ - 1].changeLength(-int(delta_l));
         nextScaPos = segments_[nbSeg_ - 1].getSecPoint();
     }
     return(false);

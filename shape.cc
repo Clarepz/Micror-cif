@@ -85,6 +85,10 @@ Segment Segment::addLength(double length){
     return Segment(point, angle, longueur+length);
 }
 
+void Segment::changeLength(double sizeOfTheChange) {
+    longueur+=sizeOfTheChange;
+}
+
 void Segment::updateSecPoint() {
     secPoint.x = point.x+longueur* cos(angle);
     secPoint.y = point.y+longueur* sin(angle);
