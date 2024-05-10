@@ -103,7 +103,7 @@ void Simulation::update(bool algBirthOn) {
         vector<Cor> babyCor;
         cors[i].update(cors, algs, babyCor);
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
-        cors[i].update(cors, algs);
+        cors[i].update(cors, algs, babyCor);
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()
            and cors[i].getDeadRegistration()) {
             freeDeadCor.push_back(&cors[i]);
