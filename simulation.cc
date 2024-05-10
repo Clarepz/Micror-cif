@@ -99,12 +99,16 @@ void Simulation::update(bool algBirthOn) {
     }
 
     for(int i=0; i<nbCor; i++) {
-        cors[i].update(cors, algs);
+        vector<Cor> babyCor;
+        cors[i].update(cors, algs, babyCor);
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
             allocateTargetToScavenger(cors[i]);
         nbAlg = algs.size(); //in case some algs died
-        nbCor = cors.size(); //in case of repro
+        if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
+    nbCor = cors.size(); //in case of repro (out of loop to not update new cor
+
+
     
     bool scaTooOld(false), corDestroy(false), scaBirth(false);
     for(int i(0); i<nbSca; i++) {

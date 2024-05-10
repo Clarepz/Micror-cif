@@ -47,7 +47,7 @@ public:
     void writeFile(std::ofstream &file) const;
     void display() const;
     void swapCoral(Cor &coral);
-    void update(std::vector<Cor>& cors, std::vector<Alg>& algs);
+    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs,std::vector<Cor>& babyCor);
     void setAllocatedId(bool allocId);
     void swapSegment(Cor &coral);
     const std::vector<Segment>& getSegments() const;

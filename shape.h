@@ -11,11 +11,13 @@ enum Fail {NOFAIL, NEGLENGHT, BADANGLE};
 
 constexpr double epsil_zero(0.5) ;
 
+
 struct S2d
 {
     double x=0.;
     double y=0.;
     bool operator==(S2d point) const;
+    bool operator!=(S2d point) const {return !operator==(point);}
 };
 
 

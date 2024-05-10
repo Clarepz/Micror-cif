@@ -85,7 +85,7 @@ bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
                 return false;
             }
         }else{
-            if (suppIndep(segment,otherSegment,epsil_zero) and !(segment.getPoint() == otherSegment.getPoint())){
+            if (suppIndep(segment,otherSegment,epsil_zero) and segment.getPoint() != otherSegment.getPoint()){
                 return false;
             }
         }
@@ -213,21 +213,46 @@ void Cor::swapCoral(Cor &coral) {
 }
 
 
-void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
+void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs, std::vector<Cor>& babyCor) {
     if(status_==DEAD) return;
-
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
         return;
     }
 
-    Segment & lastSeg =  segments_[segments_.size()-1];
-    Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
+    Segment& lastSeg =  segments_[segments_.size()-1];
 
+    if(lastSeg.getlength()>=l_repro){
+        if(statusDev_==EXTEND){
+            extend();
+            statusDev_ = REPRO;
+        }else{
+
+            unsigned newId = cors[cors.size()-1].getId() + 1;
+            bool IdAlreadyPicked;
+            do{
+                IdAlreadyPicked = false;
+                for(Cor aCor : cors){
+                    if(aCor.getId()==newId){
+                        IdAlreadyPicked = true;
+                        newId ++;
+                        break;
+                    }
+                }
+            }while (IdAlreadyPicked);
+
+            babyCor.push_back(repro(newId));
+            statusDev_ = EXTEND;
+        }
+        return;
+    }
+
+    Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
 
     int closestAlg = 0;
     double closestAlgAngle = delta_rot ;
+    bool mustEatAlg = false;
 
     for(int i=0; i<algs.size(); i++){
         double angleToAlg ;
@@ -235,13 +260,13 @@ void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
         if(shouldEat(algs[i], angleToAlg) and abs(angleToAlg) <= abs(closestAlgAngle)){
             closestAlgAngle = angleToAlg;
             closestAlg = i;
+            mustEatAlg =true;
         }
     }
 
     if(algs.size()>0 and shouldEat(algs[closestAlg],closestAlgAngle)){
         newLastSeg = lastSeg.addAngle(closestAlgAngle);
         newLastSeg = newLastSeg.addLength(delta_l);
-        algs.erase(algs.begin()+closestAlg);
     }
 
     bool updateCheck = true;
@@ -261,31 +286,12 @@ void Cor::update(std::vector<Cor>& cors, std::vector<Alg>& algs) {
         updateCheck = false;
     }
 
-    if(updateCheck) lastSeg = newLastSeg;
-
-    if(lastSeg.getlength()>=l_repro){
-        if(statusDev_==EXTEND){
-            extend();
-            statusDev_ = REPRO;
-        }else{
-            unsigned newId = cors[cors.size()-1].getId() + 1;
-            bool IdAlreadyPicked;
-            do{
-                IdAlreadyPicked = false;
-                for(Cor aCor : cors){
-                    if(aCor.getId()==newId){
-                        IdAlreadyPicked = true;
-                        newId ++;
-                        break;
-                    }
-                }
-            }while (IdAlreadyPicked);
-
-
-            cors.emplace_back(repro(newId));
-            statusDev_ = EXTEND;
-        }
+    if(updateCheck){
+        lastSeg = newLastSeg;
+        if(mustEatAlg) algs.erase(algs.begin()+closestAlg);
     }
+
+
 }
 
 void Cor::setAllocatedId(bool allocId) {
