@@ -76,13 +76,14 @@ void Simulation::update(bool algBirthOn) {
     nbSim++;
     bool isDead = false;
 
-    for(int i(0); i<nbAlg; i++) {
+    int i=0;
+    while (i<nbAlg){
         isDead = false;
         algs[i].update(isDead);
         if(isDead){
             algs.erase(algs.begin()+i);
             nbAlg--;
-        }
+        }else i++;
     }
 
     if(algBirthOn) {
