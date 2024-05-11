@@ -294,6 +294,10 @@ void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs, std::vect
 
 }
 
+void Cor::registrateDead() {
+    registratedDead=true;
+}
+
 void Cor::setAllocatedId(bool allocId) {
     allocatedId=allocId;
 }

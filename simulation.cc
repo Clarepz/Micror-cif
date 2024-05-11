@@ -104,7 +104,12 @@ void Simulation::update(bool algBirthOn) {
         vector<Cor> babyCor;
         cors[i].update(cors, algs, babyCor);
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
+        cors[i].update(cors, algs, babyCor);
+        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()
+           and cors[i].getDeadRegistration()) {
             freeDeadCor.push_back(&cors[i]);
+            cors[i].registrateDead();
+        }
         nbAlg = algs.size(); //in case some algs died
         if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
@@ -130,7 +135,9 @@ void Simulation::update(bool algBirthOn) {
                 }
                 scas[i].setTarget((*index).getId());
                 (*index).setAllocatedId(true);
-                swap(freeDeadCor[vectorIndex], freeDeadCor[freeDeadCor.size()]);
+                if (freeDeadCor.size()>1) swap(freeDeadCor[vectorIndex],
+                                               freeDeadCor[freeDeadCor.size()]);
+                freeDeadCor.pop_back();
                 if(freeDeadCor.size()==0) break;
             }
         }
