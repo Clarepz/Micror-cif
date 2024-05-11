@@ -1,6 +1,6 @@
 //
 // lifeform.h, Provenaz Clarence, Royer Yann verion 2
-//
+// 
 
 #ifndef LIFEFORM_H
 #define LIFEFORM_H
@@ -30,6 +30,7 @@ public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const;
     void display() const;
+    void swapToKill(const Alg &livingAlg); //copy livingCor in actual cor
     void update(bool &dead);
 };
 
@@ -48,10 +49,11 @@ public:
     void writeFile(std::ofstream &file) const;
     void display() const;
     void swapCoral(Cor &coral);
-    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs,std::vector<Cor>& babyCor);
+    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs,
+				std::vector<Cor>& babyCor);
     void setAllocatedId(bool allocId);
     void registrateDead ();
-    void swapSegment(Cor &coral);
+    void swapToKill(Cor &livingCor); //copy livingCor in actual cor
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
@@ -73,21 +75,29 @@ private:
 
 class Sca:public LifeForm {
 public:
-    Sca(S2d position, int age, int radius, int status, int targetId); //constructor
-    Sca(Segment seg); //constructor for reproduction
-    unsigned getTarget() const;
-    Status_sca getStatus() const;
+	//constructeurs
+    Sca(S2d position, int age, int radius, int status, int targetId);
+    Sca(Segment seg); //celui-ci sert à la reproduction
+    
+    //getteurs
+    int getTarget() const {return targetId_;}
+    Status_sca getStatus() const {return status_;}
+    
+    //sets
+    void setFree(bool &corDestroy);
+    void setTarget(int coralId);
+    
+    //méthodes pour la simulation
     void writeFile(std::ofstream &file) const ;
     void display() const;
-    //corDestroy let simulation when to destroy the coral
+    void swapToKill(const Sca &livingSca); //copy livingSca in actual sca
     void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
-    void setStatus(bool &corDestroy);
-    void setTarget(int coralId);
+    //corDestroy let simulation know when to destroy the coral
 
 private:
     unsigned radius_;
     Status_sca status_;
-    unsigned targetId_;
+    int targetId_;
     bool onTarget;
 };
 

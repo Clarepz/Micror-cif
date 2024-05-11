@@ -1,8 +1,7 @@
 //
 // shape.cc, Provenaz Clarence 0%, Royer Yann 100%, verion 2
-//
+// conventions rendu 3 ok
 
-#include <cmath>
 #include "shape.h"
 
 
@@ -15,19 +14,24 @@ int orientation(S2d p, S2d q, S2d r, double simConstante)
     double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
     if (distance <= simConstante and distance >=-simConstante) return 0;
     //si simConstante n'est pas initialisée (lecture) la condition <=> distance==0
-    return (val > 0)? 1: 2; // clock or counterclock wise
+    return (val > 0)? 1: 2; // sens horaire ou trigo
 }
 
-bool onSegment(S2d p, S2d q, S2d r, double simConstante)
-{
+bool onSegment(S2d p, S2d q, S2d r, double simConstante) 
+{	
     double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
     double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
     return (s/pr>=-simConstante and s/pr<=pr+simConstante);
 }
 
-bool S2d::operator==(S2d point) const
-{
+bool S2d::operator==(S2d point) const 
+{	
     return(point.x==x and point.y==y);
+}
+
+bool S2d::operator!=(S2d point) const 
+{
+	return !operator==(point);
 }
 
 
@@ -42,19 +46,6 @@ Segment::Segment(S2d basePoint, S2d secPoint_):
 {
     longueur = distance(basePoint,secPoint_);
     angle = atan2((secPoint_.y-point.y),(secPoint_.x-point.x));
-}
-
-S2d Segment::getPoint() const {
-    return point;
-}
-
-double Segment::getlength() const{
-    return longueur;
-}
-
-double Segment::getAngle() const
-{
-    return(angle);
 }
 
 Fail Segment::getFail () const
@@ -75,16 +66,14 @@ Segment Segment::addAngle(double angle_) const
 
 }
 
-Segment Segment::addLength(double length){
+Segment Segment::addLength(double length)
+{
     return Segment(point, angle, longueur+length);
 }
 
-void Segment::changeLength(double sizeOfTheChange) {
-    longueur+=sizeOfTheChange;
-}
-
-S2d Segment::getSecPoint() const {
-    return(S2d {point.x+longueur* cos(angle), point.y+longueur* sin(angle)});
+void Segment::changeLength(double change) 
+{
+    longueur+=change;
 }
 
 double deltaAngle(Segment seg1, Segment seg2)
@@ -129,6 +118,7 @@ void drawEntity(Shape shape,Color color, S2d position, double size, double angle
     drawShape(shape, color, position.x, position.y, size, angle);
 }
 
-double distance(S2d p1, S2d p2){
+double distance(S2d p1, S2d p2)
+{
     return sqrt(pow(p1.x-p2.x,2)+pow(p1.y-p2.y,2));
 }

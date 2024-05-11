@@ -40,7 +40,10 @@ private:
     bool scaTargetCheck() const;
     Cor* findCorById (int id);
     Segment corLastSegmentById(int id);
+    //les fonctions kill copient le dernier élément dans l'élément[index] et popBack
     void killCoral(int index, std::vector<Cor> &corals);
+    void killScavenger(int index, std::vector<Sca> &scavengers);
+    void killAlg(int index, std::vector<Alg> &algs);
     void allocateTargetToScavenger(Cor &deadCoral);
 
 };

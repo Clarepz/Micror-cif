@@ -9,6 +9,8 @@
 #include "lifeform.h"
 #include "constantes.h"
 
+using namespace std;
+
 bool domainCheck(S2d center);
 bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
@@ -122,6 +124,12 @@ void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
+void Alg::swapToKill(const Alg &livingAlg) {
+	position_=livingAlg.position_;
+	age_=livingAlg.age_;
+	initSuccess=livingAlg.initSuccess;
+}
+
 void Alg::update(bool &dead) {
     age_++;
     if(age_>=max_life_alg){
@@ -131,18 +139,18 @@ void Alg::update(bool &dead) {
 }
 
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
-         const std::vector<Segment>& segs): LifeForm(position,age) {
-    id_ = id;
-    status_ = static_cast<Status_cor>(status);
-    dir_ = static_cast<Dir_rot_cor>(dir);
-    statusDev_ = static_cast<Status_dev>(statusDev);
-
-    nbSeg_ = nbSeg;
-    if ( !(superposCheck(segs,id_) and segCheck(segs,id_)) ) {
-        initSuccess = false;
-    }
-    allocatedId=false;
-    segments_=segs;
+         const std::vector<Segment>& segs) : 
+    LifeForm(position,age), 
+	id_(id),
+	status_(static_cast<Status_cor>(status)),
+	dir_(static_cast<Dir_rot_cor>(dir)),
+	statusDev_(static_cast<Status_dev>(statusDev)),
+	nbSeg_(nbSeg),
+	segments_(segs),
+	allocatedId(false),
+	registratedDead(false)
+{
+    if (!(superposCheck(segs,id_) and segCheck(segs,id_))) initSuccess = false;
 }
 
 unsigned Cor::getId() const {
@@ -184,36 +192,21 @@ void Cor::display() const {
     }
 }
 
-void Cor::swapCoral(Cor &coral) {
+void Cor::swapToKill(Cor &coral) {
     segments_.swap(coral.segments_);
-    int switchId=id_;
     id_=coral.id_;
-    coral.id_=switchId;
-    Status_cor switchStatus=status_;
     status_=coral.status_;
-    coral.status_=switchStatus;
-    Dir_rot_cor switchDir=dir_;
     dir_=coral.dir_;
-    coral.dir_=switchDir;
-    Status_dev switchStatusDev=statusDev_;
     statusDev_=coral.statusDev_;
-    coral.statusDev_=switchStatusDev;
-    unsigned switchNbSeg=nbSeg_;
     nbSeg_=coral.nbSeg_;
-    coral.nbSeg_=switchNbSeg;
-    S2d switchPosition=position_;
     position_=coral.position_;
-    coral.position_=switchPosition;
-    unsigned switchAge=age_;
     age_=coral.age_;
-    coral.age_=switchAge;
-    bool switchAllocatedId=allocatedId;
+    initSuccess=coral.initSuccess;
     allocatedId=coral.allocatedId;
-    coral.allocatedId=switchAllocatedId;
+    registratedDead=coral.registratedDead;
 }
 
-
-void Cor::update(const std::vector<Cor>& cors, std::vector<Alg>& algs, std::vector<Cor>& babyCor) {
+void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCor) {
     if(status_==DEAD) return;
     age_++ ;
     if(age_ >= max_life_cor){
@@ -358,32 +351,34 @@ Cor Cor::repro(unsigned id) {
 }
 
 
-Sca::Sca(S2d position, int age, int radius, int status, int targetId)
-    : LifeForm(position,age) {
-
-    if(!scaRadiusCheck(radius)) {
-        initSuccess = false;
-    }
-    radius_ = radius;
-    status_ = static_cast<Status_sca>(status);
-    targetId_ = targetId;
-    onTarget=false; //j'éspère que ça va pas faire de la merde
+Sca::Sca(S2d position, int age, int radius, int status, int targetId) : 
+	LifeForm(position,age),
+	radius_(radius),
+	status_(static_cast<Status_sca>(status)),
+	targetId_(targetId),
+	onTarget(false) 
+{
+    if(!scaRadiusCheck(radius)) initSuccess = false;
 }
 
-Sca::Sca(Segment seg) : LifeForm({seg.getSecPoint().x+cos(seg.getAngle())*delta_l,
-                                  seg.getSecPoint().y+sin(seg.getAngle())*delta_l},1) {
-    radius_ = r_sca;
-    status_ = FREE;
-    targetId_ = 0;
-    onTarget = false;
+Sca::Sca(Segment seg) : 
+	LifeForm({seg.getSecPoint().x+cos(seg.getAngle())*delta_l,
+              seg.getSecPoint().y+sin(seg.getAngle())*delta_l},1), 
+    radius_(r_sca),
+    status_(FREE),
+    targetId_(0),
+    onTarget(false)
+{}
+
+void Sca::setFree(bool &corDestroy) {
+    onTarget=false;
+    corDestroy=false;
+    status_=FREE;
 }
 
-unsigned int Sca::getTarget() const {
-    return targetId_;
-}
-
-Status_sca Sca::getStatus() const {
-    return status_;
+void Sca::setTarget(int coralId) {
+    targetId_=coralId;
+    status_=EATING;
 }
 
 void Sca::writeFile(std::ofstream &file) const {
@@ -395,6 +390,16 @@ void Sca::writeFile(std::ofstream &file) const {
 
 void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
+}
+
+void Sca::swapToKill(const Sca &livingSca) {
+	radius_=livingSca.radius_;
+	status_=livingSca.status_;
+	targetId_=livingSca.targetId_;
+	onTarget=livingSca.onTarget;
+	position_=livingSca.position_;
+	age_=livingSca.age_;
+	initSuccess=livingSca.initSuccess;
 }
 
 void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target) {
@@ -421,8 +426,8 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
             }
         }
         else {
-            /*mange un bout du corail, si ce dernier est fini, destroy <- true. La méthode
-            modifie la position du scavenger pour la mettre au niveau de la fin du corail*/
+            /*mange un bout du corail via eaten, si il est fini, destroy <- true. Eaten
+            modifie la position du scavenger pour la mettre à la fin du corail*/
             if(target.eaten(position_)) corDestroy=true;
             if((radius_+=delta_r_sca) >= r_sca_repro) {
                 scaBirth=true;
@@ -432,17 +437,6 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
     }
 }
 
-
-void Sca::setStatus(bool &corDestroy) {
-    onTarget=false;
-    corDestroy=false;
-    status_=FREE;
-}
-
-void Sca::setTarget(int coralId) {
-    targetId_=coralId;
-    status_=EATING;
-}
 
 Alg readAlg(std::istringstream& line) {
     S2d pos;

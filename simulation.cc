@@ -148,16 +148,15 @@ void Simulation::update(bool algBirthOn) {
     for(int i(0); i<nbSca; i++) {
         scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
         if(scaTooOld) {
-            scas.erase(scas.begin()+i);
-            nbSca--;
-        }
+			killScavenger(i, scas);
+			i--;//sans cette ligne pas d'update pour l'anciennement dernier scavenger
+		}
         if(corDestroy) {
             int id=scas[i].getTarget();
             for(int j(0); j<nbCor; ++j) {
                 if(cors[j].getId()==id) {
-                    scas[i].setStatus(corDestroy);
+                    scas[i].setFree(corDestroy);
                     killCoral(j, cors);
-                    nbCor--;
                     j=nbCor;//pour quitter la boucle for
                 }
             }
@@ -269,10 +268,22 @@ Segment Simulation::corLastSegmentById(int id) {
 }
 
 void Simulation::killCoral(int index, std::vector<Cor> &corals) {
-    corals[corals.size()-1].swapCoral(corals[index]);
+    corals[index].swapToKill(corals[nbCor-1]);
     corals.pop_back();
+    nbCor--;
 }
 
+void Simulation::killScavenger(int index, std::vector<Sca> &scavengers) {
+    scavengers[index].swapToKill(scavengers[nbSca-1]);
+    scavengers.pop_back();
+    nbSca--;
+}
+
+void Simulation::killAlg(int index, std::vector<Alg> &algs) {
+    algs[index].swapToKill(algs[nbAlg-1]);
+    algs.pop_back();
+    nbAlg--;
+}
 
 void Simulation::allocateTargetToScavenger(Cor &deadCoral) {
     S2d segLastPoint=deadCoral.getLastSegmentSecPoint();

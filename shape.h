@@ -1,38 +1,44 @@
 //
 // shape.h, Provenaz Clarence, Royer Yann
-// conventions ok
+// conventions rendu 3 ok
 
 #ifndef SHAPE_H
 #define SHAPE_H
 
+#include <cmath>
 #include "graphic.h"
 
 enum Fail {NOFAIL, NEGLENGHT, BADANGLE};
 
 constexpr double epsil_zero(0.5) ;
 
-
-struct S2d
-{
+struct S2d {
     double x=0.;
     double y=0.;
     bool operator==(S2d point) const;
-    bool operator!=(S2d point) const {return !operator==(point);}
+    bool operator!=(S2d point) const;
 };
 
 
-class Segment{
+class Segment {
 public:
-    Segment(S2d coor_,double angle_, double longueur_);//constructeur
+	//constructeurs
+    Segment(S2d coor_,double angle_, double longueur_);
     Segment(S2d basePoint, S2d secPoint_);
-    S2d getPoint() const;
-    S2d getSecPoint() const;
-    double getlength() const;
-    double getAngle() const;
+    
+    //getteurs
+    S2d getPoint() const {return point;}
+    S2d getSecPoint() const {return S2d {point.x+longueur* cos(angle),
+										 point.y+longueur* sin(angle)};}
+    double getlength() const {return longueur;}
+    double getAngle() const {return(angle);}
+    
+    //méthode pour la simulation
     Fail getFail() const;
-    Segment addAngle(double angle_) const;//servira pour la supperposition en simulation
-    Segment addLength(double length);
-    void changeLength(double sizeOfTheChange);
+    Segment addAngle(double angle_) const;
+    Segment addLength(double length); //renvoie un segment plus long de "lenght"
+    void changeLength(double change); //change la taille du segment en rajoutant change
+    
 private:
     S2d point;
     double angle;
