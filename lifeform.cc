@@ -96,12 +96,11 @@ bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
 }
 
 
-LifeForm::LifeForm(S2d position, int age)
-    : position_(position), initSuccess(true) {
-    if ( !(domainCheck(position_) and ageCheck(age)) ) {
-        initSuccess = false;
-    }
-    age_=age;
+LifeForm::LifeForm(S2d position, int age) : 
+	position_(position), 
+	age_(age),
+	initSuccess(true) {
+    if(!(domainCheck(position_) and ageCheck(age))) initSuccess = false;
 }
 
 bool LifeForm::getInitSuccess() const {
@@ -147,8 +146,7 @@ Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int 
 	statusDev_(static_cast<Status_dev>(statusDev)),
 	nbSeg_(nbSeg),
 	segments_(segs),
-	allocatedId(false),
-	registratedDead(false)
+	allocatedId(false)
 {
     if (!(superposCheck(segs,id_) and segCheck(segs,id_))) initSuccess = false;
 }
@@ -203,7 +201,6 @@ void Cor::swapToKill(Cor &coral) {
     age_=coral.age_;
     initSuccess=coral.initSuccess;
     allocatedId=coral.allocatedId;
-    registratedDead=coral.registratedDead;
 }
 
 void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCor) {
@@ -287,12 +284,8 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
 
 }
 
-void Cor::registrateDead() {
-    registratedDead=true;
-}
-
-void Cor::setAllocatedId(bool allocId) {
-    allocatedId=allocId;
+void Cor::setAllocatedId(bool allocatedId_) {
+    allocatedId=allocatedId_;
 }
 
 bool Cor::eaten(S2d &nextScaPos) {
@@ -361,18 +354,16 @@ Sca::Sca(S2d position, int age, int radius, int status, int targetId) :
     if(!scaRadiusCheck(radius)) initSuccess = false;
 }
 
-Sca::Sca(Segment seg) : 
-	LifeForm({seg.getSecPoint().x+cos(seg.getAngle())*delta_l,
-              seg.getSecPoint().y+sin(seg.getAngle())*delta_l},1), 
+Sca::Sca(S2d newScaPos) : 
+	LifeForm(newScaPos,1), 
     radius_(r_sca),
     status_(FREE),
     targetId_(0),
     onTarget(false)
 {}
 
-void Sca::setFree(bool &corDestroy) {
+void Sca::setFree() {
     onTarget=false;
-    corDestroy=false;
     status_=FREE;
 }
 
@@ -402,7 +393,8 @@ void Sca::swapToKill(const Sca &livingSca) {
 	initSuccess=livingSca.initSuccess;
 }
 
-void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target) {
+void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaPos, 
+				 Cor &target) {
     //gestion de l'age et màj du booleen dead
     ++age_;
     if(age_ >= max_life_sca) {
@@ -414,7 +406,7 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
         if(!onTarget) {
             double deltaX=target.getLastSegmentSecPoint().x-position_.x;
             double deltaY=target.getLastSegmentSecPoint().y-position_.y;
-            //scavenger --> près du corail, il se déplace directement sur lui
+            //scavenger = près du corail, il se déplace directement sur lui
             if(sqrt(pow(deltaX,2)+ pow(deltaY, 2))<=delta_l) {
                 position_=target.getLastSegmentSecPoint();
                 onTarget=true;
@@ -428,6 +420,7 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target)
         else {
             /*mange un bout du corail via eaten, si il est fini, destroy <- true. Eaten
             modifie la position du scavenger pour la mettre à la fin du corail*/
+			newScaPos=position_;
             if(target.eaten(position_)) corDestroy=true;
             if((radius_+=delta_r_sca) >= r_sca_repro) {
                 scaBirth=true;

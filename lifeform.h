@@ -43,16 +43,13 @@ public:
     unsigned getNbCor() const {return(nbSeg_);}
     S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
     Segment getLastSegment() {return(segments_[nbSeg_-1]);}
-    bool getDeadRegistration() {return(registratedDead);}
     bool isIdAllocated () const {return allocatedId;}
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
-    void swapCoral(Cor &coral);
     void update(const std::vector<Cor>& cors, std::vector<Alg>& algs,
 				std::vector<Cor>& babyCor);
-    void setAllocatedId(bool allocId);
-    void registrateDead ();
+    void setAllocatedId(bool allocatedId);
     void swapToKill(Cor &livingCor); //copy livingCor in actual cor
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
@@ -65,8 +62,7 @@ private:
     Status_dev statusDev_;
     unsigned nbSeg_;
     std::vector<Segment> segments_;
-    bool allocatedId=false;
-    bool registratedDead=false;
+    bool allocatedId;
 
     bool shouldEat(const Alg& anAlg, double &angleToAlg) const ;
     void extend();
@@ -77,21 +73,22 @@ class Sca:public LifeForm {
 public:
 	//constructeurs
     Sca(S2d position, int age, int radius, int status, int targetId);
-    Sca(Segment seg); //celui-ci sert à la reproduction
+    Sca(S2d newScaPos); //celui-ci sert à la reproduction
     
     //getteurs
     int getTarget() const {return targetId_;}
     Status_sca getStatus() const {return status_;}
     
     //sets
-    void setFree(bool &corDestroy);
+    void setFree();
     void setTarget(int coralId);
     
     //méthodes pour la simulation
     void writeFile(std::ofstream &file) const ;
     void display() const;
     void swapToKill(const Sca &livingSca); //copy livingSca in actual sca
-    void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, Cor &target);
+    void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaPos,
+				Cor &target);
     //corDestroy let simulation know when to destroy the coral
 
 private:

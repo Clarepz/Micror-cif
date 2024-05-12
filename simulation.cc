@@ -76,6 +76,7 @@ void Simulation::update(bool algBirthOn) {
     nbSim++;
     bool isDead = false;
 
+	//partie algues
     int i=0;
     while (i<nbAlg){
         isDead = false;
@@ -85,7 +86,6 @@ void Simulation::update(bool algBirthOn) {
             nbAlg--;
         }else i++;
     }
-
     if(algBirthOn) {
         //create random alg
         bernoulli_distribution randomBool(alg_birth_rate);
@@ -99,74 +99,34 @@ void Simulation::update(bool algBirthOn) {
         }
     }
 
+	//partie coraux
     vector <Cor*> freeDeadCor;
     for(int i=0; i<nbCor; i++) {
         vector<Cor> babyCor;
         cors[i].update(cors, algs, babyCor);
-        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated())
-        cors[i].update(cors, algs, babyCor);
-        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()
-           and cors[i].getDeadRegistration()) {
-            freeDeadCor.push_back(&cors[i]);
-            cors[i].registrateDead();
-        }
+        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()) 
+			freeDeadCor.push_back(&cors[i]);
         nbAlg = algs.size(); //in case some algs died
         if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
     nbCor = cors.size(); //in case of repro (out of loop to not update new cor
-
-
-
-    if(freeDeadCor.size()==1) allocateTargetToScavenger(*freeDeadCor[0]);
-    else if(freeDeadCor.size()>1) {
-        for(int i; i<nbSca; i++) {
-            if(scas[i].getStatus()==FREE) {
-                double distance_=365;
-                Cor* index;
-                int vectorIndex;
-                for(int j; j<freeDeadCor.size(); j++) {
-                    S2d deadCorSecPoint=(*freeDeadCor[j]).getLastSegmentSecPoint();
-                    double distanceTest=distance(scas[i].getPosition(), deadCorSecPoint);
-                    if(distanceTest<distance_) {
-                        distance_=distanceTest;
-                        index=freeDeadCor[j];
-                        vectorIndex=j;
-                    }
-                }
-                scas[i].setTarget((*index).getId());
-                (*index).setAllocatedId(true);
-                if (freeDeadCor.size()>1) swap(freeDeadCor[vectorIndex],
-                                               freeDeadCor[freeDeadCor.size()]);
-                freeDeadCor.pop_back();
-                if(freeDeadCor.size()==0) break;
-            }
-        }
-    }
-
-
-    bool scaTooOld(false), corDestroy(false), scaBirth(false);
+	
+	//partie scavengers
+	allocateTargetToScavenger(freeDeadCor);
+	vector<Sca> newScas;
     for(int i(0); i<nbSca; i++) {
-        scas[i].update(scaTooOld, corDestroy, scaBirth, *findCorById(scas[i].getTarget()));
+		bool scaTooOld(false), corDestroy(false), scaBirth(false);
+		S2d newScaPos; //in case a reproduction take place
+        scas[i].update(scaTooOld, corDestroy, scaBirth, newScaPos,
+					   *findCorById(scas[i].getTarget()));
+        if(corDestroy) scaIsDoneEatingCoral(scas[i].getTarget(), i);
+        if(scaBirth) newScas.emplace_back(newScaPos);
         if(scaTooOld) {
 			killScavenger(i, scas);
 			i--;//sans cette ligne pas d'update pour l'anciennement dernier scavenger
 		}
-        if(corDestroy) {
-            int id=scas[i].getTarget();
-            for(int j(0); j<nbCor; ++j) {
-                if(cors[j].getId()==id) {
-                    scas[i].setFree(corDestroy);
-                    killCoral(j, cors);
-                    j=nbCor;//pour quitter la boucle for
-                }
-            }
-        }
-        if(scaBirth) {
-            scas.emplace_back(corLastSegmentById(scas[i].getTarget()));
-            nbSca++;
-            scaBirth=false;
-        }
     }
+    addToScas(newScas);
 }
 
 void Simulation::updateNbSca () {
@@ -208,8 +168,16 @@ bool Simulation::readFile(char* fileName) {
             return false;
         }
         scas.push_back(aSca);
+        setAllocatedIdOpenningFiles();
     }
     return true;
+}
+
+void Simulation::setAllocatedIdOpenningFiles() {
+	for(int i(0); i<nbSca; i++) {
+		if(scas[i].getStatus() == EATING)
+			findCorById(scas[i].getTarget())->setAllocatedId(true);
+	}
 }
 
 bool Simulation::corIdUnicityCheck() const {
@@ -267,13 +235,56 @@ Segment Simulation::corLastSegmentById(int id) {
     }
 }
 
-void Simulation::killCoral(int index, std::vector<Cor> &corals) {
-    corals[index].swapToKill(corals[nbCor-1]);
-    corals.pop_back();
+void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor) {
+	if(freeDeadCor.size()==0) return;
+	for(int i(0); i<nbSca; i++) {
+		if(scas[i].getStatus() == FREE) {
+			double distanceMin=365; //majore l'ensemble des distances du carré
+			unsigned index; //stockage de la position du corail le plus proche
+			for(int j(0); j<freeDeadCor.size(); j++) {
+				if(!freeDeadCor[j]->isIdAllocated()) {
+					double distanceTest=distance(scas[i].getPosition(),
+												 freeDeadCor[j]->getLastSegmentSecPoint());
+					if(distanceTest<distanceMin) {
+						distanceMin=distanceTest;
+						index=j;
+					}
+				}
+			}
+			if(distanceMin!=365) {
+				scas[i].setTarget(freeDeadCor[index]->getId());
+				freeDeadCor[index]->setAllocatedId(true);
+			}
+		}
+	}
+}
+
+void Simulation::scaIsDoneEatingCoral(const int corId, const unsigned indexSca) {
+	for(int j(0); j<nbCor; ++j) {
+		if(cors[j].getId()==corId) {
+			scas[indexSca].setFree();
+            killCoral(j);
+            return;
+		}
+	}
+}
+
+void Simulation::addToScas(const std::vector<Sca> newScas) {
+	for(int i(0); i<newScas.size(); i++) {
+		scas.push_back(newScas[i]);
+		nbSca++;
+	}
+}
+
+void Simulation::killCoral(int index) {
+    cors[index].swapToKill(cors[nbCor-1]);
+    cors.pop_back();
     nbCor--;
 }
 
 void Simulation::killScavenger(int index, std::vector<Sca> &scavengers) {
+	if(scavengers[index].getStatus() == EATING) 
+		findCorById(scavengers[index].getTarget())->setAllocatedId(false);
     scavengers[index].swapToKill(scavengers[nbSca-1]);
     scavengers.pop_back();
     nbSca--;
@@ -283,33 +294,4 @@ void Simulation::killAlg(int index, std::vector<Alg> &algs) {
     algs[index].swapToKill(algs[nbAlg-1]);
     algs.pop_back();
     nbAlg--;
-}
-
-void Simulation::allocateTargetToScavenger(Cor &deadCoral) {
-    S2d segLastPoint=deadCoral.getLastSegmentSecPoint();
-    double distance_ = 356; // > 256*sqrt(2) to be sure it's the largest
-    int index=-1;
-    for(int i(0); i<nbSca; i++) {
-        double testDistance=distance(segLastPoint, scas[i].getPosition());
-        if(testDistance<=distance_) {
-            if(scas[i].getStatus()==FREE) {
-                distance_=testDistance;
-                index=i;
-            }
-            /*Si deux coraux meurent en meme temps : else {
-                if(distance(scas[i].getPosition(),
-                            corLastSegmentById(scas[i].getTarget()).getSecPoint())
-                   < testDistance) {
-                    distance_=testDistance;
-                    index=i;
-                }
-            }*/
-        }
-    }
-    if(distance_!=356) {
-        scas[index].setTarget(deadCoral.getId());
-        deadCoral.setAllocatedId(true);
-    }
-    //if no scavengers are free the fonction will try again on next update
-
 }

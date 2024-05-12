@@ -34,17 +34,20 @@ private:
     std::vector<Sca> scas;
 
     bool readFile(char* fileName);
+    void setAllocatedIdOpenningFiles();
 
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
     Cor* findCorById (int id);
     Segment corLastSegmentById(int id);
+    void allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor);
+    void scaIsDoneEatingCoral(const int id, const unsigned indexSca);
+    void addToScas(const std::vector<Sca> newScas);
     //les fonctions kill copient le dernier élément dans l'élément[index] et popBack
-    void killCoral(int index, std::vector<Cor> &corals);
+    void killCoral(int index);
     void killScavenger(int index, std::vector<Sca> &scavengers);
     void killAlg(int index, std::vector<Alg> &algs);
-    void allocateTargetToScavenger(Cor &deadCoral);
 
 };
 
