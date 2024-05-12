@@ -83,11 +83,11 @@ bool scaRadiusCheck(int radius) {
 bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
     for(Segment otherSegment : otherCor.getSegments()){
         if(segment.getPoint() == otherSegment.getSecPoint() ){
-            if (suppCommun(otherSegment,segment,delta_rot)) {
+            if (suppCommun(otherSegment,segment, delta_rot)) {
                 return false;
             }
         }else{
-            if (suppIndep(segment,otherSegment,epsil_zero) and segment.getPoint() != otherSegment.getPoint()){
+            if (suppIndep(segment,otherSegment, epsil_zero) and segment.getPoint() != otherSegment.getPoint()){
                 return false;
             }
         }
@@ -260,7 +260,6 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
     }
 
     bool updateCheck = true;
-
     for(const Cor& aCor : cors){
         if (!segCollisionCheck(newLastSeg,aCor)){
             dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;

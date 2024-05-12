@@ -5,23 +5,23 @@
 #include "shape.h"
 
 
-int orientation(S2d p, S2d q, S2d r, double simConstante);
+int orientation(S2d p, S2d q, S2d r);
 bool onSegment(S2d p, S2d q, S2d r, double simConstante);
 
-int orientation(S2d p, S2d q, S2d r, double simConstante)
+int orientation(S2d p, S2d q, S2d r)
 {
     double val = (q.y - p.y) * (r.x - q.x)-(q.x - p.x) * (r.y - q.y);
     double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
-    if (distance <= simConstante and distance >=-simConstante) return 0;
+    if (distance == 0) return 0;
     //si simConstante n'est pas initialisée (lecture) la condition <=> distance==0
-    return (val > 0)? 1: 2; // sens horaire ou trigo
+    return (val > 0)? 1 : 2; // sens horaire ou trigo
 }
 
 bool onSegment(S2d p, S2d q, S2d r, double simConstante) 
 {	
     double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
     double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
-    return (s/pr>=-simConstante and s/pr<=pr+simConstante);
+    return ((s/pr) >= (-simConstante) and (s/pr) <= (pr+simConstante));
 }
 
 bool S2d::operator==(S2d point) const 
@@ -85,7 +85,8 @@ double deltaAngle(Segment seg1, Segment seg2)
 
 bool suppCommun(const Segment &seg1, const Segment &seg2, double simConstante)
 {
-    return(abs(deltaAngle(seg1,seg2))<=simConstante);
+    return(deltaAngle(seg1,seg2) <= simConstante and 
+		   deltaAngle(seg1,seg2) >= -simConstante);
 }
 
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante)
@@ -94,11 +95,11 @@ bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante)
     S2d q1=seg1.getSecPoint();
     S2d p2=seg2.getPoint();
     S2d q2=seg2.getSecPoint();
-    int o1 = orientation(p1, q1, p2, simConstante);
-    int o2 = orientation(p1, q1, q2, simConstante);
-    int o3 = orientation(p2, q2, p1, simConstante);
-    int o4 = orientation(p2, q2, q1, simConstante);
-
+    int o1 = orientation(p1, q1, p2);
+    int o2 = orientation(p1, q1, q2);
+    int o3 = orientation(p2, q2, p1);
+    int o4 = orientation(p2, q2, q1);
+    
 
     if (o1 != o2 && o3 != o4) return true;
 
