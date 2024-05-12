@@ -16,7 +16,7 @@ bool ageCheck(int age);
 bool superposCheck(const std::vector<Segment>& segs,unsigned id);
 bool segCheck(const std::vector<Segment>& segs,unsigned id);
 bool scaRadiusCheck(int radius);
-bool segCollisionCheck(const Segment& segment, const Cor& otherCor);
+bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor);
 
 bool domainCheck(S2d center) {
     if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1) {
@@ -80,10 +80,12 @@ bool scaRadiusCheck(int radius) {
     }
 }
 
-bool segCollisionCheck(const Segment& segment, const Cor& otherCor){
+bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor){
     for(Segment otherSegment : otherCor.getSegments()){
         if(segment.getPoint() == otherSegment.getSecPoint() ){
-            if (suppCommun(otherSegment,segment, delta_rot)) {
+            double deltaAngleNew = deltaAngle(otherSegment,segment);
+            double deltaAngleOld = deltaAngle(otherSegment,otherSegment);
+            if(deltaAngleNew<=delta_rot and deltaAngleNew>=-delta_rot and deltaAngleNew*deltaAngleOld<=0 ){
                 return false;
             }
         }else{
@@ -261,7 +263,7 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
 
     bool updateCheck = true;
     for(const Cor& aCor : cors){
-        if (!segCollisionCheck(newLastSeg,aCor)){
+        if (!segCollisionCheck(newLastSeg, lastSeg, aCor)){
             dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
             updateCheck = false;
             break;

@@ -109,7 +109,7 @@ void Simulation::update(bool algBirthOn) {
         nbAlg = algs.size(); //in case some algs died
         if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
-    nbCor = cors.size(); //in case of repro (out of loop to not update new cor
+    nbCor = cors.size(); //in case of repro (out of the loop to not update new cor)
 	
 	//partie scavengers
 	allocateTargetToScavenger(freeDeadCor);
@@ -236,7 +236,7 @@ Segment Simulation::corLastSegmentById(int id) {
 }
 
 void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor) {
-	if(freeDeadCor.size()==0) return;
+	if(freeDeadCor.empty()) return;
 	for(int i(0); i<nbSca; i++) {
 		if(scas[i].getStatus() == FREE) {
 			double distanceMin=365; //majore l'ensemble des distances du carré

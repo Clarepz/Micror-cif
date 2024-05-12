@@ -46,8 +46,8 @@ private:
 };
 
 double deltaAngle(Segment seg1, Segment seg2);
-bool suppCommun(const Segment &seg1, const Segment &seg2, double simConstante=0);
-//renvoie true si deux segements avec un point commun sont supperposés (delta_rot)
+bool suppCommun(const Segment &seg1, const Segment &seg2);
+//renvoie true si deux segements avec un point commun sont supperposés
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante=0);
 //intersection de 2 segments independants                       (epsil_zero)
 void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);

@@ -83,10 +83,9 @@ double deltaAngle(Segment seg1, Segment seg2)
     else return(delta);
 }
 
-bool suppCommun(const Segment &seg1, const Segment &seg2, double simConstante)
+bool suppCommun(const Segment &seg1, const Segment &seg2)
 {
-    return(deltaAngle(seg1,seg2) <= simConstante and 
-		   deltaAngle(seg1,seg2) >= -simConstante);
+    return(deltaAngle(seg1,seg2) == 0);
 }
 
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante)
