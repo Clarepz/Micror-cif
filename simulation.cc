@@ -40,19 +40,19 @@ void Simulation::saveAs(std::string const & fileName) const {
     ofstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
 
-    file<<nbAlg<<endl;
+    file<<to_string(nbAlg)<<endl;
 
     for(auto &anAlg : algs ) {
         anAlg.writeFile(file);
     }
 
-    file<<nbCor<<endl;
+    file<<to_string(nbCor)<<endl;
 
     for(auto &aCor : cors) {
         aCor.writeFile(file);
     }
 
-    file<<nbSca<<endl;
+    file<<to_string(nbSca)<<endl;
 
     for(auto &aSca : scas) {
         aSca.writeFile(file);
