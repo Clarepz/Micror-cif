@@ -251,6 +251,7 @@ void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor)
         }
         if(distanceMin!=365) {
             scas[index].setTarget(freeDeadCor[0]->getId());
+            freeDeadCor[0]->setAllocatedId(true);
             return;
         }
     }
