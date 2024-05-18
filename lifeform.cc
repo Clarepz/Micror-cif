@@ -411,6 +411,7 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaP
             if(sqrt(pow(deltaX,2)+ pow(deltaY, 2))<=delta_l) {
                 position_=target.getLastSegmentSecPoint();
                 onTarget=true;
+                target.setAllocatedId(true);
             }
             else {
                 double angle = atan2(deltaY, deltaX);

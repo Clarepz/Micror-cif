@@ -168,7 +168,7 @@ bool Simulation::readFile(char* fileName) {
             return false;
         }
         scas.push_back(aSca);
-        setAllocatedIdOpenningFiles();
+        //setAllocatedIdOpenningFiles();
     }
     return true;
 }

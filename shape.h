@@ -23,33 +23,33 @@ struct S2d {
 class Segment {
 public:
 	//constructeurs
-    Segment(S2d coor_,double angle_, double longueur_);
-    Segment(S2d basePoint, S2d secPoint_);
+    Segment(S2d coor,double angle, double longueur);
+    Segment(S2d basePoint, S2d secPoint);
     
-    //getteurs
-    S2d getPoint() const {return point;}
-    S2d getSecPoint() const {return S2d {point.x+longueur* cos(angle),
-										 point.y+longueur* sin(angle)};}
-    double getlength() const {return longueur;}
-    double getAngle() const {return(angle);}
+    //getters
+    S2d getPoint() const {return point_;}
+    S2d getSecPoint() const {return S2d {point_.x+longueur_* cos(angle_),
+										 point_.y+longueur_* sin(angle_)};}
+    double getlength() const {return longueur_;}
+    double getAngle() const {return(angle_);}
     
-    //méthode pour la simulation
+    //méthodes pour la simulation
     Fail getFail() const;
-    Segment addAngle(double angle_) const;
-    Segment addLength(double length); //renvoie un segment plus long de "lenght"
-    void changeLength(double change); //change la taille du segment en rajoutant change
+    Segment addAngle(const double &angle) const;
+    Segment addLength (const double &length) const;
+    void changeLength(const double &change); //ajoute change a l'attribut longueur_
     
 private:
-    S2d point;
-    double angle;
-    double longueur;
+    S2d point_;
+    double angle_;
+    double longueur_;
 };
 
-double deltaAngle(Segment seg1, Segment seg2);
+double deltaAngle(const Segment &seg1, const Segment &seg2);
 bool suppCommun(const Segment &seg1, const Segment &seg2);
 //renvoie true si deux segements avec un point commun sont supperposés
 bool suppIndep(const Segment &seg1, const Segment &seg2, double simConstante=0);
 //intersection de 2 segments independants                       (epsil_zero)
 void drawEntity(Shape shape,Color color, S2d position, double size, double angle=0);
-double distance(S2d p1, S2d p2);
+double distance(const S2d &p1, const S2d &p2);
 #endif
