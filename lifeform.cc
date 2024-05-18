@@ -112,7 +112,7 @@ bool LifeForm::getInitSuccess() const {
 }
 
 void LifeForm::writeFile(std::ofstream &file) const {
-    file << '\t' << position_.x << ' ' << position_.y << ' ' << age_ << ' ' ;
+    file << '\t' << position_.x << ' ' << position_.y << ' ' <<to_string(age_)<< ' ' ;
 }
 
 Alg::Alg(S2d position, int age)

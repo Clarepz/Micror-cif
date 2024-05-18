@@ -249,6 +249,25 @@ Cor* Simulation::findCorById(int id) {
 
 void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor) {
 	if(freeDeadCor.empty()) return;
+    //if only one coral's dead he's eaten b the nearest scavenger
+    if(freeDeadCor.size()==1) {
+        double distanceMin=365;
+        int index(0);
+        for (int i(0); i<nbSca; i++) {
+            double newDistance=distance(scas[i].getPosition(),
+                                        scas[i].getPosition());
+            if(distanceMin>newDistance and scas[i].getStatus()==FREE) {
+                distanceMin=newDistance;
+                index=i;
+            }
+        }
+        if(distanceMin!=365) {
+            scas[index].setTarget(freeDeadCor[0]->getId());
+            freeDeadCor[0]->setAllocatedId(true);
+            return;
+        }
+    }
+    //otherwise the first one the vector is gonna eat the nearest coral
 	for(int i(0); i<nbSca; i++) {
 		if(scas[i].getStatus() == FREE) {
 			double distanceMin=365; //majore l'ensemble des distances du carré
