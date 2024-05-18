@@ -23,18 +23,8 @@ void kill(vector<LifeForm>& lifeForms, unsigned index){
     lifeForms.pop_back();
 }
 
-void Simulation::createRandomAlg() {
-    bernoulli_distribution randomBool(alg_birth_rate);
-    uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
-    if(randomBool(randomEngine)) {
-        nbAlg++;
-        double x = randomCoordinate(randomEngine);
-        double y = randomCoordinate(randomEngine);
-        S2d randomPosition = {x,y};
-        algs.emplace_back(randomPosition,1);
-    }
-}
 
+//constructeurs
 Simulation::Simulation(): nbSim(0), nbCor(0), nbSca(0), nbAlg(0), initSuccess(true) {
     randomEngine.seed(1);
 }
@@ -58,6 +48,8 @@ Simulation::Simulation(char* inputFile): nbSim(0) {
     }
 }
 
+
+//méthodes pour le module gui
 void Simulation::saveAs(std::string const & fileName) const {
     ofstream file(fileName);
     if(file.fail()) exit(EXIT_FAILURE);
@@ -98,8 +90,8 @@ void Simulation::update(bool algBirthOn) {
     nbSim++;
     bool isDead = false;
 
-	//partie algues
-    int i=0;
+	//partie algue
+    int i(0);
     while (i<nbAlg){
         isDead = false;
         algs[i].update(isDead);
@@ -111,7 +103,7 @@ void Simulation::update(bool algBirthOn) {
 
     if(algBirthOn) createRandomAlg();
 
-	//partie coraux
+	//partie corail
     vector <Cor*> freeDeadCor;
     for(int i=0; i<nbCor; i++) {
         vector<Cor> babyCor;
@@ -123,13 +115,12 @@ void Simulation::update(bool algBirthOn) {
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()) 
 			freeDeadCor.push_back(&cors[i]);
 
-
         if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
     nbCor = cors.size(); //in case of repro (out of the loop to not update new cor)
+    aCoralIsDead(freeDeadCor);
 	
-	//partie scavengers
-	allocateTargetToScavenger(freeDeadCor);
+	//partie scavenger
 	vector<Sca> newScas;
     for(int i(0); i<nbSca; i++) {
 		bool scaTooOld(false), corDestroy(false), scaBirth(false);
@@ -150,6 +141,7 @@ void Simulation::update(bool algBirthOn) {
 }
 
 
+//méthodes privates
 bool Simulation::readFile(char* fileName) {
 
     ifstream file(fileName);
@@ -188,6 +180,18 @@ bool Simulation::readFile(char* fileName) {
         setAllocatedIdOpenningFiles();
     }
     return true;
+}
+
+void Simulation::createRandomAlg() {
+    bernoulli_distribution randomBool(alg_birth_rate);
+    uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
+    if(randomBool(randomEngine)) {
+        nbAlg++;
+        double x = randomCoordinate(randomEngine);
+        double y = randomCoordinate(randomEngine);
+        S2d randomPosition = {x,y};
+        algs.emplace_back(randomPosition,1);
+    }
 }
 
 void Simulation::setAllocatedIdOpenningFiles() {
@@ -246,48 +250,57 @@ Cor* Simulation::findCorById(int id) {
     }
 }
 
+void Simulation::aCoralIsDead(const std::vector<Cor *> &freeDeadCor) {
+    switch(freeDeadCor.size()) {
+        case 0:
+            return;
+        case 1:
+            allocateTargetToScavenger(true, freeDeadCor);
+            return;
+        default:
+            allocateTargetToScavenger(false, freeDeadCor);
+    }
+}
 
-void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor) {
-	if(freeDeadCor.empty()) return;
-    //if only one coral's dead he's eaten b the nearest scavenger
-    if(freeDeadCor.size()==1) {
-        double distanceMin=365;
-        int index(0);
-        for (int i(0); i<nbSca; i++) {
-            double newDistance=distance(scas[i].getPosition(),
-                                        scas[i].getPosition());
-            if(distanceMin>newDistance and scas[i].getStatus()==FREE) {
-                distanceMin=newDistance;
-                index=i;
+void Simulation::allocateTargetToScavenger(bool oneDead,
+                                           const vector<Cor*> &freeDeadCor) {
+    double distanceMin = 365; //majore l'ensemble des distances du carré
+    unsigned index; //stockage de la position du corail/scavenger le plus proche
+    if(oneDead) {
+        //if only one coral's dead he's eaten b the nearest scavenger
+        for (int i(0); i < nbSca; i++) {
+            double newDistance = distance(scas[i].getPosition(),
+                                          scas[i].getPosition());
+            if (distanceMin > newDistance and scas[i].getStatus() == FREE) {
+                distanceMin = newDistance;
+                index = i;
             }
         }
-        if(distanceMin!=365) {
+        if (distanceMin != 365) {
             scas[index].setTarget(freeDeadCor[0]->getId());
             freeDeadCor[0]->setAllocatedId(true);
-            return;
         }
+        return;
     }
     //otherwise the first one the vector is gonna eat the nearest coral
-	for(int i(0); i<nbSca; i++) {
-		if(scas[i].getStatus() == FREE) {
-			double distanceMin=365; //majore l'ensemble des distances du carré
-			unsigned index; //stockage de la position du corail le plus proche
-			for(int j(0); j<freeDeadCor.size(); j++) {
-				if(!freeDeadCor[j]->isIdAllocated()) {
-					double distanceTest=distance(scas[i].getPosition(),
-												 freeDeadCor[j]->getLastSegmentSecPoint());
-					if(distanceTest<distanceMin) {
-						distanceMin=distanceTest;
-						index=j;
-					}
-				}
-			}
-			if(distanceMin!=365) {
-				scas[i].setTarget(freeDeadCor[index]->getId());
-				freeDeadCor[index]->setAllocatedId(true);
-			}
-		}
-	}
+    for (int i(0); i < nbSca; i++) {
+        if (scas[i].getStatus() == FREE) {
+            for (int j(0); j < freeDeadCor.size(); j++) {
+                if (!freeDeadCor[j]->isIdAllocated()) {
+                    double distanceTest = distance(scas[i].getPosition(),
+                                                   freeDeadCor[j]->getLastSegmentSecPoint());
+                    if (distanceTest < distanceMin) {
+                        distanceMin = distanceTest;
+                        index = j;
+                    }
+                }
+            }
+            if (distanceMin != 365) {
+                scas[i].setTarget(freeDeadCor[index]->getId());
+                freeDeadCor[index]->setAllocatedId(true);
+            }
+        }
+    }
 }
 
 void Simulation::scaIsDoneEatingCoral(const int corId, const unsigned indexSca) {
@@ -296,7 +309,6 @@ void Simulation::scaIsDoneEatingCoral(const int corId, const unsigned indexSca) 
 			scas[indexSca].setFree();
             swap(cors[j],cors.back());
             cors.pop_back();
-            //killCoral(j);
             return;
 		}
 	}

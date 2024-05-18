@@ -13,10 +13,11 @@
 
 class LifeForm {
 public:
-    LifeForm(S2d position, int age);//constructeur
-    bool getInitSuccess() const;
+    //constructeur
+    LifeForm(S2d position, int age);
+    //getters
+    bool getInitSuccess() const {return initSuccess;}
     S2d getPosition() const {return position_;}
-    //virtual void update();
 
 protected:
     S2d position_;
@@ -27,7 +28,7 @@ protected:
 
 class Alg:public LifeForm {
 public:
-    Alg(S2d position, int age); //constructor
+    Alg(S2d position, int age);
     void writeFile(std::ofstream& file) const;
     void display() const;
     void update(bool &dead);
@@ -35,19 +36,24 @@ public:
 
 class Cor:public LifeForm {
 public:
+    //constructeur
     Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
         const std::vector<Segment>& segs);
-    unsigned getId() const;
+
+    //getters
+    unsigned getId() const {return id_;}
     Status_cor getStatus() {return status_;}
     S2d getLastSegmentSecPoint() const {return(segments_[nbSeg_-1].getSecPoint());}
     bool isIdAllocated () const {return allocatedId;}
+    const std::vector<Segment>& getSegments() const {return segments_;}
+
+    //méthodes publiques
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
     void update(const std::vector<Cor>& cors, const std::vector<Alg>& algs,
 				std::vector<Cor>& babyCor, int& deadAlgIndex);
     void setAllocatedId(bool allocatedId);
-    const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
 

@@ -5,10 +5,10 @@
 #include "shape.h"
 
 
-int orientation(S2d p, S2d q, S2d r, const double &simConstante);
-bool onSegment(S2d p, S2d q, S2d r, const double &simConstante);
+int orientation(S2d p, S2d q, S2d r, double simConstante);
+bool onSegment(S2d p, S2d q, S2d r, double simConstante);
 
-int orientation(S2d p, S2d q, S2d r, const double &simConstante) {
+int orientation(S2d p, S2d q, S2d r, double simConstante) {
     double val = (q.y - p.y) * (r.x - q.x)-(q.x - p.x) * (r.y - q.y);
     double distance=val/sqrt(pow(p.y-q.y,2)+pow(p.x-q.x,2));
     if (distance <= simConstante and distance >= simConstante) return 0;
@@ -16,7 +16,7 @@ int orientation(S2d p, S2d q, S2d r, const double &simConstante) {
     return (val > 0)? 1 : 2; // sens horaire ou trigo
 }
 
-bool onSegment(S2d p, S2d q, S2d r, const double &simConstante) {
+bool onSegment(S2d p, S2d q, S2d r, double simConstante) {
     double s=(q.x-p.x)*(r.x-p.x)+(q.y-p.y)*(r.y-p.y);
     double pr=sqrt(pow(r.x-p.x,2)+pow(r.y-p.y,2));
     return ((s/pr) >= (-simConstante) and (s/pr) <= (pr+simConstante));

@@ -7,32 +7,25 @@
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
-void drawShape(Shape shape,Color color, double x, double y, double size, double angle)
-{
+void drawShape(Shape shape,Color color, double x, double y, double size, double angle) {
     (*ptcr)->set_line_width(1.0);
-    switch (color)
-    {
+    switch (color) {
         case GREEN:
             (*ptcr)->set_source_rgb(0, 0.7, 0);
             break;
-
         case BLUE:
             (*ptcr)->set_source_rgb(0, 0, 0.7);
             break;
-
         case BLACK:
             (*ptcr)->set_source_rgb(0, 0, 0);
             break;
-
         case RED:
             (*ptcr)->set_source_rgb(0.7, 0, 0);
             break;
-
         case GREY:
             (*ptcr)->set_source_rgb(0.5,0.5,0.5);
     }
-    switch (shape)
-    {
+    switch (shape) {
         case CIRCLE :
             (*ptcr)->move_to(x+size, y);
             (*ptcr)->arc(x,y,size,0,6.5);

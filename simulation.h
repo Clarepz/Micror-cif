@@ -11,11 +11,14 @@
 
 class Simulation {
 public:
+    //constructeurs
     Simulation();
     Simulation(char* inputFile);
+    //fonctions pour le module gui
     void saveAs(std::string const & fileName) const;
     void display() const;
     void update(bool algBirthOn);
+    //getters
     int getNbSim() const {return nbSim;}
     int getNbAlg() const {return nbAlg;}
     int getNbCor() const {return nbCor;}
@@ -25,7 +28,6 @@ private:
     int nbAlg;
     int nbCor;
     int nbSca;
-
     bool initSuccess;
 
     std::vector<Alg> algs;
@@ -40,9 +42,10 @@ private:
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;
     Cor* findCorById (int id);
-    void allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor);
+    //this fonction is called when a coral's dead to allocate his ID to scavengers
+    void aCoralIsDead(const std::vector<Cor*> &freeDeadCor);
+    void allocateTargetToScavenger(bool oneDead, const std::vector<Cor*> &freeDeadCor);
     void scaIsDoneEatingCoral(const int id, const unsigned indexSca);
-    void addToScas(const std::vector<Sca> newScas);
 };
 
 #endif

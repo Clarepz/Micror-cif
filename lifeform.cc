@@ -13,8 +13,8 @@ using namespace std;
 
 bool domainCheck(S2d center);
 bool ageCheck(int age);
-bool superposCheck(const std::vector<Segment>& segs,unsigned id);
-bool segCheck(const std::vector<Segment>& segs,unsigned id);
+bool superposCheck(const vector<Segment>& segs, unsigned id);
+bool segCheck(const vector<Segment>& segs, unsigned id);
 bool scaRadiusCheck(int radius);
 bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor);
 
@@ -29,18 +29,15 @@ bool domainCheck(S2d center) {
 }
 
 bool ageCheck(int age) {
-    if (age>0) {
-        return true;
-    }
+    if (age>0) return true;
     else {
-        std::cout << message::lifeform_age(age);
+        cout << message::lifeform_age(age);
         return false;
     }
 }
 
-bool superposCheck(const std::vector<Segment>& segs,unsigned id) {
+bool superposCheck(const vector<Segment>& segs, unsigned id) {
     for(int i = 1; i < segs.size();i++){
-
         if(suppCommun(segs[i-1],segs[i])) {
             std::cout << message::segment_superposition(id,i-1,i);
             return false;
@@ -49,21 +46,21 @@ bool superposCheck(const std::vector<Segment>& segs,unsigned id) {
     return true;
 }
 
-bool segCheck(const std::vector<Segment>& segs,unsigned id) {
+bool segCheck(const vector<Segment>& segs, unsigned id) {
     for(auto seg:segs) {
         S2d point = seg.getSecPoint();
         if(!(point.x<dmax-epsil_zero and point.y<dmax-epsil_zero
-        and point.x>epsil_zero and point.y>epsil_zero)) {
-            std::cout << message::lifeform_computed_outside(id,point.x,point.y);
+             and point.x>epsil_zero and point.y>epsil_zero)) {
+            cout << message::lifeform_computed_outside(id,point.x,point.y);
             return false;
         }
         unsigned length = seg.getlength();
         if(!(length >= l_repro-l_seg_interne and length < l_repro)) {
-            std::cout << message::segment_length_outside(id,length);
+            cout << message::segment_length_outside(id,length);
             return false;
         }
         if(seg.getFail()==BADANGLE) {
-            std::cout << message::segment_angle_outside(id, seg.getAngle());
+            cout << message::segment_angle_outside(id, seg.getAngle());
             return false;
         }
     }
@@ -71,35 +68,31 @@ bool segCheck(const std::vector<Segment>& segs,unsigned id) {
 }
 
 bool scaRadiusCheck(int radius) {
-    if(radius>=r_sca and radius<r_sca_repro){
-        return true;
-    }
+    if(radius>=r_sca and radius<r_sca_repro) return true;
     else {
-        std::cout << message::scavenger_radius_outside(radius);
+        cout << message::scavenger_radius_outside(radius);
         return false;
     }
 }
 
 bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor){
     for(Segment otherSegment : otherCor.getSegments()){
-        if(segment.getPoint() == otherSegment.getSecPoint() ){
+        if(segment.getPoint() == otherSegment.getSecPoint()) {
             double deltaAngleNew = deltaAngle(otherSegment,segment);
             double deltaAngleOld = deltaAngle(otherSegment,oldSegment);
             if(deltaAngleNew<=delta_rot and deltaAngleNew>=-delta_rot
-                and deltaAngleNew*deltaAngleOld<=0 ){
-                return false;
-            }
-        }else{
+               and deltaAngleNew*deltaAngleOld<=0 ) return false;
+        }
+        else {
             if (suppIndep(segment,otherSegment, epsil_zero)
-                and segment.getPoint() != otherSegment.getPoint()){
-                return false;
-            }
+                and segment.getPoint() != otherSegment.getPoint()) return false;
         }
     }
     return true;
 }
 
 
+//classe Lifeform
 LifeForm::LifeForm(S2d position, int age) : 
 	position_(position), 
 	age_(age),
@@ -107,16 +100,14 @@ LifeForm::LifeForm(S2d position, int age) :
     if(!(domainCheck(position_) and ageCheck(age))) initSuccess = false;
 }
 
-bool LifeForm::getInitSuccess() const {
-    return initSuccess;
-}
-
 void LifeForm::writeFile(std::ofstream &file) const {
     file << '\t' << position_.x << ' ' << position_.y << ' ' <<to_string(age_)<< ' ' ;
 }
 
+
+//classe Alg
 Alg::Alg(S2d position, int age)
-    : LifeForm(position,age){}
+    : LifeForm(position,age) {}
 
 void Alg::writeFile(std::ofstream &file) const {
     LifeForm::writeFile(file);
@@ -127,15 +118,13 @@ void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
-
 void Alg::update(bool &dead) {
     age_++;
-    if(age_>=max_life_alg){
-        dead = true;
-        return;
-    }
+    if(age_>=max_life_alg) dead = true;
 }
 
+
+//classe Cor
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
          const std::vector<Segment>& segs) : 
     LifeForm(position,age), 
@@ -145,24 +134,19 @@ Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int 
 	statusDev_(static_cast<Status_dev>(statusDev)),
 	nbSeg_(nbSeg),
 	segments_(segs),
-	allocatedId(false)
-{
+	allocatedId(false) {
     if (!(superposCheck(segs,id_) and segCheck(segs,id_))) initSuccess = false;
 }
 
-unsigned Cor::getId() const {
-    return id_;
-}
-
 bool Cor::collisionCheck(const Cor &otherCor) const {
-    const std::vector<Segment>& otherSegs = otherCor.getSegments();
+    const vector<Segment>& otherSegs = otherCor.getSegments();
     unsigned otherId = otherCor.getId();
     for (int i(0);i<nbSeg_;i++) {
         for(int k(0); k<otherSegs.size();k++) {
             if(!(id_ == otherId and (i == k or i==k-1 or i == k+1))) {
                 if (suppIndep(segments_[i], otherSegs[k])) {
                     //if not (same cor and same/touching segment)
-                    std::cout << message::segment_collision(id_, i, otherId, k);
+                    cout << message::segment_collision(id_, i, otherId, k);
                     return false;
                 }
             }
@@ -191,16 +175,13 @@ void Cor::display() const {
 
 void Cor::update(const vector<Cor>& cors, const vector<Alg>& algs,
                  vector<Cor>& babyCor, int& deadAlgIndex) {
-
     if(status_==DEAD) return;
     age_++ ;
     if(age_ >= max_life_cor){
         status_ = DEAD;
         return;
     }
-
     Segment& lastSeg =  segments_[segments_.size()-1];
-
     if(lastSeg.getlength()>=l_repro){
         if(statusDev_==EXTEND){
             extend();
@@ -219,43 +200,35 @@ void Cor::update(const vector<Cor>& cors, const vector<Alg>& algs,
                     }
                 }
             }while (IdAlreadyPicked);
-
             babyCor.push_back(repro(newId));
             statusDev_ = EXTEND;
         }
         return;
     }
-
     Segment newLastSeg = lastSeg.addAngle((dir_ == TRIGO)? delta_rot : -delta_rot);
-
     int closestAlg = 0;
-    double closestAlgAngle = delta_rot ;
+    double closestAlgAngle = delta_rot;
     bool mustEatAlg = false;
-
-    for(int i=0; i<algs.size(); i++){
+    for(int i=0; i<algs.size(); i++) {
         double angleToAlg ;
-
-        if(shouldEat(algs[i], angleToAlg) and fabs(angleToAlg) <= fabs(closestAlgAngle)){
+        if(shouldEat(algs[i], angleToAlg) && fabs(angleToAlg)<=fabs(closestAlgAngle)) {
             closestAlgAngle = angleToAlg;
             closestAlg = i;
             mustEatAlg =true;
         }
     }
-
-    if(algs.size()>0 and shouldEat(algs[closestAlg],closestAlgAngle)){
+    if(algs.size()>0 and shouldEat(algs[closestAlg],closestAlgAngle)) {
         newLastSeg = lastSeg.addAngle(closestAlgAngle);
         newLastSeg = newLastSeg.addLength(delta_l);
     }
-
     bool updateCheck = true;
-    for(const Cor& aCor : cors){
-        if (!segCollisionCheck(newLastSeg, lastSeg, aCor)){
+    for(const Cor& aCor : cors) {
+        if (!segCollisionCheck(newLastSeg, lastSeg, aCor)) {
             dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
             updateCheck = false;
             break;
         }
     }
-
     //check collision with domain border
     S2d endPoint = newLastSeg.getSecPoint();
     if(!(endPoint.x<dmax-epsil_zero and endPoint.y<dmax-epsil_zero
@@ -263,8 +236,7 @@ void Cor::update(const vector<Cor>& cors, const vector<Alg>& algs,
         dir_ = (dir_ == TRIGO)? INVTRIGO : TRIGO;
         updateCheck = false;
     }
-
-    if(updateCheck){
+    if(updateCheck) {
         lastSeg = newLastSeg;
         if(mustEatAlg) deadAlgIndex = closestAlg;
         else deadAlgIndex = -1;
@@ -292,15 +264,11 @@ bool Cor::eaten(S2d &nextScaPos) {
     return(false);
 }
 
-const std::vector<Segment>& Cor::getSegments()const {
-    return segments_;
-}
-
 bool Cor::shouldEat(const Alg &anAlg, double &angleToAlg)const {
     Segment lastSeg = segments_[nbSeg_-1];
     Segment algToCor(anAlg.getPosition(),lastSeg.getPoint());
     angleToAlg = deltaAngle(algToCor,lastSeg);
-    if(algToCor.getlength() <= lastSeg.getlength()){
+    if(algToCor.getlength() <= lastSeg.getlength()) {
         switch (dir_) {
             case TRIGO:
                 return angleToAlg <= delta_rot and angleToAlg >=0;
@@ -314,8 +282,8 @@ bool Cor::shouldEat(const Alg &anAlg, double &angleToAlg)const {
 void Cor::extend() {
     Segment& lastSeg = segments_[nbSeg_-1];
     lastSeg = lastSeg.addLength(-int(l_repro-l_seg_interne));
-    segments_.emplace_back(lastSeg.getSecPoint(),lastSeg.getAngle(),l_repro-l_seg_interne);
-
+    segments_.emplace_back(lastSeg.getSecPoint(),lastSeg.getAngle(),
+                           l_repro-l_seg_interne);
     nbSeg_++;
 }
 
@@ -333,13 +301,13 @@ Cor Cor::repro(unsigned id) {
 }
 
 
+//classe sca
 Sca::Sca(S2d position, int age, int radius, int status, int targetId) : 
 	LifeForm(position,age),
 	radius_(radius),
 	status_(static_cast<Status_sca>(status)),
 	targetId_(targetId),
-	onTarget(false) 
-{
+	onTarget(false) {
     if(!scaRadiusCheck(radius)) initSuccess = false;
 }
 
@@ -348,8 +316,7 @@ Sca::Sca(S2d newScaPos) :
     radius_(r_sca),
     status_(FREE),
     targetId_(0),
-    onTarget(false)
-{}
+    onTarget(false) {}
 
 void Sca::setFree() {
     onTarget=false;
@@ -410,28 +377,25 @@ void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaP
 }
 
 
-Alg readAlg(std::istringstream& line) {
+Alg readAlg(istringstream& line) {
     S2d pos;
     int age;
-
     line>>pos.x>>pos.y>>age;
     return Alg(pos,age);
 }
 
-Cor readCor(std::ifstream& file) {
-    std::istringstream line = nextLine(file);
+Cor readCor(ifstream& file) {
+    istringstream line = nextLine(file);
     S2d pos;
     int age, id, statut, dir, dev, nbSeg;
     line>>pos.x>>pos.y>>age>>id>>statut>>dir>>dev>>nbSeg;
-    std::vector<Segment> segs;
-    for(int k=0;k<nbSeg;k++) {
+    vector<Segment> segs;
+    for(int k=0; k<nbSeg; k++) {
         line = nextLine(file);
         double angle;
         unsigned length;
         line >> angle >> length;
-        if (k == 0) {
-            segs.emplace_back(pos, angle, length);
-        }
+        if (k == 0) segs.emplace_back(pos, angle, length);
         else {
             S2d BasePoint = segs[k - 1].getSecPoint();
             segs.emplace_back(BasePoint, angle, length);
@@ -440,15 +404,15 @@ Cor readCor(std::ifstream& file) {
     return Cor(pos,age,id,statut,dir,dev,nbSeg,segs);
 }
 
-Sca readSca(std::istringstream& line) {
+Sca readSca(istringstream& line) {
     S2d pos;
     int age,radius,statut,targetId;
     line>>pos.x>>pos.y>>age>>radius>>statut>>targetId;
     return Sca(pos, age, radius, statut, targetId);
 }
 
-std::istringstream nextLine(std::ifstream& file) {
-    std::string line;
+istringstream nextLine(ifstream& file) {
+    string line;
     do {
         std::getline(file>>std::ws, line);
     } while (line[0] == '#');

@@ -23,7 +23,7 @@ struct S2d {
 class Segment {
 public:
 	//constructeurs
-    Segment(S2d coor,double angle, double longueur);
+    Segment(S2d coor, double angle, double longueur);
     Segment(S2d basePoint, S2d secPoint);
     
     //getters
@@ -37,7 +37,7 @@ public:
     Fail getFail() const;
     Segment addAngle(double angle) const;
     Segment addLength (double length) const;
-    void changeLength(double change); //ajoute change a l'attribut longueur_
+    void changeLength(double change); //add change to longueur_
     
 private:
     S2d point_;
