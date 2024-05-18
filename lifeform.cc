@@ -23,7 +23,7 @@ bool domainCheck(S2d center) {
         return true;
     }
     else {
-        std::cout << message::lifeform_center_outside(center.x, center.y);
+        cout << message::lifeform_center_outside(center.x, center.y);
         return false;
     }
 }
@@ -39,7 +39,7 @@ bool ageCheck(int age) {
 bool superposCheck(const vector<Segment>& segs, unsigned id) {
     for(int i = 1; i < segs.size();i++){
         if(suppCommun(segs[i-1],segs[i])) {
-            std::cout << message::segment_superposition(id,i-1,i);
+            cout << message::segment_superposition(id,i-1,i);
             return false;
         }
     }
@@ -100,7 +100,7 @@ LifeForm::LifeForm(S2d position, int age) :
     if(!(domainCheck(position_) and ageCheck(age))) initSuccess = false;
 }
 
-void LifeForm::writeFile(std::ofstream &file) const {
+void LifeForm::writeFile(ofstream &file) const {
     file << '\t' << position_.x << ' ' << position_.y << ' ' <<to_string(age_)<< ' ' ;
 }
 
@@ -109,9 +109,9 @@ void LifeForm::writeFile(std::ofstream &file) const {
 Alg::Alg(S2d position, int age)
     : LifeForm(position,age) {}
 
-void Alg::writeFile(std::ofstream &file) const {
+void Alg::writeFile(ofstream &file) const {
     LifeForm::writeFile(file);
-    file << std::endl;
+    file << endl;
 }
 
 void Alg::display() const {
@@ -126,7 +126,7 @@ void Alg::update(bool &dead) {
 
 //classe Cor
 Cor::Cor(S2d position, int age, int id, int status, int dir, int statusDev, int nbSeg,
-         const std::vector<Segment>& segs) : 
+         const vector<Segment>& segs) :
     LifeForm(position,age), 
 	id_(id),
 	status_(static_cast<Status_cor>(status)),
@@ -155,12 +155,12 @@ bool Cor::collisionCheck(const Cor &otherCor) const {
     return true;
 }
 
-void Cor::writeFile(std::ofstream &file) const {
+void Cor::writeFile(ofstream &file) const {
     LifeForm::writeFile(file);
     file << id_ << ' ' << status_ << ' ' << dir_ << ' ' << statusDev_ << ' '
-    << nbSeg_ << std::endl;
+    << nbSeg_ << endl;
     for(auto aSeg : segments_) {
-        file << "\t\t" << aSeg.getAngle() << ' ' << aSeg.getlength() << std::endl;
+        file << "\t\t" << aSeg.getAngle() << ' ' << aSeg.getlength() << endl;
     }
 }
 
@@ -295,7 +295,7 @@ Cor Cor::repro(unsigned id) {
     Segment newSeg(constructionSeg.getSecPoint(), lastSeg.getAngle(),
                    l_repro-l_seg_interne);
 
-    std::vector<Segment> newSegs{newSeg};
+    vector<Segment> newSegs{newSeg};
 
     return Cor(newSeg.getPoint(), 1, id, ALIVE, TRIGO, EXTEND, 1, newSegs);
 }
@@ -328,11 +328,11 @@ void Sca::setTarget(int coralId) {
     status_=EATING;
 }
 
-void Sca::writeFile(std::ofstream &file) const {
+void Sca::writeFile(ofstream &file) const {
     LifeForm::writeFile(file);
     file << radius_ << ' ' << status_ << ' ';
     if(status_ == EATING) file << targetId_ ;
-    file << std::endl;
+    file << endl;
 }
 
 void Sca::display() const {
@@ -414,8 +414,8 @@ Sca readSca(istringstream& line) {
 istringstream nextLine(ifstream& file) {
     string line;
     do {
-        std::getline(file>>std::ws, line);
+        getline(file>>ws, line);
     } while (line[0] == '#');
-    std::istringstream lineStream(line);
+    istringstream lineStream(line);
     return lineStream;
 }
