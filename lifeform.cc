@@ -84,12 +84,14 @@ bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const 
     for(Segment otherSegment : otherCor.getSegments()){
         if(segment.getPoint() == otherSegment.getSecPoint() ){
             double deltaAngleNew = deltaAngle(otherSegment,segment);
-            double deltaAngleOld = deltaAngle(otherSegment,otherSegment);
-            if(deltaAngleNew<=delta_rot and deltaAngleNew>=-delta_rot and deltaAngleNew*deltaAngleOld<=0 ){
+            double deltaAngleOld = deltaAngle(otherSegment,oldSegment);
+            if(deltaAngleNew<=delta_rot and deltaAngleNew>=-delta_rot
+                and deltaAngleNew*deltaAngleOld<=0 ){
                 return false;
             }
         }else{
-            if (suppIndep(segment,otherSegment, epsil_zero) and segment.getPoint() != otherSegment.getPoint()){
+            if (suppIndep(segment,otherSegment, epsil_zero)
+                and segment.getPoint() != otherSegment.getPoint()){
                 return false;
             }
         }
@@ -125,11 +127,6 @@ void Alg::display() const {
     drawEntity(CIRCLE, GREEN, position_, r_alg);
 }
 
-void Alg::swapToKill(const Alg &livingAlg) {
-	position_=livingAlg.position_;
-	age_=livingAlg.age_;
-	initSuccess=livingAlg.initSuccess;
-}
 
 void Alg::update(bool &dead) {
     age_++;
@@ -192,20 +189,9 @@ void Cor::display() const {
     }
 }
 
-void Cor::swapToKill(Cor &coral) {
-    segments_.swap(coral.segments_);
-    id_=coral.id_;
-    status_=coral.status_;
-    dir_=coral.dir_;
-    statusDev_=coral.statusDev_;
-    nbSeg_=coral.nbSeg_;
-    position_=coral.position_;
-    age_=coral.age_;
-    initSuccess=coral.initSuccess;
-    allocatedId=coral.allocatedId;
-}
+void Cor::update(const vector<Cor>& cors, const vector<Alg>& algs,
+                 vector<Cor>& babyCor, int& deadAlgIndex) {
 
-void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCor) {
     if(status_==DEAD) return;
     age_++ ;
     if(age_ >= max_life_cor){
@@ -249,7 +235,7 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
     for(int i=0; i<algs.size(); i++){
         double angleToAlg ;
 
-        if(shouldEat(algs[i], angleToAlg) and abs(angleToAlg) <= abs(closestAlgAngle)){
+        if(shouldEat(algs[i], angleToAlg) and fabs(angleToAlg) <= fabs(closestAlgAngle)){
             closestAlgAngle = angleToAlg;
             closestAlg = i;
             mustEatAlg =true;
@@ -269,6 +255,7 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
             break;
         }
     }
+
     //check collision with domain border
     S2d endPoint = newLastSeg.getSecPoint();
     if(!(endPoint.x<dmax-epsil_zero and endPoint.y<dmax-epsil_zero
@@ -279,10 +266,9 @@ void Cor::update(const vector<Cor>& cors, vector<Alg>& algs, vector<Cor>& babyCo
 
     if(updateCheck){
         lastSeg = newLastSeg;
-        if(mustEatAlg) algs.erase(algs.begin()+closestAlg);
+        if(mustEatAlg) deadAlgIndex = closestAlg;
+        else deadAlgIndex = -1;
     }
-
-
 }
 
 void Cor::setAllocatedId(bool allocatedId_) {
@@ -338,7 +324,9 @@ Cor Cor::repro(unsigned id) {
     lastSeg = lastSeg.addLength(-int(l_repro/2));
 
     Segment constructionSeg(lastSeg.getPoint(), lastSeg.getAngle(), l_seg_interne);
-    Segment newSeg(constructionSeg.getSecPoint(), lastSeg.getAngle(), l_repro-l_seg_interne);
+    Segment newSeg(constructionSeg.getSecPoint(), lastSeg.getAngle(),
+                   l_repro-l_seg_interne);
+
     std::vector<Segment> newSegs{newSeg};
 
     return Cor(newSeg.getPoint(), 1, id, ALIVE, TRIGO, EXTEND, 1, newSegs);
@@ -382,16 +370,6 @@ void Sca::writeFile(std::ofstream &file) const {
 
 void Sca::display() const {
     drawEntity(CIRCLE, RED, position_, radius_);
-}
-
-void Sca::swapToKill(const Sca &livingSca) {
-	radius_=livingSca.radius_;
-	status_=livingSca.status_;
-	targetId_=livingSca.targetId_;
-	onTarget=livingSca.onTarget;
-	position_=livingSca.position_;
-	age_=livingSca.age_;
-	initSuccess=livingSca.initSuccess;
 }
 
 void Sca::update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaPos, 

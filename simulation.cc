@@ -13,6 +13,28 @@ using namespace std;
 
 static default_random_engine randomEngine ;
 
+
+template<typename LifeForm>
+void kill(vector<LifeForm>& lifeForms, unsigned index);
+
+template<typename LifeForm>
+void kill(vector<LifeForm>& lifeForms, unsigned index){
+    swap(lifeForms[index],lifeForms.back());
+    lifeForms.pop_back();
+}
+
+void Simulation::createRandomAlg() {
+    bernoulli_distribution randomBool(alg_birth_rate);
+    uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
+    if(randomBool(randomEngine)) {
+        nbAlg++;
+        double x = randomCoordinate(randomEngine);
+        double y = randomCoordinate(randomEngine);
+        S2d randomPosition = {x,y};
+        algs.emplace_back(randomPosition,1);
+    }
+}
+
 Simulation::Simulation(): nbSim(0), nbCor(0), nbSca(0), nbAlg(0), initSuccess(true) {
     randomEngine.seed(1);
 }
@@ -82,31 +104,26 @@ void Simulation::update(bool algBirthOn) {
         isDead = false;
         algs[i].update(isDead);
         if(isDead){
-            algs.erase(algs.begin()+i);
+            kill(algs,i);
             nbAlg--;
         }else i++;
     }
-    if(algBirthOn) {
-        //create random alg
-        bernoulli_distribution randomBool(alg_birth_rate);
-        uniform_int_distribution<unsigned> randomCoordinate(1,dmax-1);
-        if(randomBool(randomEngine)) {
-            nbAlg++;
-            double x = randomCoordinate(randomEngine);
-            double y = randomCoordinate(randomEngine);
-            S2d randomPosition = {x,y};
-            algs.emplace_back(randomPosition,1);
-        }
-    }
+
+    if(algBirthOn) createRandomAlg();
 
 	//partie coraux
     vector <Cor*> freeDeadCor;
     for(int i=0; i<nbCor; i++) {
         vector<Cor> babyCor;
-        cors[i].update(cors, algs, babyCor);
+        int deadAlgIndex(-1);
+        cors[i].update(cors, algs, babyCor, deadAlgIndex);
+        if(deadAlgIndex != -1) kill(algs,deadAlgIndex);
+        nbAlg = algs.size();
+
         if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()) 
 			freeDeadCor.push_back(&cors[i]);
-        nbAlg = algs.size(); //in case some algs died
+
+
         if(!babyCor.empty()) cors.push_back(babyCor[0]);
     }
     nbCor = cors.size(); //in case of repro (out of the loop to not update new cor)
@@ -122,16 +139,16 @@ void Simulation::update(bool algBirthOn) {
         if(corDestroy) scaIsDoneEatingCoral(scas[i].getTarget(), i);
         if(scaBirth) newScas.emplace_back(newScaPos);
         if(scaTooOld) {
-			killScavenger(i, scas);
+            if(scas[i].getStatus() == EATING)
+                findCorById(scas[i].getTarget())->setAllocatedId(false);
+            kill(scas,i);
 			i--;//sans cette ligne pas d'update pour l'anciennement dernier scavenger
 		}
     }
-    addToScas(newScas);
+    scas.insert(scas.end(),newScas.begin(),newScas.end());
+    nbSca = scas.size();
 }
 
-void Simulation::updateNbSca () {
-    nbSca=scas.size();
-}
 
 bool Simulation::readFile(char* fileName) {
 
@@ -205,7 +222,7 @@ bool Simulation::corCollisionCheck() const {
 }
 
 bool Simulation::scaTargetCheck() const {
-    for(auto sca : scas) {
+    for(const auto& sca : scas) {
         unsigned target = sca.getTarget();
         if(sca.getStatus()==EATING) {
             bool targetExists(false);
@@ -229,11 +246,6 @@ Cor* Simulation::findCorById(int id) {
     }
 }
 
-Segment Simulation::corLastSegmentById(int id) {
-    for(int i(0); i<nbCor; ++i) {
-        if(cors[i].getId()==id) return(cors[i].getLastSegment());
-    }
-}
 
 void Simulation::allocateTargetToScavenger(const std::vector<Cor*> &freeDeadCor) {
 	if(freeDeadCor.empty()) return;
@@ -263,35 +275,10 @@ void Simulation::scaIsDoneEatingCoral(const int corId, const unsigned indexSca) 
 	for(int j(0); j<nbCor; ++j) {
 		if(cors[j].getId()==corId) {
 			scas[indexSca].setFree();
-            killCoral(j);
+            swap(cors[j],cors.back());
+            cors.pop_back();
+            //killCoral(j);
             return;
 		}
 	}
-}
-
-void Simulation::addToScas(const std::vector<Sca> newScas) {
-	for(int i(0); i<newScas.size(); i++) {
-		scas.push_back(newScas[i]);
-		nbSca++;
-	}
-}
-
-void Simulation::killCoral(int index) {
-    cors[index].swapToKill(cors[nbCor-1]);
-    cors.pop_back();
-    nbCor--;
-}
-
-void Simulation::killScavenger(int index, std::vector<Sca> &scavengers) {
-	if(scavengers[index].getStatus() == EATING) 
-		findCorById(scavengers[index].getTarget())->setAllocatedId(false);
-    scavengers[index].swapToKill(scavengers[nbSca-1]);
-    scavengers.pop_back();
-    nbSca--;
-}
-
-void Simulation::killAlg(int index, std::vector<Alg> &algs) {
-    algs[index].swapToKill(algs[nbAlg-1]);
-    algs.pop_back();
-    nbAlg--;
 }

@@ -30,7 +30,6 @@ public:
     Alg(S2d position, int age); //constructor
     void writeFile(std::ofstream& file) const;
     void display() const;
-    void swapToKill(const Alg &livingAlg); //copy livingCor in actual cor
     void update(bool &dead);
 };
 
@@ -40,17 +39,14 @@ public:
         const std::vector<Segment>& segs);
     unsigned getId() const;
     Status_cor getStatus() {return status_;}
-    unsigned getNbCor() const {return(nbSeg_);}
-    S2d const getLastSegmentSecPoint() {return(segments_[nbSeg_-1].getSecPoint());}
-    Segment getLastSegment() {return(segments_[nbSeg_-1]);}
+    S2d getLastSegmentSecPoint() const {return(segments_[nbSeg_-1].getSecPoint());}
     bool isIdAllocated () const {return allocatedId;}
     bool collisionCheck(const Cor& otherCor) const;
     void writeFile(std::ofstream &file) const;
     void display() const;
-    void update(const std::vector<Cor>& cors, std::vector<Alg>& algs,
-				std::vector<Cor>& babyCor);
+    void update(const std::vector<Cor>& cors, const std::vector<Alg>& algs,
+				std::vector<Cor>& babyCor, int& deadAlgIndex);
     void setAllocatedId(bool allocatedId);
-    void swapToKill(Cor &livingCor); //copy livingCor in actual cor
     const std::vector<Segment>& getSegments() const;
     bool eaten(S2d &nextScaPos); //this fonction is called when a coral is eaten
     //return true when the coral's fully eaten
@@ -86,10 +82,8 @@ public:
     //méthodes pour la simulation
     void writeFile(std::ofstream &file) const ;
     void display() const;
-    void swapToKill(const Sca &livingSca); //copy livingSca in actual sca
     void update(bool &scaTooOld, bool &corDestroy, bool &scaBirth, S2d &newScaPos,
 				Cor &target);
-    //corDestroy let simulation know when to destroy the coral
 
 private:
     unsigned radius_;

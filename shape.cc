@@ -66,7 +66,7 @@ Segment Segment::addAngle(double angle_) const
 
 }
 
-Segment Segment::addLength(double length)
+Segment Segment::addLength(double length) const
 {
     return Segment(point, angle, longueur+length);
 }

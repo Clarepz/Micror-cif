@@ -36,7 +36,7 @@ public:
     //méthode pour la simulation
     Fail getFail() const;
     Segment addAngle(double angle_) const;
-    Segment addLength(double length); //renvoie un segment plus long de "lenght"
+    Segment addLength(double length) const; //renvoie un segment plus long de "lenght"
     void changeLength(double change); //change la taille du segment en rajoutant change
     
 private:

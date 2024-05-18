@@ -2,8 +2,6 @@
 // projet.cc, Provenaz Clarence 50%, Royer Yann 50%, verion 2
 //
 
-#include <iostream>
-#include "simulation.h"
 #include "gui.h"
 
 using namespace std;
