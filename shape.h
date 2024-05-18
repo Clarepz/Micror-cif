@@ -35,9 +35,9 @@ public:
     
     //méthodes pour la simulation
     Fail getFail() const;
-    Segment addAngle(const double &angle) const;
-    Segment addLength (const double &length) const;
-    void changeLength(const double &change); //ajoute change a l'attribut longueur_
+    Segment addAngle(double angle) const;
+    Segment addLength (double length) const;
+    void changeLength(double change); //ajoute change a l'attribut longueur_
     
 private:
     S2d point_;

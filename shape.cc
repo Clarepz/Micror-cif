@@ -50,7 +50,7 @@ Fail Segment::getFail () const {
     else return(NOFAIL);
 }
 
-Segment Segment::addAngle(const double &angle) const {
+Segment Segment::addAngle(double angle) const {
     double newAngle = (angle+angle_<=-M_PI) ? angle+angle_+2*M_PI :
                       (angle+angle_>M_PI) ? angle+angle_-2*M_PI : angle+angle_;
 
@@ -58,11 +58,11 @@ Segment Segment::addAngle(const double &angle) const {
 
 }
 
-Segment Segment::addLength(const double &length) const {
+Segment Segment::addLength(double length) const {
     return Segment(point_, angle_, longueur_+length);
 }
 
-void Segment::changeLength(const double &change) {
+void Segment::changeLength(double change) {
     longueur_+=change;
 }
 
