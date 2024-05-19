@@ -282,23 +282,24 @@ void Simulation::allocateTargetToScavenger(bool oneDead,
         }
         return;
     }
-    //otherwise the first one in the vector is gonna eat the nearest coral
+    //otherwise the first one in the vector will eat the nearest coral
     for (int i(0); i < nbSca; i++) {
         if (scas[i].getStatus() == FREE) {
             for (int j(0); j < freeDeadCor.size(); j++) {
                 if (!freeDeadCor[j]->isIdAllocated()) {
-                    double distanceTest = distance(scas[i].getPosition(),
-                                                   freeDeadCor[j]->getLastSegmentSecPoint());
+                    S2d corPoint=freeDeadCor[j]->getLastSegmentSecPoint();
+                    double distanceTest = distance(scas[i].getPosition(), corPoint);
                     if (distanceTest < distanceMin) {
                         distanceMin = distanceTest;
                         index = j;
                     }
                 }
-                if (distanceMin != 365) {
-                    scas[i].setTarget(freeDeadCor[index]->getId());
-                    freeDeadCor[index]->setAllocatedId(true);
-                }
             }
+            if (distanceMin != 365) {
+                scas[i].setTarget(freeDeadCor[index]->getId());
+                freeDeadCor[index]->setAllocatedId(true);
+            }
+            distanceMin=365;
         }
     }
 }
