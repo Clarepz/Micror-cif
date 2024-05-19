@@ -37,7 +37,9 @@ private:
     bool readFile(char* fileName);
     void createRandomAlg();
     void setAllocatedIdOpenningFiles();
-
+    void updateTheAlgs(bool algBirthOn);
+    void updateTheCorals();
+    void updateTheScavengers();
     bool corIdUnicityCheck() const;
     bool corCollisionCheck() const;
     bool scaTargetCheck() const;

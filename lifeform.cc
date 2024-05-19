@@ -16,7 +16,8 @@ bool ageCheck(int age);
 bool superposCheck(const vector<Segment>& segs, unsigned id);
 bool segCheck(const vector<Segment>& segs, unsigned id);
 bool scaRadiusCheck(int radius);
-bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor);
+bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, 
+					   const Cor& otherCor);
 
 bool domainCheck(S2d center) {
     if (center.x<=dmax-1 and center.y<=dmax-1 and center.x>=1 and center.y>=1) {
@@ -75,7 +76,8 @@ bool scaRadiusCheck(int radius) {
     }
 }
 
-bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, const Cor& otherCor){
+bool segCollisionCheck(const Segment& segment, const Segment& oldSegment, 
+					   const Cor& otherCor){
     for(Segment otherSegment : otherCor.getSegments()){
         if(segment.getPoint() == otherSegment.getSecPoint()) {
             double deltaAngleNew = deltaAngle(otherSegment,segment);

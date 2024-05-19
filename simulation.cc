@@ -88,56 +88,12 @@ void Simulation::display() const {
 
 void Simulation::update(bool algBirthOn) {
     nbSim++;
-    bool isDead = false;
 
-	//partie algue
-    int i(0);
-    while (i<nbAlg){
-        isDead = false;
-        algs[i].update(isDead);
-        if(isDead){
-            kill(algs,i);
-            nbAlg--;
-        }else i++;
-    }
+    updateTheAlgs(algBirthOn);
 
-    if(algBirthOn) createRandomAlg();
-
-	//partie corail
-    vector <Cor*> freeDeadCor;
-    for(int i=0; i<nbCor; i++) {
-        vector<Cor> babyCor;
-        int deadAlgIndex(-1);
-        cors[i].update(cors, algs, babyCor, deadAlgIndex);
-        if(deadAlgIndex != -1) kill(algs,deadAlgIndex);
-        nbAlg = algs.size();
-
-        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()) 
-			freeDeadCor.push_back(&cors[i]);
-
-        if(!babyCor.empty()) cors.push_back(babyCor[0]);
-    }
-    nbCor = cors.size(); //in case of repro (out of the loop to not update new cor)
-    aCoralIsDead(freeDeadCor);
+	updateTheCorals();
 	
-	//partie scavenger
-	vector<Sca> newScas;
-    for(int i(0); i<nbSca; i++) {
-		bool scaTooOld(false), corDestroy(false), scaBirth(false);
-		S2d newScaPos; //in case a reproduction take place
-        scas[i].update(scaTooOld, corDestroy, scaBirth, newScaPos,
-					   *findCorById(scas[i].getTarget()));
-        if(corDestroy) scaIsDoneEatingCoral(scas[i].getTarget(), i);
-        if(scaBirth) newScas.emplace_back(newScaPos);
-        if(scaTooOld) {
-            if(scas[i].getStatus() == EATING)
-                findCorById(scas[i].getTarget())->setAllocatedId(false);
-            kill(scas,i);
-			i--;//sans cette ligne pas d'update pour l'anciennement dernier scavenger
-		}
-    }
-    scas.insert(scas.end(),newScas.begin(),newScas.end());
-    nbSca = scas.size();
+	updateTheScavengers();
 }
 
 
@@ -177,8 +133,8 @@ bool Simulation::readFile(char* fileName) {
             return false;
         }
         scas.push_back(aSca);
-        setAllocatedIdOpenningFiles();
     }
+    setAllocatedIdOpenningFiles();
     return true;
 }
 
@@ -199,6 +155,58 @@ void Simulation::setAllocatedIdOpenningFiles() {
 		if(scas[i].getStatus() == EATING)
 			findCorById(scas[i].getTarget())->setAllocatedId(true);
 	}
+}
+
+void Simulation::updateTheAlgs(bool algBirthOn) {
+    bool isDead = false;
+	int i(0);
+    while (i<nbAlg){
+        isDead = false;
+        algs[i].update(isDead);
+        if(isDead){
+            kill(algs,i);
+            nbAlg--;
+        }else i++;
+    }
+    if(algBirthOn) createRandomAlg();
+}
+
+void Simulation::updateTheCorals() {
+    vector <Cor*> freeDeadCor;
+    for(int i=0; i<nbCor; i++) {
+        vector<Cor> babyCor;
+        int deadAlgIndex(-1);
+        cors[i].update(cors, algs, babyCor, deadAlgIndex);
+        if(deadAlgIndex != -1) kill(algs,deadAlgIndex);
+        nbAlg = algs.size();
+
+        if(cors[i].getStatus() == DEAD and !cors[i].isIdAllocated()) 
+			freeDeadCor.push_back(&cors[i]);
+
+        if(!babyCor.empty()) cors.push_back(babyCor[0]);
+    }
+    nbCor = cors.size(); //in case of repro (out of the loop to not update new cor)
+    aCoralIsDead(freeDeadCor);
+}
+	
+void Simulation::updateTheScavengers() {
+	vector<Sca> newScas;
+    for(int i(0); i<nbSca; i++) {
+		bool scaTooOld(false), corDestroy(false), scaBirth(false);
+		S2d newScaPos; //in case a reproduction take place
+        scas[i].update(scaTooOld, corDestroy, scaBirth, newScaPos,
+					   *findCorById(scas[i].getTarget()));
+        if(corDestroy) scaIsDoneEatingCoral(scas[i].getTarget(), i);
+        if(scaBirth) newScas.emplace_back(newScaPos);
+        if(scaTooOld) {
+            if(scas[i].getStatus() == EATING)
+                findCorById(scas[i].getTarget())->setAllocatedId(false);
+            kill(scas,i);
+			i--;//sans cette ligne pas d'update pour l'anciennement dernier scavenger
+		}
+    }
+    scas.insert(scas.end(),newScas.begin(),newScas.end());
+    nbSca = scas.size();
 }
 
 bool Simulation::corIdUnicityCheck() const {

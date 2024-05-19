@@ -75,7 +75,6 @@ UserInterface::UserInterface():
     set_title("Microrecif");
     set_resizable(true);
     set_child(m_Main_Box);
-
     m_Main_Box.append(cmd_et_infos);
     m_Main_Box.append(m_Area);
     cmd_et_infos.append(titre1);
@@ -84,7 +83,6 @@ UserInterface::UserInterface():
     cmd_et_infos.append(infos);
     infos.append(sujetsInfos);
     infos.append(nbSujets);
-
     m_Area.set_expand();
 
     button.append(exit);
@@ -98,27 +96,20 @@ UserInterface::UserInterface():
     sujetsInfos.append(label_Algue);
     sujetsInfos.append(corail);
     sujetsInfos.append(charognards);
-
     nbSujets.append(nbMiseAJour);
     nbSujets.append(nbAlgue);
     nbSujets.append(nbCorail);
     nbSujets.append(nbCharognards);
 
     exit.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::exitClicked));
-
     open.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::openClicked));
-
     save.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::saveClicked));
-
     start.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::startClicked));
-
     step.signal_clicked().connect(sigc::mem_fun(*this, &UserInterface::stepClicked));
-
     auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &UserInterface::on_window_key_pressed), false);
     add_controller(controller);
-
 }
 
 
