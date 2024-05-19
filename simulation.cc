@@ -250,7 +250,7 @@ Cor* Simulation::findCorById(int id) {
     }
 }
 
-void Simulation::aCoralIsDead(const std::vector<Cor *> &freeDeadCor) {
+void Simulation::aCoralIsDead(const vector<Cor*> &freeDeadCor) {
     switch(freeDeadCor.size()) {
         case 0:
             return;
@@ -259,18 +259,18 @@ void Simulation::aCoralIsDead(const std::vector<Cor *> &freeDeadCor) {
             return;
         default:
             allocateTargetToScavenger(false, freeDeadCor);
+            return;
     }
 }
 
 void Simulation::allocateTargetToScavenger(bool oneDead,
                                            const vector<Cor*> &freeDeadCor) {
-    double distanceMin = 365; //majore l'ensemble des distances du carré
-    unsigned index; //stockage de la position du corail/scavenger le plus proche
-    if(oneDead) {
-        //if only one coral's dead he's eaten b the nearest scavenger
+    double distanceMin(365); //majore l'ensemble des distances du carré
+    unsigned index(0); //stockage de la position du corail/scavenger le plus proche
+    if(oneDead) { //if only one coral's dead he's eaten by the nearest scavenger
         for (int i(0); i < nbSca; i++) {
             double newDistance = distance(scas[i].getPosition(),
-                                          scas[i].getPosition());
+                                          freeDeadCor[0]->getLastSegmentSecPoint());
             if (distanceMin > newDistance and scas[i].getStatus() == FREE) {
                 distanceMin = newDistance;
                 index = i;
@@ -282,7 +282,7 @@ void Simulation::allocateTargetToScavenger(bool oneDead,
         }
         return;
     }
-    //otherwise the first one the vector is gonna eat the nearest coral
+    //otherwise the first one in the vector is gonna eat the nearest coral
     for (int i(0); i < nbSca; i++) {
         if (scas[i].getStatus() == FREE) {
             for (int j(0); j < freeDeadCor.size(); j++) {
@@ -294,10 +294,10 @@ void Simulation::allocateTargetToScavenger(bool oneDead,
                         index = j;
                     }
                 }
-            }
-            if (distanceMin != 365) {
-                scas[i].setTarget(freeDeadCor[index]->getId());
-                freeDeadCor[index]->setAllocatedId(true);
+                if (distanceMin != 365) {
+                    scas[i].setTarget(freeDeadCor[index]->getId());
+                    freeDeadCor[index]->setAllocatedId(true);
+                }
             }
         }
     }
